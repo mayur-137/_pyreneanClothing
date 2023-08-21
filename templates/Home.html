@@ -1,0 +1,191 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %} Home | Pyrenean {% endblock title %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/Home.css' %}" media="screen">
+{% endblock head %}
+{% block body %}
+<body class="u-body u-xl-mode" data-lang="en">
+  <section class="u-align-center u-clearfix u-grey-5 u-section-1" id="sec-fc73">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h1 class="u-align-center u-text u-text-default u-text-1">Mens<br>
+      </h1>
+      <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          {% for men in Mens %}
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-1"
+                data-image-width="1280" data-image-height="781"
+                src="{{men.picture}}">
+              <h5 class="u-text u-text-2">{{men.name}}</h5>
+              <p class="u-text u-text-3">{{men.description|slice:":25"}}...</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
+                Now</a>
+              <a href="/ProductDetails/{{men.slug}}"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
+                More</a>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-2"
+                data-image-width="905" data-image-height="1280"
+                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
+              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
+              <p class="u-text u-text-5">Advertising Manager</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
+                More</a>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-3"
+                data-image-width="1280" data-image-height="960"
+                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
+              <h5 class="u-text u-text-6">Adrian Scold</h5>
+              <p class="u-text u-text-7">Financial Director</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
+                More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="u-align-center u-clearfix u-grey-5 u-section-2" id="sec-848b">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h1 class="u-align-center u-text u-text-default u-text-1">Kides<br>
+      </h1>
+      <div class="u-expanded-width u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-1"
+                data-image-width="1280" data-image-height="781"
+                src="{% static 'images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg' %}">
+              <h5 class="u-text u-text-2">Samuel Schick</h5>
+              <p class="u-text u-text-3">Sales Manager</p>
+              <a href="/cart/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
+                More</a>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-2"
+                data-image-width="905" data-image-height="1280"
+                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
+              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
+              <p class="u-text u-text-5">Advertising Manager</p>
+              <a href="/cart/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
+                More</a>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-3"
+                data-image-width="1280" data-image-height="960"
+                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
+              <h5 class="u-text u-text-6">Adrian Scold</h5>
+              <p class="u-text u-text-7">Financial Director</p>
+              <a href="/cart/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
+                More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="u-align-center u-clearfix u-grey-5 u-section-3" id="sec-a181">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h1 class="u-align-center u-text u-text-default u-text-1">Womens</h1>
+      <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-1"
+                data-image-width="1280" data-image-height="781"
+                src="{% static 'images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg' %}">
+              <h5 class="u-text u-text-2">Samuel Schick</h5>
+              <p class="u-text u-text-3">Sales Manager</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
+                More</a>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-2"
+                data-image-width="905" data-image-height="1280"
+                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
+              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
+              <p class="u-text u-text-5">Advertising Manager</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
+                More</a>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <img alt=""
+                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-3"
+                data-image-width="1280" data-image-height="960"
+                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
+              <h5 class="u-text u-text-6">Adrian Scold</h5>
+              <p class="u-text u-text-7">Financial Director</p>
+              <a href="/cart/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
+                Now</a>
+              <a href="/ProductDetails/"
+                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
+                More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+</body>
+
+{% endblock body %}

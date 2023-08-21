@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/_pyreneanClothing.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/apps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/asgi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/wsgi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Blog-Template.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Cart.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Customer-Service.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Home.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/News-Latter.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Post-Template.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/Product-Details.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/0fd3416c.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/68f64b9d.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/8ad73f3c.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/cart.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/default-image.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/fd.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/type_pyrenean-1-removebg-preview.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/jquery.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/Cart.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/News-Latter.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": -1
+}]]></component>
+  <component name="ProjectId" id="2UHcdjPxMFSrLnS4jAQ36oINio3" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="_pyreneanClothing" type="Python.DjangoServer" factoryName="Django server">
+      <module name="_pyreneanClothing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="_pyreneanClothing.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="" />
+      <created>1692600036229</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692600036229</updated>
+      <workItem from="1692600040293" duration="7373000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
