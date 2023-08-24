@@ -1,6 +1,6 @@
 from django.urls import path
 from Pyrenean.views import HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
-    VitaminGummiesView, edit_user_data
+    VitaminGummiesView, edit_user_data, CustomerServiceView
 from . import views
 
 app_name = "main"
@@ -18,5 +18,7 @@ urlpatterns = [
     path("register/", views.register_request, name="register"),
     path("login/", views.login_request, name="login"),
     path("logout/", views.logout_request, name="logout"),
-    path('edit_user_data/', views.edit_user_data, name="edit_user_data")
+    path('edit_user_data/', views.edit_user_data, name="edit_user_data"),
+    path('customerService/', CustomerServiceView.as_view(), name="customerService"),
+
 ]

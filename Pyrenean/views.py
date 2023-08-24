@@ -53,19 +53,10 @@ class ContactView(TemplateView):
 class ContactFormView(CreateView):
     model = ContactModel
     form_class = ContactFormModel
-    template_name = "success.html"
-    success_url = "/submit/"
+    template_name = "Contact.html"
+    success_url = "/contact/"
 
     def form_valid(self, form):
-        print("doneeeeeeeeeeeeeeeeeeeeeeeeee")
-        print(self.request.POST.get('email'))
-        print(form['name'].value())
-
-        # Using form.cleaned_data
-        print(form.cleaned_data['name'])
-        print(form.cleaned_data['email'])
-        print(form.cleaned_data['message'])
-        form.cleaned_data
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -116,6 +107,17 @@ class ContactView(TemplateView):
     def get_context_data(self, **kwargs):
         contact = super().get_context_data()
         return contact
+
+
+class CustomerServiceView(TemplateView):
+    template_name = "Customer-Service.html"
+
+    def get_context_data(self, **kwargs):
+        customerService = super().get_context_data()
+        return customerService
+
+
+
 
 
 def user_data_function(request):

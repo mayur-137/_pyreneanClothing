@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "description", "price", "size", "color", "discount", "slug", "quantity", "picture",
+    list_display = ["id", "name", "description", "price", "discount", "slug", "quantity", "picture",
                     "created_on"]
 
 

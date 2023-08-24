@@ -1,27 +1,34 @@
 from django.db import models
+from multiupload.fields import MultiFileField
+
+SIZE_CHOICES = (
+    ('Small', 'S'),
+    ('Medium', 'M'),
+    ('Large', 'L'),
+    ('Extra Large', 'XL'),
+    ('Very Extra Large', 'XXL')
+)
 
 
 class Mens(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
-    description = models.CharField(max_length=255)
+    description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=4)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Medium')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
     quantity = models.IntegerField(default=0)
-    picture = models.ImageField(upload_to="static/images/Mens/")
+    picture = models.ImageField(upload_to="static/images/Mens/", default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class Womens(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
-    description = models.CharField(max_length=255)
+    description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=4)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Medium')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
     quantity = models.IntegerField(default=0)
@@ -32,10 +39,9 @@ class Womens(models.Model):
 class Kides(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
-    description = models.CharField(max_length=255)
+    description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=4)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Small')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
     quantity = models.IntegerField(default=0)
@@ -46,10 +52,9 @@ class Kides(models.Model):
 class CartModel(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
-    description = models.CharField(max_length=255)
+    description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=4)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=20)
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
     quantity = models.IntegerField(default=0)

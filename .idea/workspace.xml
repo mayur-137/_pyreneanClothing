@@ -5,54 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/_pyreneanClothing.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_pyreneanClothing/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Blog-Template.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Cart.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Customer-Service.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Home.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/News-Latter.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Post-Template.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/Product-Details.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/0fd3416c.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/68f64b9d.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/8ad73f3c.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/cart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/default-image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/fd.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/type_pyrenean-1-removebg-preview.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/js/jquery.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/js/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/Cart.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/News-Latter.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0002_remove_cartmodel_color_remove_kides_color_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0003_alter_cartmodel_description_alter_kides_description_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0004_alter_cartmodel_picture.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0005_alter_cartmodel_picture.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0006_remove_mens_picture.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Kides/Chombooka-Boy1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/Post-Template.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Post-Template.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/Product-Details.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Product-Details.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Product-Details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,10 +42,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": -1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2UHcdjPxMFSrLnS4jAQ36oINio3" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -81,21 +53,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;developemnt&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="_pyreneanClothing" type="Python.DjangoServer" factoryName="Django server">
       <module name="_pyreneanClothing" />
@@ -131,6 +103,11 @@
       <option name="presentableId" value="Default" />
       <updated>1692600036229</updated>
       <workItem from="1692600040293" duration="7373000" />
+      <workItem from="1692693682279" duration="329000" />
+      <workItem from="1692783167651" duration="860000" />
+      <workItem from="1692856950391" duration="642000" />
+      <workItem from="1692860850877" duration="3102000" />
+      <workItem from="1692867675040" duration="2202000" />
     </task>
     <servers />
   </component>
