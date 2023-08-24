@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Mens, Womens, Kides, CartModel, ContactModel, user_data, ProductBuyDetails
+from .models import Mens, Women, Kid, CartModel, ContactModel, user_data, ProductBuyDetails
 
 
 # Register your models here.
@@ -13,8 +13,8 @@ class AuthorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Mens, AuthorAdmin)
-admin.site.register(Womens, AuthorAdmin)
-admin.site.register(Kides, AuthorAdmin)
+admin.site.register(Women, AuthorAdmin)
+admin.site.register(Kid, AuthorAdmin)
 admin.site.register(CartModel, AuthorAdmin)
 
 admin.site.register(user_data, UserAdmin)

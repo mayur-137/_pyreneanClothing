@@ -23,7 +23,7 @@ class Mens(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
 
-class Womens(models.Model):
+class Women(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
     description = models.TextField(max_length=255)
@@ -36,7 +36,7 @@ class Womens(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
 
-class Kides(models.Model):
+class Kid(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=55)
     description = models.TextField(max_length=255)

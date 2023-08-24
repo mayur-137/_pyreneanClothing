@@ -1,26 +1,15 @@
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
-from django.views.generic.edit import CreateView
-from .forms import ContactFormModel
-from .models import Mens, Womens, Kides, ContactModel, user_data, ProductBuyDetails
-from django.shortcuts import render, redirect
+from .models import Mens, Women, Kid, ContactModel, user_data, ProductBuyDetails, CartModel
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm  # add this
 from django.contrib.auth import login, authenticate, logout  # add this
 from django.views.decorators.csrf import csrf_exempt
 from .forms import ContactFormModel, NewUserForm, ProductBuyFormDetails
 from django.contrib.auth.models import User, auth
+from django.views import View
 from django.contrib.auth.decorators import login_required
-
-
-class VitaminGummiesView(TemplateView):
-    # model = VitaminGummies
-    template_name = "VitaminGummies.html"
-
-    def get_context_data(self, **kwargs):
-        VG = super().get_context_data()
-        # VG["vg"] = VitaminGummies.objects.all()
-        return VG
 
 
 class HomeView(TemplateView):
@@ -63,27 +52,19 @@ class ContactFormView(CreateView):
         return super().form_invalid(form)
 
 
-# class CartView(TemplateView):
+# class CartView(CreateView):
+#     model = ProductBuyDetails
+#     form_class = ProductBuyFormDetails
 #     template_name = "Cart.html"
-
-#     def get_context_data(self, **kwargs):
-#         cart = super().get_context_data()
-#         slug = self.kwargs.get("slug")
-#         print(slug)
-#         return cart
-class CartView(CreateView):
-    model = ProductBuyDetails
-    form_class = ProductBuyFormDetails
-    template_name = "Cart.html"
-    success_url = "/cart/"
-
-    def form_valid(self, form):
-        print("name", form.cleaned_data["email"])
-
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
+#     success_url = "/cart/"
+#
+#     def form_valid(self, form):
+#         print("name", form.cleaned_data["email"])
+#
+#         return super().form_valid(form)
+#
+#     def form_invalid(self, form):
+#         return super().form_invalid(form)
 
 
 class ProductDetailsView(TemplateView):
@@ -101,14 +82,6 @@ class ProductDetailsView(TemplateView):
         return VG
 
 
-class ContactView(TemplateView):
-    template_name = "Contact.html"
-
-    def get_context_data(self, **kwargs):
-        contact = super().get_context_data()
-        return contact
-
-
 class CustomerServiceView(TemplateView):
     template_name = "Customer-Service.html"
 
@@ -117,7 +90,26 @@ class CustomerServiceView(TemplateView):
         return customerService
 
 
+class AddToCartView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Mens, id=product_id)
+        print(product, "1111111111111")
+        # Add the product to the cart
+        cart_session = request.session.get('cart_session', {})
+        cart_session[product_id] = cart_session.get(product_id, 0) + 1
+        request.session['cart_session'] = cart_session
+        return redirect("/cart/")
 
+
+class CartView(View):
+    def get(self, request, *args, **kwargs):
+        cart = request.session.get('cart_session', {})
+        products_in_cart = Mens.objects.filter(id__in=cart.keys())
+        print(products_in_cart, "22222222222222")
+        for product in products_in_cart:
+            product.subtotal = product.price * cart[str(product.id)]
+        return render(request, 'cart.html', {'products': products_in_cart})
 
 
 def user_data_function(request):
@@ -236,35 +228,3 @@ def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("/")
-
-
-@csrf_exempt
-def add_to_cart(request):
-    if request.method == "POST":
-        print(request, "****************************")
-
-        markup = requests.get("http://127.0.0.1:8000/male/")
-        soup = BeautifulSoup(markup.content, 'html.parser')
-        # print([x for x in soup.find_all('div',attrs={"class":'destination_title'})],'@@@@@@@@@@')
-
-        product_name = soup.find('a', id="name")
-        product_price = soup.find('div', id="price")
-        product_desc = soup.find('div', id="desc")
-        product_image = soup.find('div', id="image")
-
-        cart_data = cart_items(pro_name=product_name.string, pro_price=product_price.string[7:],
-                               pro_desc=product_desc.string)
-        cart_data.save()
-
-        return redirect('/')
-
-# @csrf_exempt
-# def user_data(request):
-#     if request.method == "POST":
-#         email = request.user.email
-#         print(email)
-#         # return render(request ,'main/user_data.html' , {'context': context})
-#     else:
-#         return render(request,'main/user_data.html')
-
-

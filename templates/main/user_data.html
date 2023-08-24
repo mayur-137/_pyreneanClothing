@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+</head>
+ 
+<body>
+    <h2> username - {{context.username}}'s data</h2>
+    <form method="post">
+      {%csrf_token%}
+        <p>
+            <label><h4>building : {{context.building}}</h4></label>
+        </p>
+ 
+        <p>
+            <label><h4>street :  {{context.street}}</label>
+        </p>
+        <p>
+            <label><h4>area : {{context.area}}</label>
+        </p>
+        <p>
+            <label><h4>pincode : {{context.pincode}}</label>
+        </p>
+        <p>
+            <label><h4>city :{{context.city}}</label>
+        </p>
+        <p>
+            <label><h4>phone number :{{context.phone_number}}</label>
+        </p>
+        <p>
+            <label><h4>email :{{context.email}}</label>
+        </p>
+        <button><a href="/edit_user_data/">Edit</a</button>
+            
+        <!-- <button type="submit" href="/edit_user_data/" >edit</button> -->
+        
+        
+    </form>
+</body>
+</html>
+

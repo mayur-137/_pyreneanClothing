@@ -21,9 +21,11 @@
                 src="{{men.picture}}">
               <h5 class="u-text u-text-2">{{men.name|slice:"26"}}...</h5>
               <p class="u-text u-text-3">{{men.description|slice:":25"}}...</p>
-              <a href="/cart/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
-                Now</a>
+              <form method="post" action="/add_to_cart/">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ men.id }}">
+              <button class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
+                Now</button></form>
               <a href="/ProductDetails/{{men.slug}}"
                 class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
                 More</a>

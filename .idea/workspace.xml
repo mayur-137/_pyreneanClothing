@@ -5,27 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0002_remove_cartmodel_color_remove_kides_color_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0003_alter_cartmodel_description_alter_kides_description_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0004_alter_cartmodel_picture.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0005_alter_cartmodel_picture.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0006_remove_mens_picture.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Chombooka-Boy3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Kides/Chombooka-Boy1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0008_rename_kides_kid_rename_womens_women.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/templatetags/cart_extras.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/main/edit_user_data.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/main/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/main/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/main/user_data.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/Post-Template.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Post-Template.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/Product-Details.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Product-Details.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_pyreneanClothing/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Cart.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Product-Details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +61,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\_Code_PlayGround\_pyreneanClothing\templatetags" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="_pyreneanClothing" type="Python.DjangoServer" factoryName="Django server">
       <module name="_pyreneanClothing" />
@@ -77,14 +75,15 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="_pyreneanClothing.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\mayur\anaconda3\envs\vittenv\python.exe" />
+      <option name="SDK_NAME" value="vittenv" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
-      <option name="host" value="" />
+      <option name="host" value="0.0.0.0" />
       <option name="additionalOptions" value="" />
       <option name="browserUrl" value="" />
       <option name="runTestServer" value="false" />
@@ -108,6 +107,7 @@
       <workItem from="1692856950391" duration="642000" />
       <workItem from="1692860850877" duration="3102000" />
       <workItem from="1692867675040" duration="2202000" />
+      <workItem from="1692908451154" duration="7911000" />
     </task>
     <servers />
   </component>
