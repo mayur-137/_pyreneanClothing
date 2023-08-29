@@ -5,20 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0008_rename_kides_kid_rename_womens_women.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pyrenean/templatetags/cart_extras.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/main/edit_user_data.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/main/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/main/register.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/main/user_data.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_pyreneanClothing/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/Cart.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Cart.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Cart.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,6 +101,12 @@
       <workItem from="1692860850877" duration="3102000" />
       <workItem from="1692867675040" duration="2202000" />
       <workItem from="1692908451154" duration="7911000" />
+      <workItem from="1692952811831" duration="626000" />
+      <workItem from="1692998597491" duration="4351000" />
+      <workItem from="1693006754929" duration="3441000" />
+      <workItem from="1693036860830" duration="4746000" />
+      <workItem from="1693067929788" duration="1968000" />
+      <workItem from="1693132294774" duration="614000" />
     </task>
     <servers />
   </component>

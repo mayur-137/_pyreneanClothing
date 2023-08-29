@@ -103,12 +103,22 @@ class AddToCartView(View):
 
 
 class CartView(View):
+    model = CartModel
+
     def get(self, request, *args, **kwargs):
         cart = request.session.get('cart_session', {})
         products_in_cart = Mens.objects.filter(id__in=cart.keys())
-        print(products_in_cart, "22222222222222")
         for product in products_in_cart:
             product.subtotal = product.price * cart[str(product.id)]
+            product.product_quantity = str(cart[str(product.id)])
+            print(product.name, "quentity")
+            try:
+                AddToCart = CartModel(name=product.name, description=product.description, price=product.price,
+                                      size=product.size, discount=product.discount, slug=product.slug,
+                                      picture=product.picture)
+                AddToCart.save()
+            except:
+                pass
         return render(request, 'cart.html', {'products': products_in_cart})
 
 
