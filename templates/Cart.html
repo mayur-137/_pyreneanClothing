@@ -31,7 +31,7 @@
             <tbody class="u-align-left u-table-alt-grey-5 u-table-body">
               {% for item in products %}
               <tr style="height: 121px;">
-                <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-5"><span
+                <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-5"><span name="Remove_item" value="{{item.id}}"
                     class="u-cart-remove-item u-icon u-text-grey-40 u-icon-1"><svg xmlns="http://www.w3.org/2000/svg"
                       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xml:space="preserve"
                       class="u-svg-content" viewBox="0 0 52 52" x="0px" y="0px" style="width: 1em; height: 1em;">
@@ -44,8 +44,8 @@
 		c0.391-0.391,0.391-1.023,0-1.414L27.414,26l8.293-8.293C36.098,17.316,36.098,16.684,35.707,16.293z"></path>
                       </g>
                     </svg></span>
-                  <img class="u-cart-product-image u-image u-image-round u-product-control u-radius-17" style="mix-blend-mode: darken;"
-                    src="/{{item.picture}}">
+                  <img class="u-cart-product-image u-image u-image-round u-product-control u-radius-17"
+                    style="mix-blend-mode: darken;" src="/{{item.picture}}">
                   <h2 class="u-cart-product-title u-product-control u-text u-text-1">
                     <a class="u-product-title-link" href="#">{{item.name}}</a>
                   </h2>
@@ -54,7 +54,8 @@
                   <div class="u-cart-product-price u-product-control u-product-price u-product-price-1">
                     <div class="u-price-wrapper">
                       <div class="u-hide-price u-old-price"></div>
-                      <div class="u-price" style="font-weight: 700; font-size: 1rem;" id="{{item.slug}}_P_price" >&#8377; {{item.price}} </div>
+                      <div class="u-price" style="font-weight: 700; font-size: 1rem;" id="{{item.slug}}_P_price">&#8377;
+                        {{item.price}} </div>
                     </div>
                   </div>
                 </td>
@@ -62,22 +63,17 @@
                   <div class="u-cart-product-quantity u-product-control u-product-quantity u-product-quantity-1">
                     <div class="u-hidden u-quantity-label"> Quantity </div>
                     <div class="u-border-1 u-border-grey-25 u-quantity-input u-radius-5">
-                      <a class="minus minus_btn u-button-style u-quantity-button" name="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16px" height="16px" id="minus_btn"
-                          viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
-                          <rect x="1" y="7" width="14" height="2"></rect>
-                        </svg>
-                      </a>
-                      
-                        <input class="u-input" type="number" value="{{item.product_quantity}}" min="1" max="{{item.max_quantity}}" id="{{item.id}}" name="quantity">
-                      
-                      <a class="plus plus_btn u-button-style u-quantity-button" id="plus_btn" data-max-quantity="{{ item.max_quantity }}" data-quantity="0" name="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16px" height="16px"
-                          viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
-                          <rect x="7" y="1" width="2" height="14"></rect>
-                          <rect x="1" y="7" width="14" height="2"></rect>
-                        </svg>
-                      </a>
+                      <form action="/updateCart/" method="post" style="display: flex;">
+                        {% csrf_token %}
+                        <button type="submit"
+                          style="border: none; background: unset; font-weight: 900;padding: 4px 13px;" value="-"
+                          name="minus">-</button>
+                        <input class="u-input" type="number" value="{{item.product_quantity}}" min="0"
+                          max="{{item.max_quantity}}" name="quantity">
+                        <input type="hidden" name="Update_product_quantity" value="{{item.id}}">
+                        <button type="submit"
+                          style="border: none; background: unset; font-weight: 900; padding: 4px 13px;">+</button>
+                      </form>
                     </div>
                   </div>
                 </td>
@@ -85,83 +81,14 @@
                   <div class="u-cart-product-subtotal u-product-control u-product-price">
                     <div class="u-price-wrapper">
                       <div class="u-hide-price u-old-price"></div>
-                      <div class="u-price" style="font-weight: 400;" id="subtotal">{{item.subtotal}}</div>
+                      <div class="u-price" style="font-weight: 400;" id="subtotal">&#8377; {{item.subtotal}}</div>
                     </div>
                   </div>
                 </td>
               </tr>
-
-              <script>
-
-
-              var minusButtons = document.getElementsByClassName('minus-btn');
-                  var plusButtons = document.getElementsByClassName('plus-btn');
-                  console.log(minusButtons, plusButtons, "111")
-
-                  for (var i = 0; i < minusButtons.length; i++) {
-                      minusButtons[i].addEventListener('click', function() {
-                          var input = this.nextElementSibling;
-                          var value = parseInt(input.value);
-                          if (value > 1) {
-                              input.value = value - 1;
-                              updatePrice(input);
-                          }
-                      });
-
-                      plusButtons[i].addEventListener('click', function() {
-                          var input = this.previousElementSibling;
-                          var value = parseInt(input.value);
-                          input.value = value + 1;
-                          updatePrice(input);
-                      });
-                  }
-
-                  function updatePrice(input) {
-                      var itemId = input.id;
-                      var quantity = parseInt(input.value);
-                      var priceElement = document.getElementById(itemId);
-                      var pricePerItem = parseFloat(priceElement.getAttribute('data-price-per-item'));
-                      priceElement.textContent = (quantity * pricePerItem).toFixed(2);
-                  }
-
-
-              // var plusButton = document.getElementById('plus_btn');
-              // var minusButton = document.getElementById('minus_btn');
-              // var maxQuantity = parseInt(plusButton.dataset.maxQuantity);
-              // var quantity = parseInt(plusButton.dataset.quantity);
-              // console.log(quantity, "quantity1")
-              // plusButton.addEventListener('click', function() {
-              //   quantity += 1;
-              //   if (quantity >= maxQuantity) {
-              //       console.log(plusButton, maxQuantity, quantity);
-              //       plusButton.dataset.quantity = quantity;  // Disable the button
-              //         plusButton.classList.add('disabled');  // Add the disable class
-              //         plusButton.disabled = true;
-              //     }
-              //       // Update the quantity data attribute
-              // });
-              // var quantity = parseInt(plusButton.dataset.quantity);
-              // minusButton.addEventListener('click', function(){
-              //   quantity -= 1;
-              //   if (quantity <= maxQuantity) {
-              //       console.log(plusButton, maxQuantity, quantity);
-              //       plusButton.dataset.quantity = quantity;  // Disable the button
-              //         plusButton.classList.remove('disabled');  // remove the disable class
-              //         // plusButton.disabled = true;
-              //     }
-              // })
-
-              // var InputTag = document.getElementsByName("quantity").
-              // console.log(InputTag, "inputtag")
-
-          </script>
-
               {% endfor %}
             </tbody>
           </table>
-
-          
-       
         </div>
         <div class="u-cart-button-container">
           <a href="/"
@@ -178,13 +105,8 @@
                 </g>
               </svg></span>&nbsp;Continue Shopping
           </a>
-          <button class="u-btn u-btn-round u-button-style u-cart-update u-grey-5 u-radius-50 u-btn-2" id="UpdateCart">Update Cart</button>
-          <script>
-            var UpdateCart = document.getElementById('UpdateCart').addEventListener('click', function (){
-              console.log('hii212')
-              
-            })
-          </script>
+          <a href="#" class="u-btn u-btn-round u-button-style u-cart-update u-grey-5 u-radius-50 u-btn-2">Update
+            Cart</a>
         </div>
         <div class="u-cart-blocks-container">
           <div class="u-cart-block u-indent-30">
@@ -228,13 +150,14 @@
                         <td
                           class="u-align-left u-border-1 u-border-grey-15 u-first-column u-table-cell u-table-cell-17">
                           Subtotal</td>
-                        <td class="u-border-1 u-border-grey-15 u-table-cell">$281.00</td>
+                        <td class="u-border-1 u-border-grey-15 u-table-cell">&#8377; {{product_total}}</td>
                       </tr>
                       <tr style="height: 46px;">
                         <td
                           class="u-align-left u-border-1 u-border-grey-15 u-first-column u-table-cell u-table-cell-19">
                           Total</td>
-                        <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-20">$281.00</td>
+                        <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-20">&#8377; {{product_total}}
+                        </td>
                       </tr>
                     </tbody>
                   </table>

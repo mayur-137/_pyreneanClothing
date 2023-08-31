@@ -1,4 +1,5 @@
 from django.views.generic.base import TemplateView
+from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from .models import Mens, Women, Kid, ContactModel, user_data, ProductBuyDetails, CartModel
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,6 +11,8 @@ from .forms import ContactFormModel, NewUserForm, ProductBuyFormDetails
 from django.contrib.auth.models import User, auth
 from django.views import View
 from django.contrib.auth.decorators import login_required
+
+global product_total
 
 
 class HomeView(TemplateView):
@@ -94,8 +97,6 @@ class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Mens, id=product_id)
-        print(product, "1111111111111")
-        # Add the product to the cart
         cart_session = request.session.get('cart_session', {})
         cart_session[product_id] = cart_session.get(product_id, 0) + 1
         request.session['cart_session'] = cart_session
@@ -106,20 +107,36 @@ class CartView(View):
     model = CartModel
 
     def get(self, request, *args, **kwargs):
+        product_total = 0
         cart = request.session.get('cart_session', {})
         products_in_cart = Mens.objects.filter(id__in=cart.keys())
         for product in products_in_cart:
             product.subtotal = product.price * cart[str(product.id)]
+            product_total = product.subtotal + product_total
+            print(product_total, "total")
             product.product_quantity = str(cart[str(product.id)])
-            print(product.name, "quentity")
-            try:
-                AddToCart = CartModel(name=product.name, description=product.description, price=product.price,
-                                      size=product.size, discount=product.discount, slug=product.slug,
-                                      picture=product.picture)
-                AddToCart.save()
-            except:
-                pass
-        return render(request, 'cart.html', {'products': products_in_cart})
+        return render(request, 'cart.html', {'products': products_in_cart, 'product_total': product_total})
+
+
+class Update_cart_view(View):
+
+    def post(self, request, *args, **kwargs):
+        Product_id = request.POST.get("Update_product_quantity")
+        product = get_object_or_404(Mens, id=Product_id)
+        Mode_of_Operations = request.POST.get("minus")
+        if Mode_of_Operations == "-":
+            cart_session = request.session.get('cart_session', {})
+            cart_session[Product_id] = cart_session.get(Product_id) - 1
+            request.session['cart_session'] = cart_session
+            if cart_session.get(Product_id) == 0:
+                del cart_session[Product_id]
+        else:
+            GetMaxQuantity = Mens.objects.filter(id=Product_id).values("max_quantity").get()
+            cart_session = request.session.get('cart_session', {})
+            if not cart_session.get(Product_id) == GetMaxQuantity["max_quantity"]:
+                cart_session[Product_id] = cart_session.get(Product_id) + 1
+                request.session['cart_session'] = cart_session
+        return redirect("/cart/")
 
 
 def user_data_function(request):
