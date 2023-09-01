@@ -74,22 +74,27 @@
       </h1>
       <div class="u-expanded-width u-list u-list-1">
         <div class="u-repeater u-repeater-1">
+          {% for Kid in Kids %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-container-layout-1">
               <img alt=""
                 class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-1"
                 data-image-width="1280" data-image-height="781"
-                src="{% static 'images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg' %}">
-              <h5 class="u-text u-text-2">Samuel Schick</h5>
-              <p class="u-text u-text-3">Sales Manager</p>
-              <a href="/cart/"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
-                Now</a>
-              <a href="/ProductDetails/"
+                src="{{Kid.picture}}">
+              <h5 class="u-text u-text-2">{{Kid.name|slice:"26"}}...</h5>
+              <p class="u-text u-text-3">{{Kid.description|slice:":25"}}...</p>
+              <form method="post" action="/add_to_cart/">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ Kid.id }}">
+                <button class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
+                  Now</button>
+              </form>
+              <a href="/ProductDetails/{{Kid.slug}}"
                 class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
                 More</a>
             </div>
           </div>
+          {% endfor %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-container-layout-2">
               <img alt=""
@@ -131,14 +136,15 @@
       <h1 class="u-align-center u-text u-text-default u-text-1">Womens</h1>
       <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
         <div class="u-repeater u-repeater-1">
+          {% for women in Women %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-container-layout-1">
               <img alt=""
                 class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-1"
                 data-image-width="1280" data-image-height="781"
-                src="{% static 'images/04556b349cc49e353255a1f3ad2ee9302d8e3e6e836cf66d0d73c3a82ebcece85c670cae77242361662557d4fb4d18c0caf880149470ddf680e1ae_1280.jpg' %}">
-              <h5 class="u-text u-text-2">Samuel Schick</h5>
-              <p class="u-text u-text-3">Sales Manager</p>
+                src="{{women.picture}}">
+              <h5 class="u-text u-text-2">{{women.name|slice:"26"}}...</h5>
+              <p class="u-text u-text-3">{{women.description|slice:":25"}}...</p>
               <a href="/cart/"
                 class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
                 Now</a>
@@ -147,6 +153,7 @@
                 More</a>
             </div>
           </div>
+          {% endfor %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-container-layout-2">
               <img alt=""

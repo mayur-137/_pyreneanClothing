@@ -21,8 +21,8 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["Mens"] = Mens.objects.all()
-        # context["ET"] = EffervescentTablets.objects.all()
-        # context["AP"] = AyurvedicPower.objects.all()
+        context["Kids"] = Kid.objects.all()
+        context["Women"] = Women.objects.all()
         return context
 
 
@@ -55,21 +55,6 @@ class ContactFormView(CreateView):
         return super().form_invalid(form)
 
 
-# class CartView(CreateView):
-#     model = ProductBuyDetails
-#     form_class = ProductBuyFormDetails
-#     template_name = "Cart.html"
-#     success_url = "/cart/"
-#
-#     def form_valid(self, form):
-#         print("name", form.cleaned_data["email"])
-#
-#         return super().form_valid(form)
-#
-#     def form_invalid(self, form):
-#         return super().form_invalid(form)
-
-
 class ProductDetailsView(TemplateView):
     model = Mens
     template_name = "Product-Details.html"
@@ -77,11 +62,11 @@ class ProductDetailsView(TemplateView):
     def get_context_data(self, **kwargs):
         VG = super().get_context_data()
         slug = self.kwargs.get("slug")
-        VG["Mens"] = Mens.objects.filter(slug=slug)
-        # if not VG["vg"]:
-        #     VG["vg"] = EffervescentTablets.objects.filter(slug=slug)
-        # if not VG["vg"]:
-        #     VG["vg"] = AyurvedicPower.objects.filter(slug=slug)
+        VG["PRD"] = Mens.objects.filter(slug=slug)
+        if not VG["PRD"]:
+            VG["PRD"] = Kid.objects.filter(slug=slug)
+        if not VG["PRD"]:
+            VG["PRD"] = Women.objects.filter(slug=slug)
         return VG
 
 
@@ -96,7 +81,9 @@ class CustomerServiceView(TemplateView):
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
+        print(product_id, "id")
         product = get_object_or_404(Mens, id=product_id)
+        print(product, "prd")
         cart_session = request.session.get('cart_session', {})
         cart_session[product_id] = cart_session.get(product_id, 0) + 1
         request.session['cart_session'] = cart_session
@@ -136,6 +123,18 @@ class Update_cart_view(View):
             if not cart_session.get(Product_id) == GetMaxQuantity["max_quantity"]:
                 cart_session[Product_id] = cart_session.get(Product_id) + 1
                 request.session['cart_session'] = cart_session
+        return redirect("/cart/")
+
+
+class RemoveItemView(View):
+
+    def post(self, request, *args, **kwargs):
+        GetRemoveItemId = request.POST.get("removeItem")
+        cart_session = request.session.get('cart_session', {})
+        product = get_object_or_404(Mens, id=GetRemoveItemId)
+        if GetRemoveItemId in cart_session:
+            del cart_session[GetRemoveItemId]
+            request.session['cart_session'] = cart_session
         return redirect("/cart/")
 
 
