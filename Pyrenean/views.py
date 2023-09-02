@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.generic.edit import CreateView
-from .models import Mens, Women, Kid, ContactModel, user_data, ProductBuyDetails, CartModel
+from .models import Mens, Women, Kid, ContactModel, user_data, CartModel
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm  # add this
@@ -81,12 +81,17 @@ class CustomerServiceView(TemplateView):
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
-        print(product_id, "id")
-        product = get_object_or_404(Mens, id=product_id)
-        print(product, "prd")
+        models = [Mens, Kid, Women]
+        for model in models:
+            try:
+                product = get_object_or_404(model, id=product_id)
+            except Http404:
+                pass
         cart_session = request.session.get('cart_session', {})
         cart_session[product_id] = cart_session.get(product_id, 0) + 1
         request.session['cart_session'] = cart_session
+        print(request.session['cart_session'], "1")
+        print(cart_session, "2")
         return redirect("/cart/")
 
 
@@ -94,22 +99,54 @@ class CartView(View):
     model = CartModel
 
     def get(self, request, *args, **kwargs):
+        # global product
+        products_in_cart = []
+        products_list = []
+        # products_list.clear()
         product_total = 0
         cart = request.session.get('cart_session', {})
-        products_in_cart = Mens.objects.filter(id__in=cart.keys())
-        for product in products_in_cart:
-            product.subtotal = product.price * cart[str(product.id)]
-            product_total = product.subtotal + product_total
-            print(product_total, "total")
-            product.product_quantity = str(cart[str(product.id)])
-        return render(request, 'cart.html', {'products': products_in_cart, 'product_total': product_total})
+        print(cart, "3")
+        models = [Mens, Kid, Women]
+        for model in models:
+            try:
+                itm = model.objects.filter(id__in=cart.keys())
+                # print(cart.keys(), "4")
+                # print(itm, model, "itm")
+                if itm:
+                    products_in_cart.append(itm)
+                    # print(model, "i am in if")
+                # products_in_cart.append(itm)
+                # print(products_in_cart, "5")
+                # products_in_cart.clear()
+            except:
+                pass
+        for products in products_in_cart:
+            # print(products, "products ")
+            # print(products_in_cart, "cart==================")
+            for product in products:
+                # print(product, "6")
+                # print(product.price, "price")
+                # print(cart[str(product.id)], "quntity")
+                product.subtotal = product.price * cart[str(product.id)]
+                # print(product.subtotal, "subtotal")
+                product_total = product.subtotal + product_total
+                # print(product_total, "total")
+                product.product_quantity = str(cart[str(product.id)])
+                # print(str(cart[str(product.id)]), "str(cart[str(product.id)])")
+                products_list.append(product)
+            # print(products_list, "list")
+        return render(request, 'cart.html', {'products': products_list, 'product_total': product_total})
 
 
 class Update_cart_view(View):
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.GetMaxQuantity = None
+
     def post(self, request, *args, **kwargs):
         Product_id = request.POST.get("Update_product_quantity")
-        product = get_object_or_404(Mens, id=Product_id)
+        print(Product_id, "ID")
         Mode_of_Operations = request.POST.get("minus")
         if Mode_of_Operations == "-":
             cart_session = request.session.get('cart_session', {})
@@ -118,9 +155,14 @@ class Update_cart_view(View):
             if cart_session.get(Product_id) == 0:
                 del cart_session[Product_id]
         else:
-            GetMaxQuantity = Mens.objects.filter(id=Product_id).values("max_quantity").get()
+            models = [Mens, Kid, Women]
+            for model in models:
+                try:
+                    self.GetMaxQuantity = model.objects.filter(id=Product_id).values("max_quantity").get()
+                except:
+                    pass
             cart_session = request.session.get('cart_session', {})
-            if not cart_session.get(Product_id) == GetMaxQuantity["max_quantity"]:
+            if not cart_session.get(Product_id) == self.GetMaxQuantity["max_quantity"]:
                 cart_session[Product_id] = cart_session.get(Product_id) + 1
                 request.session['cart_session'] = cart_session
         return redirect("/cart/")
@@ -131,7 +173,12 @@ class RemoveItemView(View):
     def post(self, request, *args, **kwargs):
         GetRemoveItemId = request.POST.get("removeItem")
         cart_session = request.session.get('cart_session', {})
-        product = get_object_or_404(Mens, id=GetRemoveItemId)
+        models = [Mens, Kid, Women]
+        for model in models:
+            try:
+                product = get_object_or_404(model, id=GetRemoveItemId)
+            except Http404:
+                pass
         if GetRemoveItemId in cart_session:
             del cart_session[GetRemoveItemId]
             request.session['cart_session'] = cart_session
@@ -156,12 +203,12 @@ def user_data_function(request):
             context = {"email": email, "phone_number": phone_number, 'username': username, 'building': building,
                        'street': street, 'area': area, 'pincode': pincode, 'city': city}
             print(context)
-            return render(request, 'main/user_data.html', {'context': context})
+            return render(request, 'user_data.html', {'context': context})
 
         except:
-            return render(request, 'main/user_data.html')
+            return render(request, 'user_data.html')
     else:
-        return render(request, 'main/user_data.html')
+        return render(request, 'user_data.html')
 
 
 def edit_user_data(request):
@@ -194,7 +241,7 @@ def edit_user_data(request):
             user_data.save(b)
         return redirect('/')
     else:
-        return render(request, 'main/edit_user_data.html')
+        return render(request, 'edit_user_data.html')
 
 
 @csrf_exempt
@@ -208,11 +255,11 @@ def register_request(request):
         if User.objects.filter(username=username).exists():
             print("user already registered")
             context = {'error': 'The username you entered has already been taken. Please try another username.'}
-            return render(request, 'main/register.html', {'context': context})
+            return render(request, 'register.html', {'context': context})
         elif User.objects.filter(email=email).exists():
             print("this email is already taken try another one")
             context = {"error": "this email is already taken try another one"}
-            return render(request, 'main/register.html', {"context": context})
+            return render(request, 'register.html', {"context": context})
         else:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.save()
@@ -221,7 +268,7 @@ def register_request(request):
             return redirect('main:login')
     else:
         print("noooo")
-        return render(request, 'main/register.html')
+        return render(request, 'register.html')
 
     # return render (request=request, template_name="main/register.html", context={"register_form":form})
 
@@ -241,12 +288,12 @@ def login_request(request):
                 return redirect('/')
             else:
                 context = {'error': 'email and password does not match.'}
-                return render(request, 'main/login.html', {'context': context})
+                return render(request, 'login.html', {'context': context})
         except:
             context = {'error': 'user not found go to register'}
-            return render(request, 'main/login.html', {'context': context})
+            return render(request, 'login.html', {'context': context})
     else:
-        return render(request, 'main/login.html')
+        return render(request, 'login.html')
 
 
 @csrf_exempt
