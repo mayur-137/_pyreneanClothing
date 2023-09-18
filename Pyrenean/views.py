@@ -185,6 +185,10 @@ class RemoveItemView(View):
         return redirect("/cart/")
 
 
+class LoginView(TemplateView):
+    template_name = "registration/login.html"
+
+
 def user_data_function(request):
     current_user = request.user
     email = current_user.email

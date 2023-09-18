@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en" dir="ltr">
 {% load static %}
 <head>
@@ -12,7 +12,8 @@
       <div class="title">
          Login Form
       </div>
-      <form method="POST">
+      <form method="POST">{% csrf_token %}
+
          <div class="container">{{context.error}}</div>
          <div class="field">
             <input type="text" required name="email_address">
@@ -91,4 +92,19 @@
 
 </body>
 
-</html> {% endcomment %}
+</html> {% endcomment %} -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Login Form | Pyrenean</title>
+</head>
+<body>
+   <form action="" method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit"> Submit </button>
+   </form>
+</body>
+</html>
