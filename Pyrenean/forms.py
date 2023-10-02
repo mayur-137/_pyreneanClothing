@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactModel, ProductBuyDetails
+from .models import ContactModel
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -32,9 +32,4 @@ class ContactFormModel(forms.ModelForm):
         model = ContactModel
         fields = ["name", "email", "message"]
 
-
-class ProductBuyFormDetails(forms.ModelForm):
-    class Meta:
-        model = ProductBuyDetails
-        fields = ['email', 'slug']
 

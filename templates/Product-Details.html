@@ -10,17 +10,21 @@
 
 
 
-
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert" role="alert"> {{ message }} </div>
+    {% endfor %}
+{% endif %}
   <section class="u-clearfix u-container-align-center-xs u-section-1" id="sec-3aaa">
     <div class="u-clearfix u-sheet u-sheet-1">
       <!--product--><!--product_options_json--><!--{"source":""}--><!--/product_options_json--><!--product_item-->
       <div class="u-container-style u-expanded-width u-product u-product-1">
         <div class="u-container-layout u-container-layout-1"><!--product_title-->
           {% for item in PRD %}
-          <h2 class="u-align-left u-product-control u-text u-text-default-sm u-text-default-xs u-text-1">
+          <h4 class="u-align-left u-product-control u-text u-text-default-sm u-text-default-xs u-text-1">
             <a class="u-product-title-link"
               href="#"><!--product_title_content-->{{item.name}}<!--/product_title_content--></a>
-          </h2><!--/product_title-->
+          </h4><!--/product_title-->
           <a href="/fav/"
             class="u-border-2 u-border-hover-palette-3-base u-border-palette-1-base u-btn u-btn-round u-button-style u-none u-radius-50 u-text-palette-2-base u-btn-1"><span
               class="u-icon u-text-palette-2-base u-icon-1"><svg class="u-svg-content" viewBox="0 0 512 512" x="0px"
@@ -38,18 +42,10 @@
                 <div class="u-back-slide">
                   <img class="u-back-image u-expanded" src="/{{item.picture}}">
                 </div>
-                <div class="u-over-slide u-over-slide-1">
-                  <h3 class="u-gallery-heading">Sample Title</h3>
-                  <p class="u-gallery-text">Sample Text</p>
-                </div>
               </div><!--/product_gallery_item--><!--product_gallery_item-->
               <div class="u-carousel-item u-gallery-item">
                 <div class="u-back-slide">
-                  <img class="u-back-image u-expanded" src="/{{item.picture}}">
-                </div>
-                <div class="u-over-slide u-over-slide-2">
-                  <h3 class="u-gallery-heading">Sample Title</h3>
-                  <p class="u-gallery-text">Sample Text</p>
+                  <img class="u-back-image u-expanded" src="/{{item.picture_1}}">
                 </div>
               </div><!--/product_gallery_item-->
             </div>
@@ -94,7 +90,7 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
               </li><!--/product_gallery_thumbnail--><!--product_gallery_thumbnail-->
               <li class="u-carousel-thumbnail u-carousel-thumbnail-2" data-u-target="#carousel-0cf2"
                 data-u-slide-to="1">
-                <img class="u-carousel-thumbnail-image u-image" src="/{{item.picture}}">
+                <img class="u-carousel-thumbnail-image u-im age" src="/{{item.picture_1}}">
               </li><!--/product_gallery_thumbnail-->
             </ol>
           </div><!--/product_gallery--><!--product_price-->
@@ -104,37 +100,35 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
                 <!--product_old_price_content--><!--/product_old_price_content-->
               </div>
               <!--/product_old_price--><!--product_regular_price-->
-              <div class="u-price u-text-palette-2-base" style="font-size: 1.875rem; font-weight: 700;">
-                <!--product_regular_price_content-->&#8377; {{item.price}}<!--/product_regular_price_content-->
+
+              <div class="u-price u-text-palette-2-base" style="font-size: 1.5rem; font-weight: 600;">
+                  <span><strong>&#8377;{{ item.discounted_price }}</strong></span>
+                <span style="text-decoration: line-through; color: grey;">&#8377;{{item.price}}</span>
+                <span style="color: green">Discount {{ item.discount }}% off</span>
               </div>
-              <!--/product_regular_price-->
             </div>
-          </div><!--/product_price-->
-          <a href="S"
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-grey-10 u-none u-text-hover-black u-btn-2"
-            title=" Size Small">s</a>
-          <a href="M"
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-grey-10 u-none u-text-hover-black u-btn-3"
-            title="Size Medium ">m</a>
-          <a href="L"
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-grey-10 u-none u-text-hover-black u-btn-4"
-            title="Size Large">L</a>
-          <a href=""
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-grey-10 u-none u-text-hover-black u-btn-5"
-            title="Size Extra Large">xl</a>
-          <a href=""
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-grey-10 u-none u-text-hover-black u-btn-6"
-            title="Size Vary Extra Large">xxl</a>
-          <ul class="u-text u-text-2">
-            <li>Sample Item 1</li>
-            <li>Sample Item 2</li>
-            <li>Sample Item 3</li>
-          </ul>
-          <!--product_button--><!--options_json--><!--{"clickType":"add-to-cart","content":""}--><!--/options_json-->
-          <a href="/cart/"
-            class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-product-control u-text-black u-text-hover-white u-btn-7"
-            data-product-button-click-type="add-to-cart"><!--product_button_content-->Add to
-            Cart<!--/product_button_content--></a><!--/product_button-->
+          </div>
+           <div class="u-product-size-1">
+            Sizes:
+            {% for size in Size %}
+                {% if size.men_id == item.id or size.kid_id == item.id or size.women_id == item.id %}
+                    <form action="/ProductDetails/{{ item.slug }}/size={{ size.size }}/id={{ size.id }}" method="get">
+                    {% csrf_token %}
+                    <button id="u-btn-size" class="u-btn-size" type="submit" name="size" value="{{ size.size }}">{{ size.size }}</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+          <p class="u-text u-text-2">
+           <strong>Description :</strong><br>
+            {{ item.description }}
+          </p>
+          <form method="post" action="/add_to_cart/">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ item.id }}">
+              <button type="submit" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-product-control u-text-black u-text-hover-white u-btn-7">Add to
+            Cart</button></form>
+
           {% endfor %}
         </div>
       </div><!--/product_item--><!--/product-->

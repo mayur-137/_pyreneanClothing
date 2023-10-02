@@ -1,18 +1,16 @@
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse, Http404
 from django.views.generic.edit import CreateView
-from .models import Mens, Women, Kid, ContactModel, user_data, CartModel
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm  # add this
-from django.contrib.auth import login, authenticate, logout  # add this
+from .models import Mens, Women, UniSex, ContactModel, user_data, CartModel, Size
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
 from django.views.decorators.csrf import csrf_exempt
-from .forms import ContactFormModel, NewUserForm, ProductBuyFormDetails
+from .forms import ContactFormModel
 from django.contrib.auth.models import User, auth
 from django.views import View
-from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-global product_total
+global product_total, getSize_id, getSize, slug
 
 
 class HomeView(TemplateView):
@@ -21,8 +19,16 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["Mens"] = Mens.objects.all()
-        context["Kids"] = Kid.objects.all()
+        context["Kids"] = UniSex.objects.all()
         context["Women"] = Women.objects.all()
+        for cnt in context:
+            if cnt == "view":
+                continue
+            for data in context[cnt]:
+                data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+
+        context['Size'] = Size.objects.all()
+
         return context
 
 
@@ -56,17 +62,35 @@ class ContactFormView(CreateView):
 
 
 class ProductDetailsView(TemplateView):
-    model = Mens
     template_name = "Product-Details.html"
 
     def get_context_data(self, **kwargs):
+        global slug, getSize, getSize_id
         VG = super().get_context_data()
         slug = self.kwargs.get("slug")
+        getSize = self.kwargs.get("size")
+        getSize_id = self.kwargs.get("id")
+        if getSize is not None and getSize_id is not None:
+            getSize = getSize.split("=")[1]
+            getSize_id = getSize_id.split("=")[1]
+            print(getSize, getSize_id, slug, "firstcheck")
         VG["PRD"] = Mens.objects.filter(slug=slug)
         if not VG["PRD"]:
-            VG["PRD"] = Kid.objects.filter(slug=slug)
+            VG["PRD"] = UniSex.objects.filter(slug=slug)
         if not VG["PRD"]:
             VG["PRD"] = Women.objects.filter(slug=slug)
+        print(VG['PRD'], "PRD")
+        for data in VG['PRD']:
+            data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+            print(data.discounted_price)
+
+        VG['Size'] = Size.objects.all()
+        max_quantity = 0
+        max_size = None
+        for size in VG['Size']:
+            if (size.men_id == data.id or size.kid_id == data.id or size.women_id == data.id) and size.quantity > max_quantity:
+                data.max_quantity = size.quantity
+                data.max_size = size.size
         return VG
 
 
@@ -79,19 +103,37 @@ class CustomerServiceView(TemplateView):
 
 
 class AddToCartView(View):
+
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
-        models = [Mens, Kid, Women]
-        for model in models:
-            try:
-                product = get_object_or_404(model, id=product_id)
-            except Http404:
-                pass
+        current_user = request.user
+        email = current_user.email
+        print(email, "email")
+        product = Size.objects.filter(men_id=product_id)
+        if not product:
+            product = Size.objects.filter(kid_id=product_id)
+        if not product:
+            product = Size.objects.filter(women_id=product_id)
+        print(product, "product")
+        checkCart = CartModel.objects.filter(product_id=product_id)
+        print(checkCart, "checkCart")
+        if not checkCart:
+            addCart = CartModel(product_id=product_id, email=email).save()
+        for detail in product:
+            print(detail.quantity, "quantity11111111", detail.id, product_id)
         cart_session = request.session.get('cart_session', {})
-        cart_session[product_id] = cart_session.get(product_id, 0) + 1
-        request.session['cart_session'] = cart_session
-        print(request.session['cart_session'], "1")
-        print(cart_session, "2")
+        print(cart_session, "11")
+        if cart_session.get(product_id) is None or cart_session.get(product_id) < detail.quantity:
+            print("hey")
+            cart_session[product_id] = cart_session.get(product_id, 0) + 1
+            request.session['cart_session'] = cart_session
+        # if cart_session.get(product_id) == detail.quantity:
+        #     details.stock = False
+        #     for model in models:
+        #         try:
+        #             updateStock = model.objects.filter(id=product_id).update(stock=details.stock)
+        #         except:
+        #             pass
         return redirect("/cart/")
 
 
@@ -106,65 +148,89 @@ class CartView(View):
         product_total = 0
         cart = request.session.get('cart_session', {})
         print(cart, "3")
-        models = [Mens, Kid, Women]
+        models = [Mens, UniSex, Women]
         for model in models:
             try:
                 itm = model.objects.filter(id__in=cart.keys())
-                # print(cart.keys(), "4")
-                # print(itm, model, "itm")
                 if itm:
                     products_in_cart.append(itm)
-                    # print(model, "i am in if")
-                # products_in_cart.append(itm)
-                # print(products_in_cart, "5")
-                # products_in_cart.clear()
             except:
                 pass
         for products in products_in_cart:
-            # print(products, "products ")
-            # print(products_in_cart, "cart==================")
             for product in products:
-                # print(product, "6")
-                # print(product.price, "price")
-                # print(cart[str(product.id)], "quntity")
                 product.subtotal = product.price * cart[str(product.id)]
-                # print(product.subtotal, "subtotal")
                 product_total = product.subtotal + product_total
-                # print(product_total, "total")
                 product.product_quantity = str(cart[str(product.id)])
-                # print(str(cart[str(product.id)]), "str(cart[str(product.id)])")
+                print(getSize_id, getSize, product.id, "checking")
+                if getSize is None and slug is None:
+                    messages.error(request, "Please select a size first")
+                    return redirect(f"/ProductDetails/{slug}")
+                else:
+                    product.size = getSize
+                    checkCart = Size.objects.filter(size=getSize)
+                    print(checkCart, "checkCart11")
+                for mysize in checkCart:
+                    pass
+                if str(mysize.id) == str(getSize_id):
+                    print(mysize.size, "myid")
+                    updateCart = CartModel.objects.filter(product_id=product.id).update(size_id=mysize.id, size=mysize.size, quantity=mysize.quantity)
+                    # if checkCart:
+                    #     checkSize = Size.objects.filter(id=getSize_id)
+                    #     checkCart.update(size=getSize)
                 products_list.append(product)
-            # print(products_list, "list")
+
         return render(request, 'cart.html', {'products': products_list, 'product_total': product_total})
 
 
 class Update_cart_view(View):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.GetMaxQuantity = None
-
     def post(self, request, *args, **kwargs):
         Product_id = request.POST.get("Update_product_quantity")
         print(Product_id, "ID")
         Mode_of_Operations = request.POST.get("minus")
+        # models = [Mens, Kid, Women]
+        # for model in models:
+        #     try:
+        #         product = model.objects.filter(id=Product_id)
+        #         for details in product:
+        #             for detail in details.size.all():
+        #                 pass
+        #     except:
+        #         pass
+        product = Size.objects.filter(men_id=Product_id)
+        if not product:
+            product = Size.objects.filter(kid_id=Product_id)
+        if not product:
+            product = Size.objects.filter(women_id=Product_id)
+        print(product)
+        for detail in product:
+            print(detail.quantity)
         if Mode_of_Operations == "-":
             cart_session = request.session.get('cart_session', {})
             cart_session[Product_id] = cart_session.get(Product_id) - 1
             request.session['cart_session'] = cart_session
+            # if cart_session.get(Product_id) < detail.quantity:
+            #     details.stock = True
+            #     for model in models:
+            #         try:
+            #             updateStock = model.objects.filter(id=Product_id).update(stock=details.stock)
+            #         except:
+            #             pass
             if cart_session.get(Product_id) == 0:
                 del cart_session[Product_id]
         else:
-            models = [Mens, Kid, Women]
-            for model in models:
-                try:
-                    self.GetMaxQuantity = model.objects.filter(id=Product_id).values("max_quantity").get()
-                except:
-                    pass
             cart_session = request.session.get('cart_session', {})
-            if not cart_session.get(Product_id) == self.GetMaxQuantity["max_quantity"]:
+            if not cart_session.get(Product_id) == detail.quantity:
                 cart_session[Product_id] = cart_session.get(Product_id) + 1
                 request.session['cart_session'] = cart_session
+            else:
+                pass
+                # details.stock = False
+                # for model in models:
+                #     try:
+                #         updateStock = model.objects.filter(id=Product_id).update(stock=details.stock)
+                #     except:
+                #         pass
         return redirect("/cart/")
 
 
@@ -173,12 +239,21 @@ class RemoveItemView(View):
     def post(self, request, *args, **kwargs):
         GetRemoveItemId = request.POST.get("removeItem")
         cart_session = request.session.get('cart_session', {})
-        models = [Mens, Kid, Women]
+        models = [Mens, UniSex, Women]
         for model in models:
             try:
-                product = get_object_or_404(model, id=GetRemoveItemId)
-            except Http404:
+                product = model.objects.filter(id=GetRemoveItemId)
+                for details in product:
+                    pass
+            except:
                 pass
+        if not details.stock:
+            details.stock = True
+            for model in models:
+                try:
+                    updateStock = model.objects.filter(id=GetRemoveItemId).update(stock=details.stock)
+                except:
+                    pass
         if GetRemoveItemId in cart_session:
             del cart_session[GetRemoveItemId]
             request.session['cart_session'] = cart_session

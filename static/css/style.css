@@ -1,9 +1,3 @@
-/*begin-commonstyles library*//*!
- * froala_editor v4.0.6 (https://www.froala.com/wysiwyg-editor)
- * License https://froala.com/wysiwyg-editor/terms/
- * Copyright 2014-2021 Froala Labs
- */
-
 .fr-clearfix::after {
   clear: both;
   display: block;
@@ -83,7 +77,7 @@
     -khtml-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    break-after: always;
+    break-after: auto;
     page-break-after: always; }
   .fr-view .fr-file {
     position: relative; }
@@ -7175,6 +7169,9 @@ ul.u-text li:last-child {
 img.u-image,
 .u-video-poster {
   overflow: hidden;
+    margin: 5px 0px;
+    width: 100px;
+    height: 150px;
 }
 .u-back-image.u-image-contain,
 .u-image.u-image-contain {
@@ -7216,13 +7213,13 @@ section.u-image:not(.u-hover-box),
 .u-xl-mode .u-sheet {
   width: var(--theme-sheet-width-xl);
 }
-.u-xxl-mode .u-sheet {
-  width: var(--theme-sheet-width-xxl);
-}
+/*.u-xxl-mode .u-sheet {*/
+/*  width: var(--theme-sheet-width-xxl);*/
+/*}*/
 @media (min-width: 1400px) {
-  .u-sheet {
-    width: var(--theme-sheet-width-xxl) !important;
-  }
+  /*.u-sheet {*/
+  /*  width: var(--theme-sheet-width-xxl) !important;*/
+  /*}*/
 }
 @media (min-width: 1200px) {
   .u-xl-mode .u-sheet {

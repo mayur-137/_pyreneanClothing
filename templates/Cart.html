@@ -23,7 +23,7 @@
             <thead class="u-grey-10 u-table-header u-table-header-1">
               <tr style="height: 46px;">
                 <th class="u-border-1 u-border-grey-15 u-table-cell">Product </th>
-                <th class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-2">Price </th>
+                <th class="u-border-1 u-border-grey-15 u-table-cell">Size & Price </th>
                 <th class="u-border-1 u-border-grey-15 u-table-cell">Quantity </th>
                 <th class="u-border-1 u-border-grey-15 u-table-cell">Subtotal </th>
               </tr>
@@ -43,15 +43,15 @@
                   <img class="u-cart-product-image u-image u-image-round u-product-control u-radius-17"
                     style="mix-blend-mode: darken;" src="/{{item.picture}}">
                   <h2 class="u-cart-product-title u-product-control u-text u-text-1">
-                    <a class="u-product-title-link" href="#">{{item.name}}</a>
+                    <a class="u-product-title-link" href="/ProductDetails/{{item.slug}}">{{item.name}}</a>
                   </h2>
                 </td>
                 <td class="u-border-1 u-border-grey-15 u-table-cell">
                   <div class="u-cart-product-price u-product-control u-product-price u-product-price-1">
                     <div class="u-price-wrapper">
                       <div class="u-hide-price u-old-price"></div>
-                      <div class="u-price" style="font-weight: 700; font-size: 1rem;" id="{{item.slug}}_P_price">&#8377;
-                        {{item.price}} </div>
+                      <div class="u-price" style="font-weight: 700; font-size: 1rem;">&#8377;
+                        {{ item.size }} - {{item.price}} </div>
                     </div>
                   </div>
                 </td>

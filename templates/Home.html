@@ -14,182 +14,120 @@
         <div class="u-repeater u-repeater-1">
           {% for men in Mens %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
+          {% if not men.stock %}
+            <div class="ProductItem__LabelList">
+              <span class="ProductItem__Label ProductItem__Label--soldOut Heading Text--subdued">OUT OF STOCK</span>
+              </div>
+            {% endif %}
+          <a href="/ProductDetails/{{men.slug}}">
             <div class="u-container-layout u-similar-container u-container-layout-1">
-              <img alt=""
+              <img alt="" style="mix-blend-mode: darken"
                 class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-1"
                 data-image-width="1280" data-image-height="781"
                 src="{{men.picture}}">
-              <h5 class="u-text u-text-2">{{men.name|slice:"26"}}...</h5>
-              <p class="u-text u-text-3">{{men.description|slice:":25"}}...</p>
-              <form method="post" action="/add_to_cart/">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ men.id }}">
-              <button class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
-                Now</button></form>
-              <a href="/ProductDetails/{{men.slug}}"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
-                More</a>
+                <h6 class="" style="color: grey;margin: 5px 0px;">Pyrenean Clothing</h6>
+              <h5 class="u-text u-text-2" style="margin: 5px 0 0;">{{men.name|slice:"26"}}...</h5>
+                <span><strong>&#8377;{{ men.discounted_price }}</strong></span>
+                <span style="text-decoration: line-through; color: grey;">&#8377;{{men.price}}</span>
+                <span style="color: green">Discount {{ men.discount }}% off</span>
+            <div>Sizes:
+                <span>
+                    <strong>
+                        {% for size in Size %}
+                            {% if size.men_id == men.id %}
+                                {{ size.size }}
+                            {% endif %}
+                        {% endfor %}
+                    </strong>
+                </span>
             </div>
+            </div>
+          </a>
           </div>
           {% endfor %}
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-2">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-2"
-                data-image-width="905" data-image-height="1280"
-                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
-              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
-              <p class="u-text u-text-5">Advertising Manager</p>
-              <a href="/cart/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
-                More</a>
-            </div>
-          </div>
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-3">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-3"
-                data-image-width="1280" data-image-height="960"
-                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
-              <h5 class="u-text u-text-6">Adrian Scold</h5>
-              <p class="u-text u-text-7">Financial Director</p>
-              <a href="/cart/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
-                More</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </section>
   <section class="u-align-center u-clearfix u-grey-5 u-section-2" id="sec-848b">
     <div class="u-clearfix u-sheet u-sheet-1">
-      <h1 class="u-align-center u-text u-text-default u-text-1">Kides<br>
+      <h1 class="u-align-center u-text u-text-default u-text-1">UniSex<br>
       </h1>
       <div class="u-expanded-width u-list u-list-1">
         <div class="u-repeater u-repeater-1">
           {% for Kid in Kids %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
+          {% if not Kid.stock %}
+            <div class="ProductItem__LabelList">
+              <span class="ProductItem__Label ProductItem__Label--soldOut Heading Text--subdued">OUT OF STOCK</span>
+              </div>
+            {% endif %}
+          <a href="/ProductDetails/{{Kid.slug}}">
             <div class="u-container-layout u-similar-container u-container-layout-1">
-              <img alt=""
+              <img alt="" style="mix-blend-mode: darken"
                 class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-1"
                 data-image-width="1280" data-image-height="781"
                 src="{{Kid.picture}}">
               <h5 class="u-text u-text-2">{{Kid.name|slice:"26"}}...</h5>
-              <p class="u-text u-text-3">{{Kid.description|slice:":25"}}...</p>
-              <form method="post" action="/add_to_cart/">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ Kid.id }}">
-                <button  class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
-                  Now</button>
-              </form>
-              <a href="/ProductDetails/{{Kid.slug}}"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
-                More</a>
+                <span><strong>&#8377;{{ Kid.discounted_price }}</strong></span>
+                <span style="text-decoration: line-through; color: grey;">&#8377;{{Kid.price}}</span>
+                <span style="color: green">Discount {{ Kid.discount }}% off</span>
+            <div>Sizes:
+                <span>
+                    <strong>
+                        {% for size in Size %}
+                            {% if size.kid_id == Kid.id %}
+                                {{ size.size }}
+                            {% endif %}
+                        {% endfor %}
+                    </strong>
+                </span>
             </div>
+            </div>
+          </a>
           </div>
           {% endfor %}
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-2">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-2"
-                data-image-width="905" data-image-height="1280"
-                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
-              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
-              <p class="u-text u-text-5">Advertising Manager</p>
-              <a href="/cart/"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
-                More</a>
-            </div>
-          </div>
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-3">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-expanded-width-xs u-image u-image-default u-image-3"
-                data-image-width="1280" data-image-height="960"
-                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
-              <h5 class="u-text u-text-6">Adrian Scold</h5>
-              <p class="u-text u-text-7">Financial Director</p>
-              <a href="/cart/"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
-                More</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </section>
   <section class="u-align-center u-clearfix u-grey-5 u-section-3" id="sec-a181">
     <div class="u-clearfix u-sheet u-sheet-1">
-      <h1 class="u-align-center u-text u-text-default u-text-1">Womens</h1>
+      <h1 class="u-align-center u-text u-text-default u-text-1">Women</h1>
       <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
         <div class="u-repeater u-repeater-1">
           {% for women in Women %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
+          {% if not women.stock %}
+            <div class="ProductItem__LabelList">
+              <span class="ProductItem__Label ProductItem__Label--soldOut Heading Text--subdued">OUT OF STOCK</span>
+              </div>
+            {% endif %}
+          <a href="/ProductDetails/{{women.slug}}">
             <div class="u-container-layout u-similar-container u-container-layout-1">
-              <img alt=""
+              <img alt="" style="mix-blend-mode: darken"
                 class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-1"
                 data-image-width="1280" data-image-height="781"
                 src="{{women.picture}}">
               <h5 class="u-text u-text-2">{{women.name|slice:"26"}}...</h5>
-              <p class="u-text u-text-3">{{women.description|slice:":25"}}...</p>
-              <form method="post" action="/add_to_cart/">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ women.id }}">
-                <button
-                  class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy
-                  Now</button>
-              </form>
-              <a href="/ProductDetails/{{women.slug}}"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-2">View
-                More</a>
+                <span><strong>&#8377;{{ women.discounted_price }}</strong></span>
+                <span style="text-decoration: line-through; color: grey;">&#8377;{{women.price}}</span>
+                <span style="color: green">Discount {{ women.discount }}% off</span>
+            <div>Sizes:
+                <span>
+                    <strong>
+                        {% for size in Size %}
+                            {% if size.women_id == women.id %}
+                                {{ size.size }}
+                            {% endif %}
+                        {% endfor %}
+                    </strong>
+                </span>
             </div>
+            </div>
+          </a>
           </div>
           {% endfor %}
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-2">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-2"
-                data-image-width="905" data-image-height="1280"
-                src="{% static 'images/05cb679fe512dec2069b25b9270c76c01f31be7ee4e7319d54120f0d1fece894fb8eb07e1dc3c13a0bdd4d836278a7200e38ed594707ed4997bced_1280.png' %}">
-              <h5 class="u-text u-text-4">Phoebe Nelson</h5>
-              <p class="u-text u-text-5">Advertising Manager</p>
-              <a href="/cart/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-4">View
-                More</a>
-            </div>
-          </div>
-          <div class="u-align-center u-container-style u-list-item u-repeater-item">
-            <div class="u-container-layout u-similar-container u-container-layout-3">
-              <img alt=""
-                class="u-expanded-width-lg u-expanded-width-md u-expanded-width-xl u-image u-image-default u-image-3"
-                data-image-width="1280" data-image-height="960"
-                src="{% static 'images/0b279506ac6f7a4eed5d5be3c52aa24ea17c6b42e44b58e514d36c39352c8ae66d9ef1216c0538e4e36aade49f5af952f34887dc936ffebda0a745_1280.jpg' %}">
-              <h5 class="u-text u-text-6">Adrian Scold</h5>
-              <p class="u-text u-text-7">Financial Director</p>
-              <a href="/cart/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Buy
-                Now</a>
-              <a href="/ProductDetails/"
-                class="u-align-center-lg u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-active-black u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-hover-white u-none u-radius-9 u-text-active-black u-text-body-color u-text-hover-black u-btn-6">View
-                More</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>

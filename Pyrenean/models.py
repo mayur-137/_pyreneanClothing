@@ -1,14 +1,5 @@
 from django.db import models
 import uuid
-from multiupload.fields import MultiFileField
-
-SIZE_CHOICES = (
-    ('Small', 'S'),
-    ('Medium', 'M'),
-    ('Large', 'L'),
-    ('Extra Large', 'XL'),
-    ('Very Extra Large', 'XXL')
-)
 
 
 class Mens(models.Model):
@@ -16,12 +7,15 @@ class Mens(models.Model):
     name = models.CharField(max_length=55)
     description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Medium')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
-    max_quantity = models.IntegerField(default=0)
+    stock = models.BooleanField(default=True)
     picture = models.ImageField(upload_to="static/images/Mens/", default="")
+    picture_1 = models.ImageField(upload_to="static/images/Mens/", default="")
     created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} (Price: {self.slug})"
 
 
 class Women(models.Model):
@@ -29,51 +23,61 @@ class Women(models.Model):
     name = models.CharField(max_length=55)
     description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Medium')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
-    max_quantity = models.IntegerField(default=0)
+    stock = models.BooleanField(default=True)
     picture = models.ImageField(upload_to="static/images/Womens/")
+    picture_1 = models.ImageField(upload_to="static/images/Womens/", default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.name} (Price: {self.slug})"
 
-class Kid(models.Model):
+
+class UniSex(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=55)
     description = models.TextField(max_length=255)
     price = models.IntegerField()
-    size = models.CharField(max_length=20, choices=SIZE_CHOICES, default='Small')
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
-    max_quantity = models.IntegerField(default=0)
-    picture = models.ImageField(upload_to="static/images/Kides/")
+    picture = models.ImageField(upload_to="static/images/UniSex/")
+    picture_1 = models.ImageField(upload_to="static/images/UniSex/", default="")
     created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} (Price: {self.slug})"
 
 
 class CartModel(models.Model):
-    id = models.UUIDField(primary_key=True)
-    name = models.CharField(max_length=55)
-    description = models.TextField(max_length=255)
-    price = models.IntegerField()
-    size = models.CharField(max_length=20)
-    discount = models.PositiveIntegerField()
-    slug = models.SlugField(unique=True, max_length=255)
-    max_quantity = models.IntegerField(default=0)
-    picture = models.ImageField(upload_to="static/images/CartModules/")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product_id = models.CharField(max_length=100, null=False)
+    size_id = models.CharField(max_length=100, null=True, default=None)
+    # name = models.CharField(max_length=55)
+    email = models.EmailField(unique=False, max_length=100, default="")
+    # description = models.TextField(max_length=255)
+    price = models.IntegerField(default=0)
+    # discount = models.PositiveIntegerField()
+    # slug = models.SlugField(unique=True, max_length=255)
+    # stock = models.BooleanField(default=True)
+    size = models.CharField(max_length=4, default="", null=True)
+    quantity = models.IntegerField(default=0, null=True)
+    # picture = models.ImageField(upload_to="static/images/CartModules/")
+    # picture_1 = models.ImageField(upload_to="static/images/CartModules/", default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class ContactModel(models.Model):
     id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=25)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     message = models.TextField(max_length=4000)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class user_data(models.Model):
     id = models.AutoField
-    email = models.EmailField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
     building = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
@@ -82,7 +86,20 @@ class user_data(models.Model):
     phone_number = models.CharField(max_length=100)
 
 
-class ProductBuyDetails(models.Model):
-    id = models.AutoField
-    email = models.EmailField()
-    slug = models.SlugField(unique=True, max_length=255)
+class Size(models.Model):
+    SIZE_CHOICES = [
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
+        ('XL', 'Extra Large'),
+        ('XXL', 'Extra Extra Large'),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    size = models.CharField(max_length=255, choices=SIZE_CHOICES)
+    quantity = models.IntegerField(default=0)
+    men = models.ForeignKey(Mens, on_delete=models.SET_NULL, db_column="", null=True, blank=True)
+    kid = models.ForeignKey(UniSex, on_delete=models.SET_NULL, db_column="", null=True, blank=True)
+    women = models.ForeignKey(Women, on_delete=models.SET_NULL, db_column="", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.size} (Quantity: {self.quantity})"

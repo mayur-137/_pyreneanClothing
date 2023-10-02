@@ -12,6 +12,7 @@ urlpatterns = [
     path('cart/', CartView.as_view(), name="cart"),
     path('submit/', ContactFormView.as_view(), name="submit"),
     path('ProductDetails/<slug:slug>', ProductDetailsView.as_view(), name="ProductDetails"),
+    path('ProductDetails/<slug:slug>/<str:size>/<str:id>', ProductDetailsView.as_view(), name="ProductDetails"),
     path("user_data/", views.user_data_function, name="user_data"),
     path("register/", views.register_request, name="register"),
     path("login/", views.login_request, name="login"),
