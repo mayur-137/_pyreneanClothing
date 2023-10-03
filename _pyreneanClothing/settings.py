@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Pyrenean.apps.PyreneanConfig',
+    'crispy_forms',
+
 ]
 
 MIDDLEWARE = [

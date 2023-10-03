@@ -103,3 +103,19 @@ class Size(models.Model):
 
     def __str__(self):
         return f"{self.size} (Quantity: {self.quantity})"
+
+
+class user_email(models.Model):
+    email = models.CharField(max_length=100)
+    otp = models.IntegerField()
+    
+class user_data(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(max_length=100)
+    building = models.CharField(max_length=100)
+    street = models.CharField(max_length=100)
+    area = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100,default="GUJRAT")
+    phone_number = models.CharField(max_length=100)
