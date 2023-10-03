@@ -106,6 +106,7 @@ class CustomerServiceView(TemplateView):
 class AddToCartView(View):
 
     def post(self, request, *args, **kwargs):
+        print("addd-----------too-----------cart")
         product_id = request.POST.get('product_id')
         current_user = request.user
         email = current_user.email
@@ -115,15 +116,20 @@ class AddToCartView(View):
             product = Size.objects.filter(kid_id=product_id)
         if not product:
             product = Size.objects.filter(women_id=product_id)
-        print(product, "product")
+        print(product, "product",product_id)
+        
         checkCart = CartModel.objects.filter(product_id=product_id)
         print(checkCart, "checkCart")
+        
         if not checkCart:
+            print("checkcart")
             addCart = CartModel(product_id=product_id, email=email).save()
         for detail in product:
             print(detail.quantity, "quantity11111111", detail.id, product_id)
+        
         cart_session = request.session.get('cart_session', {})
         print(cart_session, "11")
+        
         if cart_session.get(product_id) is None or cart_session.get(product_id) < detail.quantity:
             print("hey")
             cart_session[product_id] = cart_session.get(product_id, 0) + 1
@@ -142,6 +148,7 @@ class CartView(View):
     model = CartModel
 
     def get(self, request, *args, **kwargs):
+        print("cartt------------vieww")
         # global product
         products_in_cart = []
         products_list = []
@@ -157,12 +164,13 @@ class CartView(View):
                     products_in_cart.append(itm)
             except:
                 pass
+        print(products_in_cart,"products in cart")
         for products in products_in_cart:
             for product in products:
                 product.subtotal = product.price * cart[str(product.id)]
                 product_total = product.subtotal + product_total
                 product.product_quantity = str(cart[str(product.id)])
-                print(getSize_id, getSize, product.id, "checking")
+                print(getSize, product.id, "checking")
                 if getSize is None and slug is None:
                     messages.error(request, "Please select a size first")
                     return redirect(f"/ProductDetails/{slug}")
@@ -172,9 +180,15 @@ class CartView(View):
                     print(checkCart, "checkCart11")
                 for mysize in checkCart:
                     pass
-                if str(mysize.id) == str(getSize_id):
-                    print(mysize.size, "myid")
+                
+                print(mysize.id,getSize_id,"compare")
+                print(mysize.size,getSize,"compare")
+
+                if str(mysize.size) == str(getSize):
+                    print(mysize.size, getSize_id,"myid")
+                    print(product.id,"product----------id")
                     updateCart = CartModel.objects.filter(product_id=product.id).update(size_id=mysize.id, size=mysize.size, quantity=mysize.quantity)
+                    print("done")
                     # if checkCart:
                     #     checkSize = Size.objects.filter(id=getSize_id)
                     #     checkCart.update(size=getSize)
