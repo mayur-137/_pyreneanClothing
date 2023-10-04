@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse, Http404
 from django.views.generic.edit import CreateView
-from .models import Mens, Women, UniSex, ContactModel, user_data, CartModel, Size,user_email
+from .models import Mens, Women, UniSex, ContactModel, user_data, CartModel, Size,user_email,cart_data,final_order
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +10,6 @@ from django.contrib.auth.models import User, auth
 from django.views import View
 from django.contrib import messages
 import random ,smtplib
-
 global product_total, getSize_id, getSize, slug
 
 
@@ -170,30 +169,104 @@ class CartView(View):
                 product.subtotal = product.price * cart[str(product.id)]
                 product_total = product.subtotal + product_total
                 product.product_quantity = str(cart[str(product.id)])
-                print(getSize, product.id, "checking")
-                if getSize is None and slug is None:
+            
+            #dhruv
+            try:  
+                print(getSize,getSize_id,product.id, "checking")
+                print("frommm----------product-------page") 
+                if getSize is None and getSize_id is None:
                     messages.error(request, "Please select a size first")
                     return redirect(f"/ProductDetails/{slug}")
                 else:
                     product.size = getSize
-                    checkCart = Size.objects.filter(size=getSize)
-                    print(checkCart, "checkCart11")
-                for mysize in checkCart:
-                    pass
-                
-                print(mysize.id,getSize_id,"compare")
-                print(mysize.size,getSize,"compare")
+                 
+                print(product.id,getSize_id,"compare")
+                print(product.id,getSize,"compare")
 
-                if str(mysize.size) == str(getSize):
-                    print(mysize.size, getSize_id,"myid")
-                    print(product.id,"product----------id")
-                    updateCart = CartModel.objects.filter(product_id=product.id).update(size_id=mysize.id, size=mysize.size, quantity=mysize.quantity)
-                    print("done")
+                # if str(mysize.size) == str(getSize):
+                #     print(mysize.size, getSize_id,"myid")
+                #     print(product.id,"product----------id")
+                #     updateCart = CartModel.objects.filter(product_id=product.id).update(size_id=mysize.id, size=mysize.size, quantity=mysize.quantity)
+                #     print("done")
                     # if checkCart:
                     #     checkSize = Size.objects.filter(id=getSize_id)
                     #     checkCart.update(size=getSize)
                 products_list.append(product)
 
+                try:
+                    print("products",products_list)
+                    email = "ladoladhruv5218@gmail.com"
+                #     email = request.user.email
+                    # print(email, "email")
+                    order_product_data = []
+                    for i in products_list:
+                        print("item",i.name,i.price,i.subtotal,i.product_quantity,i.product.id)
+                        products_detail = str(str(i.name) + "#" + str(i.price)+"#"+(str(product.id))+"#"+(str(i.price)) +"#"+(str(i.subtotal)))
+                        order_product_data.append(products_detail)
+                        # order_product_data += str(","+products_detail + "\n")
+                    print("order_prodyct_data",order_product_data)
+                    try:
+                        email = "ladoladhruv5218@gmail.com"
+                        c = user_data.objects.get(email=email)
+                        print(c, "cccccccccc")
+                        address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(c.pincode) + " , " + str(c.city) + " , " + str(c.state)
+                        
+                        if cart_data.objects.filter(email=email).exists():
+                            if order_product_data != "":
+                                print("user data is there")
+                                user = cart_data.objects.get(email=email)
+                                user.products_detail = (order_product_data)
+                                user.order_total = product_total
+                                print(address)
+                                user.address_1 = address
+                                user.save()
+                                print("user data changged render to cart")
+                                print(products_list)
+                                # products_list = []
+                                # product_total = 20030
+                                return render(request, 'Cart.html', {'products': products_list, 'product_total': product_total})
+
+                            else:
+                                pass
+                        else:
+                            if order_product_data != "":
+                                print("user data is not there")
+                                b = cart_data(email=email, address_1=address, products_detail=order_product_data,
+                                        order_total=product_total)
+                                cart_data.save(b)
+                                print("user data saved")
+                            else:
+                                pass
+                        # return render(request, 'cart_checkout/Cart.html', {'products': products_list, 'product_total': product_total})
+                    
+                    except:
+                        context = "you have to add your address first"
+                        print("you have to add your address first-------------------------------")
+                        messages.success(request,(context))
+                        after_edit = (f"ProductDetails/{slug}")
+                        print(after_edit,"after edit")
+                        request.session['edit_redirect'] = after_edit
+                        return redirect('/edit_user_data/',{"context":context})
+                except:
+                    context = "you have't login yet"
+                    print("you have't login yet-------------------------------------")
+                    messages.success(request,(context))
+                    return redirect('/login/',{"context":context})
+            except:
+                print("not from product page------------------")
+                product_total = 0
+                products_list = []
+                return render(request, 'cart.html', {'products': products_list, 'product_total': product_total})
+
+        #         context = "you have to add your address first"
+        #         print("you have to add your address first")
+        #         messages.success(request,(context))
+        #         return redirect('/edit_user_data/',{"context":context})
+            
+        # except:
+        #     print("no log in user")
+        #     return render(request, 'cart_checkout/Cart.html')
+        
         return render(request, 'cart.html', {'products': products_list, 'product_total': product_total})
 
 
@@ -498,9 +571,8 @@ class user_datas():
     from .models import user_data  # Make sure the import path is correct
     
     def user_data_function(request):
-        current_user = request.user
-        email = current_user.email
-        if email:
+        try:
+            email  =  request.user.email
             try:
                 print("user data already stored ")
                 username = (User.objects.get(email=email)).username
@@ -519,8 +591,9 @@ class user_datas():
 
             except:
                 return render(request, 'user_data/user_data.html')
-        else:
-            return render(request, 'user_data/user_data.html')
+        except:
+            print('no user found')
+            return redirect('/login/',{"context":"you have't logged in "})
 
 
     @csrf_exempt
@@ -548,23 +621,18 @@ class user_datas():
                 user.phone_number = phone_number
                 user.state = state
                 user.save()
+                
+                edit_change = request.session.get('edit_redirect')
+                print(edit_change,"edit_change")
+                # return redirect('/ProductDetails/2')
+                return redirect('/{}'.format(edit_change))
+        
             else:
                 print("user data is not saved")
                 b = user_data(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
                             phone_number=phone_number, state=state)
                 user_data.save(b)
-                print("saved new data")
-                return redirect('/test/')
-            
-            edit_change = request.session.get('edit_redirect')
-            return redirect('/{}/'.format(edit_change))
-        
-            # if edit_change == "login":
-            #     return redirect('/login/')
-            # elif edit_change == "user_data":
-            #     return redirect('/user_data/')
-            # else:
-            #     return redirect('/test/')
+                return redirect('/')
             
         else:
             print("GET")

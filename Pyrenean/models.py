@@ -119,3 +119,21 @@ class user_data(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100,default="GUJRAT")
     phone_number = models.CharField(max_length=100)
+
+
+
+class cart_data(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    email = models.EmailField()
+    address_1 = models.CharField(max_length=1000,default="INDIA")
+    # product_picture = models.ImageField(upload_to="static/images/VitaminCapsules/",default="")
+    products_detail = models.CharField(max_length=1000,default='empty')
+    order_total = models.IntegerField()
+
+class final_order(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    email = models.EmailField()
+    address = models.CharField(max_length=1000,default="INDIA")
+    products_detail = models.CharField(max_length=1000,default='empty')
+    order_total = models.IntegerField()
+    shiprocket_dashboard = models.BooleanField(default=False)    
