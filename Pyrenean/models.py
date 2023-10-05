@@ -16,6 +16,13 @@ class Mens(models.Model):
 
     def __str__(self):
         return f"{self.name} (Price: {self.slug})"
+    
+    def get_sizes(self):
+        # Use the related_name defined in the ForeignKey to access the sizes
+        return self.size_set.all()
+
+    def __str__(self):
+        return f"{self.name} (Price: {self.slug})"
 
 
 class Women(models.Model):

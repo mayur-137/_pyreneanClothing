@@ -27,14 +27,14 @@ urlpatterns = [
     path('edit_user_data/',views.user_datas.edit_user_data,name="edit_user_data"),
     path("user_data/", views.user_datas.user_data_function, name= "user_data"),
     
-
-
-
     # path('edit_user_data/', views.edit_user_data, name="edit_user_data"),
     path('customerService/', CustomerServiceView.as_view(), name="customerService"),
     path('add_to_cart/', AddToCartView.as_view(), name='add_to_cart'),
     path('updateCart/', Update_cart_view.as_view(), name="update cart"),
     path('removeItem/', RemoveItemView.as_view(), name='removeItem'),
+
+    path('initiate_payment/',views.razor_payment.homepage,name="initiate_payment"),
+    path('initiate_payment/paymenthandler/', views.razor_payment.paymenthandler, name='paymenthandler'),
 
 
 

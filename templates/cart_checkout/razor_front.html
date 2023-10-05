@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GFG</title>
+    <style>       
+      @use postcss-preset-env {
+  stage: 0;
+}
+
+:root {
+  --color-background: #fae3ea;
+  --color-primary: #fc8080;
+  --font-family-base: Poppin, sans-serif;
+  --font-size-h1: 1.25rem;
+  --font-size-h2: 1rem;
+}
+
+
+* {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  display: grid;
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+  margin: 0;
+  min-block-size: 100vh;
+  padding: 5vmin;
+  place-items: center;
+}
+
+address {
+  font-style: normal;
+}
+
+button {
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: 1.2;
+  margin-block: 0 1.5em;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  line-height: 1.2;
+  margin-block: 12px 0.5em;
+}
+
+legend {
+  font-weight: 600;
+  margin-block-end: 0.5em;
+  padding: 0;
+}
+
+input {
+  border: 0;
+  color: inherit;
+  font: inherit;
+}
+
+input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+tbody {
+  color: #b4b4b4;
+}
+
+td {
+  padding-block: 0.125em;
+}
+
+tfoot {
+  border-top: 1px solid #b4b4b4;
+  font-weight: 600;
+}
+
+.align {
+  display: grid;
+  place-items: center;
+}
+
+.button {
+  align-items: center;
+  background-color: var(--color-primary);
+  border-radius: 999em;
+  color: #fff;
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+  padding-block: 0.75em;
+  padding-inline: 1em;
+  transition: 0.3s;
+}
+
+.button:focus,
+.button:hover {
+  background-color: #e96363;
+}
+
+.button--full {
+  inline-size: 100%;
+}
+.change--edit {
+  background-color: pink;
+  inline-size: 100%;
+}
+
+.card {
+  border-radius: 1em;
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 1em;
+}
+
+.form {
+  display: grid;
+  gap: 2em;
+}
+
+.form__radios {
+  display: grid;
+  gap: 1em;
+}
+
+.form__radio {
+  align-items: center;
+  background-color: #fefdfe;
+  border-radius: 1em;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
+  display: flex;
+  padding: 1em;
+}
+
+.form__radio label {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 1em;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  padding-block: 0.5em;
+  padding-inline: 1em;
+}
+
+.icon {
+  block-size: 1em;
+  display: inline-block;
+  fill: currentColor;
+  inline-size: 1em;
+  vertical-align: middle;
+}
+
+.iphone {
+  background-color: #fbf6f7;
+  background-image: linear-gradient(to bottom, #fbf6f7, #fff);
+  border-radius: 2em;
+  block-size: 812px;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
+  inline-size: 375px;
+  overflow: auto;
+  padding: 2em;
+}
+
+  .btn_container {
+    padding: 20px;
+    text-align: center;
+  }
+  .btn {
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+    background-color: #ffaaa7;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+    </style>
+  </head>
+  <body>
+    <div class="iphone">
+      <header class="header">
+        <h1>Checkout</h1>
+      </header>
+    
+      <form action="https://httpbin.org/post" class="form" method="POST">
+        {% csrf_token %}
+        <div>
+          <h2>Address</h2>
+    
+          <div class="card">
+            <address>
+              {{ address }}
+            </address>
+          </div>
+        </div>
+        <form>
+          <div>
+            <button class="button change--edit "><a href="/user_data/">change or edit address</a></button>
+            </div>
+        </form>          
+        
+        <div>
+          <h2>Shopping Bill</h2>
+    
+          <table>
+            <tbody>
+              <tr>
+                <td>Shipping fee</td>
+                <td align="right">$5.43</td>
+              </tr>
+              <tr>
+                <td>Discount 10%</td>
+                <td align="right">-$1.89</td>
+              </tr>
+              <tr>
+                <td>itmes</td>
+                <td align="right">{{order_product}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total</td>
+                <td align="right"> {{ order_total }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+    
+        <div>
+          <button class="button button--full" type="submit"  id="pay-btn" ><svg class="icon">
+              <use xlink:href="#icon-shopping-bag" /> 
+            </svg>Buy Now</button>
+        </div>
+      </form>
+    </div>
+  </body>
+   
+  <!-- Razorpay's Javascript code. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+       
+      // Enter the Key ID generated from the Dashboard
+      key: "{{ razorpay_merchant_key }}",
+       
+      // Amount is in currency subunits.
+      // Default currency is INR. Hence,
+      // 50000 refers to 50000 paise
+      amount: "{{ razorpay_amount }}",
+      currency: "{{ currency }}",
+       
+      // Your/store name.
+      name: "Vittuse",
+       
+      // Pass the `id` obtained in the response of Step 1
+      order_id: "{{ razorpay_order_id }}",
+      callback_url: "{{ callback_url }}",
+    };
+     
+    // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+     
+    // add event listener to the payment button.
+    document.getElementById("pay-btn").onclick = function (e) {
+      rzp1.open();
+      e.preventDefault();
+    };
+
+   
+  </script>
+</html>
