@@ -10,10 +10,12 @@
 
 
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert" role="alert"> {{ message }} </div>
-    {% endfor %}
+{% if not user.is_authenticated  %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert" role="alert"> {{ message }} </div>
+        {% endfor %}
+    {% endif %}
 {% endif %}
   <section class="u-clearfix u-container-align-center-xs u-section-1" id="sec-3aaa">
     <div class="u-clearfix u-sheet u-sheet-1">
@@ -111,7 +113,7 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
            <div class="u-product-size-1">
             Sizes:
             {% for size in Size %}
-                {% if size.men_id == item.id or size.kid_id == item.id or size.women_id == item.id %}
+                {% if size.product_id == item.id %}
                     <form action="/ProductDetails/{{ item.slug }}/size={{ size.size }}/id={{ size.id }}" method="get">
                     {% csrf_token %}
                     <button id="u-btn-size" class="u-btn-size" type="submit" name="size" value="{{ size.size }}">{{ size.size }}</button>
@@ -131,7 +133,7 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 
           {% endfor %}
         </div>
-      </div><!--/product_item--><!--/product-->
+      </div>
     </div>
   </section>
 

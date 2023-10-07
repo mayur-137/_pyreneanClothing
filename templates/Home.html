@@ -12,7 +12,8 @@
       </h1>
       <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
         <div class="u-repeater u-repeater-1">
-          {% for men in Mens %}
+          {% for men in Products %}
+              {% if men.category == "Mens" %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
           {% if not men.stock %}
             <div class="ProductItem__LabelList">
@@ -34,7 +35,7 @@
                 <span>
                     <strong>
                         {% for size in Size %}
-                            {% if size.men_id == men.id %}
+                            {% if size.product_id == men.id %}
                                 {{ size.size }}
                             {% endif %}
                         {% endfor %}
@@ -44,6 +45,7 @@
             </div>
           </a>
           </div>
+              {% endif %}
           {% endfor %}
         </div>
       </div>
@@ -55,7 +57,8 @@
       </h1>
       <div class="u-expanded-width u-list u-list-1">
         <div class="u-repeater u-repeater-1">
-          {% for Kid in Kids %}
+          {% for Kid in Products %}
+              {% if Kid.category == "UniSex" %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
           {% if not Kid.stock %}
             <div class="ProductItem__LabelList">
@@ -76,7 +79,7 @@
                 <span>
                     <strong>
                         {% for size in Size %}
-                            {% if size.kid_id == Kid.id %}
+                            {% if size.product_id == Kid.id %}
                                 {{ size.size }}
                             {% endif %}
                         {% endfor %}
@@ -86,6 +89,7 @@
             </div>
           </a>
           </div>
+              {% endif %}
           {% endfor %}
         </div>
       </div>
@@ -96,7 +100,8 @@
       <h1 class="u-align-center u-text u-text-default u-text-1">Women</h1>
       <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-list u-list-1">
         <div class="u-repeater u-repeater-1">
-          {% for women in Women %}
+          {% for women in Products %}
+              {% if women.category == "Women" %}
           <div class="u-align-center u-container-style u-list-item u-repeater-item">
           {% if not women.stock %}
             <div class="ProductItem__LabelList">
@@ -117,7 +122,7 @@
                 <span>
                     <strong>
                         {% for size in Size %}
-                            {% if size.women_id == women.id %}
+                            {% if size.product_id == women.id %}
                                 {{ size.size }}
                             {% endif %}
                         {% endfor %}
@@ -127,6 +132,7 @@
             </div>
           </a>
           </div>
+              {% endif %}
           {% endfor %}
         </div>
       </div>

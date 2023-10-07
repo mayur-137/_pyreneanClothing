@@ -5,48 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_LtaCB5W.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_NfY3ibu.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_Z41SPN7.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_cv0qBj1.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_do3PdnJ.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_ekBLZ2m.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_hUebCpm.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/0fd3416c_k1Egq4v.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/68f64b9d.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/68f64b9d_Pj5GcBq.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/8ad73f3c.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/8ad73f3c_GtekSEY.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/bundle_banner_desktop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Mens/bundle_banner_desktop_BtnFRFC.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/Womens/bundle_banner_desktop.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pyrenean/migrations/0006_remove_size_kid_remove_size_men_remove_size_women_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Product_images/amazing-animal-beautiful-beautifull.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/Product_images/amazing-animal-beautiful-beautifull_YacHxS5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0002_remove_cartmodel_color_remove_kides_color_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0003_alter_cartmodel_description_alter_kides_description_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0004_alter_cartmodel_picture.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0005_alter_cartmodel_picture.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0006_remove_mens_picture.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0007_mens_picture.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0008_rename_kides_kid_rename_womens_women.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0009_rename_quantity_cartmodel_max_quantity_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0010_alter_cartmodel_id_alter_contactmodel_id_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0011_alter_kid_id_alter_mens_id_alter_women_id.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/templatetags/cart_extras.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_pyreneanClothing/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/Home.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Home.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/Product-Details.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/Product-Details.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_pyreneanClothing/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/_pyreneanClothing/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Cart.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Product-Details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/cart_checkout/Cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cart_checkout/Cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forget/forget.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forget/forget.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forget/forget_username.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forget/forget_username.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forget/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forget/reset_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +58,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;developemnt&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;cart__data&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -167,6 +145,8 @@
       <workItem from="1696179214483" duration="6402000" />
       <workItem from="1696185855685" duration="754000" />
       <workItem from="1696225042968" duration="2625000" />
+      <workItem from="1696688112600" duration="272000" />
+      <workItem from="1696692781813" duration="13029000" />
     </task>
     <servers />
   </component>

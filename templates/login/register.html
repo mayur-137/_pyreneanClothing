@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 {% block content %} 
 
-{% load crispy_forms_tags %} 
-<!-- Created By CodingLab - www.codinglabweb.com -->
+{% load crispy_forms_tags %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8">
@@ -21,18 +20,10 @@
             <span class="details">Full Name</span>
             <input type="text" placeholder="Enter your name" required name="username">
           </div>
-          {% comment %} <div class="input-box">
-            <span class="details">Username</span>
-            <input type="text" placeholder="Enter your username" required>
-          </div> {% endcomment %}
           <div class="input-box">
             <span class="details">Email</span>
             <input type="email" placeholder="Enter your email" required name="email">
           </div>
-          {% comment %} <div class="input-box">
-            <span class="details">Phone Number</span>
-            <input type="text" placeholder="Enter your number" required>
-          </div> {% endcomment %}
           <div class="input-box">
             <span class="details">Password</span>
             <input type="text" placeholder="Enter your password" required name="password">
@@ -42,26 +33,6 @@
             <input type="text" placeholder="Confirm your password" required>
           </div>
         </div>
-        {% comment %} <div class="gender-details">
-          <input type="radio" name="gender" id="dot-1">
-          <input type="radio" name="gender" id="dot-2">
-          <input type="radio" name="gender" id="dot-3">
-          <span class="gender-title">Gender</span>
-          <div class="category">
-            <label for="dot-1">
-            <span class="dot one"></span>
-            <span class="gender">Male</span>
-          </label>
-          <label for="dot-2">
-            <span class="dot two"></span>
-            <span class="gender">Female</span>
-          </label>
-          <label for="dot-3">
-            <span class="dot three"></span>
-            <span class="gender">Prefer not to say</span>
-            </label>
-          </div>
-        </div> {% endcomment %}
         <div class="button">
           <input type="submit" value="Register">
           <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
@@ -73,20 +44,3 @@
 </body>
 {% endblock %}
 </html>
-
-{% comment %} {% block content %} 
-
-{% load crispy_forms_tags %}         
-
-<!--Register--> 
-<div class="container py-5">
-	<h1>Register</h1>
-	<form method="POST">
-        {% csrf_token %}
-		{{ register_form|crispy }}                    
-		<button class="btn btn-primary" type="submit">Register</button>
-	</form>
-	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
-</div>
-
-{% endblock %} {% endcomment %}

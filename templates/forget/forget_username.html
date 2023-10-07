@@ -11,16 +11,19 @@
 	<form action="/forget_username/" method="post">
 	{% csrf_token %}
 	<div class="row">
-		<h1>Forgot Password</h1>
-		<h6 class="information-text">Enter your registered email to reset your password.</h6>
+		<h1>Forgot UserName</h1>
+		<h6 class="information-text">Enter your registered email to remember your Username.</h6>
 		<div class="form-group">
 			<input type="email" name="email" id="email">
+            <p>
+                <label for="username">Email</label>
+            </p>
 			<button onclick="showSpinner()" type="submit" >send mail</button>
 		</div>
 		<div class="footer">
 			<h5>New here? <a href="/register/">Sign Up.</a></h5>
 			<h5>Already have an account? <a href="/login/">Log In.</a></h5>
-			<p class="information-text"><span class="symbols" title="Lots of love from me to YOU!">&hearts; </span><a href="https://www.facebook.com/adedokunyinka.enoch" target="_blank" title="Connect with me on Facebook">Yinka Enoch Adedokun</a></p>
+			<p class="information-text"><span class="symbols" title="Lots of love from me to YOU!">&hearts; </span><a href="https://instagram.com/_pyrenean_?igshid=MzRlODBiNWFlZA==" target="_blank" title="Connect with me on Instagram">Pyrenean Clothing</a></p>
 		</div>
 	</div>
 </form>
