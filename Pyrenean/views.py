@@ -125,6 +125,34 @@ class CartView(View):
                 product_total = product.subtotal + product_total
                 product.product_quantity = str(cart[str(product.id)])
                 products_list.append(product)
+
+        order_product_data = []
+        for i in products_list:
+            products_detail = str(str(i.name) + "#" + str(i.price)+ "#" +str(i.product_quantity) + "#" +str(i.subtotal))
+            order_product_data.append(products_detail)
+        
+        email =  request.user.email
+        
+        if cart_data.objects.filter(email=email).exists():
+            if order_product_data != "":
+                user = cart_data.objects.get(email=email)
+                user.products_detail = order_product_data
+                user.order_total = product_total
+                user.save()
+                return render(request, 'cart_checkout/Cart.html',
+                                {'products': products_list, 'product_total': product_total})
+            else:
+                pass
+        else:
+            if order_product_data != "":
+                b = cart_data(email=email, products_detail=order_product_data,
+                                order_total=product_total)
+                cart_data.save(b)
+                return render(request, 'cart_checkout/Cart.html',
+                                {'products': products_list, 'product_total': product_total})
+            else:
+                pass
+
         return render(request, 'cart_checkout/cart.html',
                       {'products': products_list, 'product_total': product_total})
         try:
@@ -428,8 +456,10 @@ class user_datas:
             try:
                 print("user data already stored ")
                 username = (User.objects.get(email=email)).username
-                phone_number = user_data.objects.get(email=email).phone_number
+                print("111")
                 building = user_data.objects.get(email=email).building
+                print(building)
+                phone_number = user_data.objects.get(email=email).phone_number
                 street = (user_data.objects.get(email=email)).street
                 area = (user_data.objects.get(email=email)).area
                 pincode = (user_data.objects.get(email=email)).pincode
@@ -460,6 +490,15 @@ class user_datas:
             city = request.POST['city']
             state = request.POST['state']
             phone_number = request.POST['phone_number']
+            address = str(str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(state) + ',' + str(phone_number))
+            print(address)
+            if cart_data.objects.filter(email=email).exists():
+                user = cart_data.objects.get(email=email)
+                user.address_1 = address
+                user.save()
+            else:
+                b = cart_data(email=email,address_1=address)
+                cart_data.save(b)
 
             if user_data.objects.filter(email=email).exists():
                 print("your data is saved")
@@ -476,14 +515,39 @@ class user_datas:
                 edit_change = request.session.get('edit_redirect')
                 print(edit_change, "edit_change")
                 # return redirect('/ProductDetails/2')
-                return redirect('/{}'.format(edit_change))
+
+                return redirect('/{}/'.format(edit_change))
 
             else:
                 print("user data is not saved")
                 b = user_data(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
                               phone_number=phone_number, state=state)
                 user_data.save(b)
-                return redirect('/')
+                edit_change = request.session.get('edit_redirect')
+                if edit_change == "initiate_payment":
+                    return redirect('/{}/'.format(edit_change))
+                else:
+                    return redirect('/'.format(edit_change))
+
+            if cart_data.objects.filter(email=email).exists():
+                if order_product_data != "":
+                    user = cart_data.objects.get(email=email)
+                    user.products_detail = order_product_data
+                    user.order_total = product_total
+                    user.save()
+                    return render(request, 'cart_checkout/Cart.html',
+                                    {'products': products_list, 'product_total': product_total})
+                else:
+                    pass
+            else:
+                if order_product_data != "":
+                    b = cart_data(email=email, products_detail=order_product_data,
+                                    order_total=product_total)
+                    cart_data.save(b)
+                    return render(request, 'cart_checkout/Cart.html',
+                                    {'products': products_list, 'product_total': product_total})
+                else:
+                    pass
 
         else:
             print("GET")
@@ -642,52 +706,128 @@ class razor_payment:
     # authorize razorpay client with API Keys.
     razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 
+    def check_user_data(request,email):
+        try:
+            c = user_data.objects.get(email=email)
+            print(c,"data is there")
+            return True
+        except:
+            context = "you have to add your address first"
+            return False
+            # messages.success(request, context)
+            print("you have to add ypur data first")
+            # request.session['edit_redirect'] = after_edit
+            # return redirect('/edit_user_data/', {"context": context})
+    
+        # try:
+        #     try:
+        #         email = email
+        #         order_product_data = []
+        #         for i in products_list:
+        #             products_detail = str(str(i.name) + "#" + str(i.price))
+        #             order_product_data.append(products_detail)
+        #         try:
+        #             c = user_data.objects.get(email=email)
+        #             address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
+        #                 c.pincode) + " , " + str(c.city) + " , " + str(c.state)
+
+        #             if cart_data.objects.filter(email=email).exists():
+        #                 if order_product_data != "":
+        #                     user = cart_data.objects.get(email=email)
+        #                     user.products_detail = order_product_data
+        #                     user.order_total = product_total
+        #                     user.address_1 = address
+        #                     user.save()
+        #                     return render(request, 'cart_checkout/Cart.html',
+        #                                   {'products': products_list, 'product_total': product_total})
+        #                 else:
+        #                     pass
+        #             else:
+        #                 if order_product_data != "":
+        #                     b = cart_data(email=email, address_1=address, products_detail=order_product_data,
+        #                                   order_total=product_total)
+        #                     cart_data.save(b)
+        #                     return render(request, 'cart_checkout/Cart.html',
+        #                                   {'products': products_list, 'product_total': product_total})
+        #                 else:
+        #                     pass
+        #         except:
+        #             context = "you have to add your address first"
+        #             messages.success(request, context)
+        #             after_edit = f"ProductDetails/{slug}"
+        #             request.session['edit_redirect'] = after_edit
+        #             return redirect('/edit_user_data/', {"context": context})
+        #     except:
+        #         context = "you have't login yet"
+        #         messages.success(request, context)
+        #         return redirect('/login/', {"context": context})
+        # except:
+        #     product_total = 0
+        #     products_list = []
+        #     return render(request, 'cart_checkout/cart.html',
+        #                   {'products': products_list, 'product_total': product_total})
+
+
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
         email = request.user.email
-        order_user = cart_data.objects.get(email=email)
-        print(order_user)
-        order_address = order_user.address_1
-        order_total = order_user.order_total
-        order_product = ast.literal_eval(order_user.products_detail)
+        check_data = razor_payment.check_user_data(request=request,email=email)
+        print("razor front page")
+        if check_data:
+            order_user = cart_data.objects.get(email=email)
+            print("razor front page ")
+            order_address = order_user.address_1
+            order_total = order_user.order_total
+            order_product = ast.literal_eval(order_user.products_detail)
 
-        currency = 'INR'
-        amount = order_total * 100  # Rs. 200
 
-        # Create a Razorpay Order
-        razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                           currency=currency,
-                                                           payment_capture='0'))
+            currency = 'INR'
+            amount = order_total * 100  # Rs. 200
 
-        # order id of newly created order.
-        razorpay_order_id = razorpay_order['id']
-        callback_url = 'paymenthandler/'
+            # Create a Razorpay Order
+            razorpay_order = razorpay_client.order.create(dict(amount=amount,
+                                                            currency=currency,
+                                                            payment_capture='0'))
 
-        # we need to pass these details to frontend.
-        context = {}
-        context['razorpay_order_id'] = razorpay_order_id
-        context['razorpay_merchant_key'] = RAZOR_KEY_ID
-        context['razorpay_amount'] = amount
-        context['currency'] = currency
-        context['callback_url'] = callback_url
-        # c = user_data.objects.get(email=email)
-        # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)    
-        # print(address)
-        context['address'] = order_address
-        context["order_total"] = order_total
-        msg = ""
-        for i in order_product:
-            print(i, len(i), "hiiiiiiiiiiiiiiiiii")
-            name = i.split("#")[0]
-            quantity = i.split("#")[1]
-            price = i.split("#")[2]
-            msg += "\n{}-{}-{}".format(name, quantity, price)
-        context["order_product"] = msg
-        return render(request, 'cart_checkout/razor_front.html', context=context)
+            # order id of newly created order.
+            razorpay_order_id = razorpay_order['id']
+            callback_url = 'paymenthandler/'
+
+            # we need to pass these details to frontend.
+            context = {}
+            context['razorpay_order_id'] = razorpay_order_id
+            context['razorpay_merchant_key'] = RAZOR_KEY_ID
+            context['razorpay_amount'] = amount
+            context['currency'] = currency
+            context['callback_url'] = callback_url
+            # c = user_data.objects.get(email=email)
+            # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)    
+            # print(address)
+            context['address'] = order_address
+            context["order_total"] = order_total
+            msg = ""
+            for i in order_product:
+                print(i, len(i), "hiiiiiiiiiiiiiiiiii")
+                name = i.split("#")[0]
+                quantity = i.split("#")[1]
+                price = i.split("#")[2]
+                msg += "\n{}-{}-{}".format(name, quantity, price)
+            context["order_product"] = msg
+            return render(request, 'cart_checkout/razor_front.html', context=context)
+        else:
+            print("you have to add your address first")
+            context = "you have to add your address first"
+            messages.success(request, context)
+            request.session['edit_redirect'] = 'initiate_payment'
+            return redirect('/edit_user_data/', {"context": context})
+
+
+
 
     @csrf_exempt
     def paymenthandler(self, request, razorpay_client=razorpay_client):
         print("after payment", request.method)
         # only accept POST request.
+
         if request.method == "POST":
             try:
                 # get the required parameters from post request.
