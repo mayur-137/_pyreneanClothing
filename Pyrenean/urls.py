@@ -2,7 +2,8 @@ from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
                             RegisterView, ResetView,
-                            UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView)
+                            UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
+                            Terms_ConditionView)
 from . import views
 
 app_name = "main"
@@ -35,6 +36,7 @@ urlpatterns = [
 
     # path('edit_user_data/', views.edit_user_data, name="edit_user_data"),
     path('customerService/', CustomerServiceView.as_view(), name="customerService"),
+    path('Terms_Condition/', Terms_ConditionView.as_view(), name="Terms_ConditionView"),
     path('add_to_cart/', AddToCartView.as_view(), name='add_to_cart'),
     path('updateCart/', Update_cart_view.as_view(), name="update cart"),
     path('removeItem/', RemoveItemView.as_view(), name='removeItem'),

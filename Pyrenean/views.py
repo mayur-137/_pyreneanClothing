@@ -305,6 +305,13 @@ class SubscribeView(CreateView):
         return super().form_invalid(form)
 
 
+class Terms_ConditionView(TemplateView):
+    template_name = "terms_conditions.html"
+
+    def get_context_data(self, **kwargs):
+        Terms = super().get_context_data()
+        return Terms
+
 class mail:
 
     def otp_generation(self):
