@@ -26,17 +26,17 @@
       <h2 class="u-text u-text-default u-text-1">subscribe</h2>
       <div class="u-form u-form-1">
         <form
-          action="/ok/"
+          action="/Subscribe/" method="post"
           class="u-clearfix u-form-horizontal u-form-spacing-15 u-inner-form"
           style="padding: 15px"
           source="email"
         >
+        {% csrf_token %}
           <div class="u-form-email u-form-group u-label-none">
             <label for="email-ef64" class="u-label">Email</label>
             <input
               type="email"
               placeholder="Email"
-              id="email-ef64"
               name="email"
               class="u-input u-input-rectangle"
               required=""

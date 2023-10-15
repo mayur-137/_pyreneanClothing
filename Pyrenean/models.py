@@ -1,8 +1,9 @@
 from django.db import models
 import uuid
 
+
 class ContactModel(models.Model):
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=25)
     email = models.EmailField(unique=True)
     message = models.TextField(max_length=4000)
@@ -25,7 +26,7 @@ class user_email(models.Model):
     otp = models.IntegerField()
 
 
-class user_data(models.Model):
+class user_address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=100)
     building = models.CharField(max_length=100)
@@ -41,9 +42,11 @@ class cart_data(models.Model):
     order_id = models.AutoField(primary_key=True)
     email = models.EmailField()
     address_1 = models.CharField(max_length=1000, default="INDIA")
-    # product_picture = models.ImageField(upload_to="static/images/VitaminCapsules/",default="")
-    products_detail = models.CharField(max_length=1000, default='empty')
-    order_total = models.IntegerField()
+    products_detail = models.JSONField(null=True)
+    order_total = models.IntegerField(null=True, default=0)
+
+    def __str__(self):
+        return f"{self.products_detail}, {self.order_total}"
 
 
 class final_order(models.Model):
@@ -94,3 +97,13 @@ class Size(models.Model):
 
     def __str__(self):
         return f"{self.size} (Quantity: {self.quantity})"
+
+
+class WishList(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product_id = models.CharField(max_length=50, unique=True)
+
+
+class SubscribeNow(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(max_length=255, unique=True)

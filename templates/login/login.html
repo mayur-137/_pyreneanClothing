@@ -12,6 +12,11 @@
          <div class="title">
             Login Form
          </div>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert" role="alert"> {{ message }} </div>
+            {% endfor %}
+          {% endif %}
          <form method="POST" action="/login/">
             {% csrf_token %}
             <div class="container">{{context.error}}</div>

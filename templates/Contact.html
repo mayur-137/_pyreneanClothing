@@ -12,26 +12,22 @@
     <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
       <h1 class="u-text u-text-default u-text-1">Contact Us</h1>
       <div class="u-form u-form-1">
-        <form action="/contact/"
+        <form action="/contactForm/"
           class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" style="padding: 10px" source="email"
           name="form" method="post">
           {% csrf_token %}
           <div class="u-form-group u-form-name u-label-none">
-            <label for="name-3b9a15" class="u-label">Name</label>
-              {{ contact }}
-            <input type="text" placeholder="Enter your Name" id="name-3b9a15" name="name"
+            <input type="text" placeholder="Enter your Name"  name="name"
               class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-1"
               required>
           </div>
           <div class="u-form-email u-form-group u-label-none">
-            <label for="email-3b9a" class="u-label">Email</label>
-            <input type="email" placeholder="Enter a valid email address" id="email-3b9a" name="email"
+            <input type="email" placeholder="Enter a valid email address" name="email"
               class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-2"
               required>
           </div>
           <div class="u-form-group u-form-message u-label-none">
-            <label for="message-3b9a" class="u-label">Message</label>
-            <textarea placeholder="Enter your message" rows="4" cols="50" id="message-3b9a" name="message"
+            <textarea placeholder="Enter your message" rows="4" cols="50"  name="message"
               class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-3"
               required></textarea>
           </div>

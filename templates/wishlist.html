@@ -1,6 +1,6 @@
 {% extends 'Base.html' %}
 {% load static %}
-{% block title %} Cart | Pyrenean {% endblock title %}
+{% block title %} Wishlist | Pyrenean {% endblock title %}
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/Cart.css' %}" media="screen">
 {% endblock head %}
@@ -8,8 +8,8 @@
 
 <body class="u-body u-xl-mode" data-lang="en">
 
-
-  <section class="u-clearfix u-section-1" id="sec-6fa9">
+<section class="u-clearfix u-section-1" id="sec-6fa9">
+    <h2 style="display: flex; justify-content: center;">My Wish List</h2>
     <div class="u-clearfix u-sheet u-sheet-1">
       <div class="u-cart u-expanded-width u-layout-grid u-cart-1">
         <div class="u-cart-products-table u-table u-table-responsive">
@@ -23,17 +23,17 @@
             <thead class="u-grey-10 u-table-header u-table-header-1">
               <tr style="height: 46px;">
                 <th class="u-border-1 u-border-grey-15 u-table-cell">Product </th>
-                <th class="u-border-1 u-border-grey-15 u-table-cell">Size & Price </th>
-                <th class="u-border-1 u-border-grey-15 u-table-cell">Quantity </th>
-                <th class="u-border-1 u-border-grey-15 u-table-cell">Subtotal </th>
+                <th class="u-border-1 u-border-grey-15 u-table-cell">Price </th>
+                <th class="u-border-1 u-border-grey-15 u-table-cell">Stock </th>
+                <th class="u-border-1 u-border-grey-15 u-table-cell">Add To Cart </th>
               </tr>
             </thead>
             <tbody class="u-align-left u-table-alt-grey-5 u-table-body">
-              {% for item in products %}
+              {% for item in FV %}
               <tr style="height: 121px;">
                 <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-5">
-                  <form action="/removeItem/" method="post" style="display: inline;" >{% csrf_token %}
-                    <input type="hidden" name="removeItem" value="{{item.size_id}}">
+                  <form action="/removeWishListItem/" method="post" style="display: inline;" >{% csrf_token %}
+                    <input type="hidden" name="removeWishListItem" value="{{item.id}}">
                   <span
                     class="u-cart-remove-item u-icon u-text-grey-40 u-icon-1">
                     <button type="submit" style="background: none; border: none;">
@@ -51,33 +51,25 @@
                     <div class="u-price-wrapper">
                       <div class="u-hide-price u-old-price"></div>
                       <div class="u-price" style="font-weight: 700; font-size: 1rem;">&#8377;
-                        {{ item.size }} - {{item.price}} </div>
+                        {{item.discounted_price}} </div>
                     </div>
                   </div>
                 </td>
                 <td class="u-border-1 u-border-grey-15 u-table-cell">
                   <div class="u-cart-product-quantity u-product-control u-product-quantity u-product-quantity-1">
-                    <div class="u-hidden u-quantity-label"> Quantity </div>
-                    <div class="u-border-1 u-border-grey-25 u-quantity-input u-radius-5">
-                      <form action="/updateCart/" method="post" style="display: flex;">
-                        {% csrf_token %}
-                        <button type="submit"
-                          style="border: none; background: unset; font-weight: 900;padding: 4px 13px;" value="-"
-                          name="minus">-</button>
-                        <input class="u-input" type="number" value="{{item.quantity}}" min="0"
-                          max="{{item.max_quantity}}" name="quantity">
-                        <input type="hidden" name="Update_product_quantity" value="{{item.size_id}}">
-                        <button type="submit"
-                          style="border: none; background: unset; font-weight: 900; padding: 4px 13px;">+</button>
-                      </form>
+                    <div class="u-hidden-wishlist u-quantity-label">{% if item.stock %}
+                        <span style="color: green;">In Stock</span>
+                        {%else%}
+                        <span style="color: red;">Out of Stock</span>
+                        {% endif %}
+
                     </div>
                   </div>
                 </td>
                 <td class="u-border-1 u-border-grey-15 u-table-cell">
                   <div class="u-cart-product-subtotal u-product-control u-product-price">
                     <div class="u-price-wrapper">
-                      <div class="u-hide-price u-old-price"></div>
-                      <div class="u-price" style="font-weight: 400;" id="subtotal">&#8377; {{item.subtotal}}</div>
+                        <a href="/ProductDetails/{{item.slug}}" class="u-btn u-btn-round u-button-style u-cart-checkout-btn u-radius-50 u-btn-4">BuyNow</a>
                     </div>
                   </div>
                 </td>
@@ -104,7 +96,7 @@
           <a href="#" class="u-btn u-btn-round u-button-style u-cart-update u-grey-5 u-radius-50 u-btn-2">Update
             Cart</a>
         </div>
-        <div class="u-cart-blocks-container">
+        <!-- <div class="u-cart-blocks-container">
           <div class="u-cart-block u-indent-30">
             <div class="u-cart-block-container u-clearfix">
               <h5 class="u-cart-block-header u-text">Promotion Code</h5>
@@ -163,10 +155,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
 </body>
+
+
 
 {% endblock body %}

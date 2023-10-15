@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GFG</title>
+    <title>Payment | Pyrenean</title>
     <style>       
       @use postcss-preset-env {
   stage: 0;
@@ -186,7 +186,7 @@ tfoot {
   border-radius: 2em;
   block-size: 812px;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
-  inline-size: 375px;
+  inline-size: 500px;
   overflow: auto;
   padding: 2em;
 }
@@ -226,7 +226,7 @@ tfoot {
         </div>
         <form>
           <div>
-            <button class="button change--edit "><a href="/user_data/">change or edit address</a></button>
+            <button class="button change--edit "><a href="/user_address/">change or edit address</a></button>
             </div>
         </form>          
         
@@ -287,7 +287,7 @@ tfoot {
       order_id: "{{ razorpay_order_id }}",
       callback_url: "{{ callback_url }}",
     };
-     
+
     // initialise razorpay with the options.
     var rzp1 = new Razorpay(options);
      

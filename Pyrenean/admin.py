@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import ContactModel, user_data, Size, user_email, cart_data, final_order, Product_Details
+from .models import ContactModel, user_address, Size, user_email, cart_data, final_order, Product_Details, WishList, \
+    SubscribeNow
 
 
 # Register your models here.# Register your models here.
@@ -7,7 +8,7 @@ class AuthorAdmin(admin.ModelAdmin):
     list_display = ["id", "email", "building", "street", "street", 'area', 'pincode', 'city', 'state']
 
 
-admin.site.register(user_data, AuthorAdmin)
+admin.site.register(user_address, AuthorAdmin)
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -53,3 +54,13 @@ class AuthorAdmin_order(admin.ModelAdmin):
 @admin.register(final_order)
 class AuthorAdmin_final_order(admin.ModelAdmin):
     list_display = ["order_id", "email", "address", "products_detail", "order_total", "shiprocket_dashboard"]
+
+
+@admin.register(WishList)
+class WishListAdmin(admin.ModelAdmin):
+    list_display = ["id", "product_id"]
+
+
+@admin.register(SubscribeNow)
+class WishListAdmin(admin.ModelAdmin):
+    list_display = ["id", "email"]

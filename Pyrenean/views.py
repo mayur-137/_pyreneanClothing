@@ -1,18 +1,25 @@
-from django.views.generic.base import TemplateView
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
-from django.views.generic.edit import CreateView
-from .models import ContactModel, user_data, Product_Details, Size, user_email, cart_data, final_order
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
-from django.views.decorators.csrf import csrf_exempt
-from .forms import ContactFormModel
-from django.contrib.auth.models import User, auth
-from django.views import View
-from django.contrib import messages
-import random, smtplib, requests, ast, razorpay
-from django.db.models import Max
+import ast
+import json
+import random
+import razorpay
+import requests
+import smtplib
 
-global product_total, getSize_id, getSize, slug
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.models import User, auth
+from django.db.models import Max
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render, redirect
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
+
+from .forms import ContactFormModel, SubscribeForm
+from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, SubscribeNow
+
+global product_total, slug
 
 
 class HomeView(TemplateView):
@@ -24,7 +31,6 @@ class HomeView(TemplateView):
         context['Size'] = Size.objects.all()
         for data in context["Products"]:
             data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
-
         return context
 
 
@@ -61,16 +67,14 @@ class ProductDetailsView(TemplateView):
     template_name = "Product-Details.html"
 
     def get_context_data(self, **kwargs):
-        global slug, getSize, getSize_id
         PD = super().get_context_data()
         slug = self.kwargs.get("slug")
+        PD["size"] = self.kwargs.get("size")
+        PD["size_id"] = self.kwargs.get("id")
         PD['Size'] = Size.objects.all()
         PD["PRD"] = Product_Details.objects.filter(slug=slug)
-        # print(PD['PRD'], "PRD")
         for data in PD['PRD']:
             data.discounted_price = float(data.price - (data.price * data.discount / 100))
-            print(data.discounted_price)
-
         return PD
 
 
@@ -86,149 +90,189 @@ class AddToCartView(View):
 
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
-        print(product_id, "id")
-        current_user = request.user
-        if current_user.is_authenticated:
-            email = current_user.email
-            print(email, "email")
-        else:
-            return redirect("/register/")
-        product = Size.objects.filter(product_id=product_id)
-        print(product, "product")
+        getSize_id = request.POST.get("size_id")
+        getSize_id = getSize_id.split("=")[1]
+        size_session = request.session.get("size_session", {})
+        product = Size.objects.filter(id=getSize_id)
         for detail in product:
             pass
 
-        cart_session = request.session.get('cart_session', {})
+        if size_session.get(getSize_id) is None or size_session.get(getSize_id) < detail.quantity:
+            size_session[getSize_id] = size_session.get(getSize_id, 0) + 1
+            request.session["size_session"] = size_session
 
-        if cart_session.get(product_id) is None or cart_session.get(product_id) < detail.quantity:
-            cart_session[product_id] = cart_session.get(product_id, 0) + 1
-            request.session['cart_session'] = cart_session
         return redirect("/cart/")
 
 
 class CartView(View):
 
     def get(self, request, *args, **kwargs):
+
         products_in_cart = []
+        order_product_data = []
         products_list = []
         product_total = 0
-        cart = request.session.get('cart_session', {})
+        size_session = request.session.get("size_session", {})
         try:
-            itm = Product_Details.objects.filter(id__in=cart.keys())
+            itm = Size.objects.filter(id__in=size_session.keys())
             if itm:
                 products_in_cart.append(itm)
         except:
             pass
         for products in products_in_cart:
             for product in products:
-                product.subtotal = product.price * cart[str(product.id)]
-                product_total = product.subtotal + product_total
-                product.product_quantity = str(cart[str(product.id)])
-                products_list.append(product)
+                try:
+                    product.discounted_price = int(
+                        product.product.price - (product.product.price * product.product.discount / 100)) + 1
+                    product.subtotal = product.discounted_price * size_session[str(product.id)]
+                    product_total = product.subtotal + product_total
+                    product.product_quantity = str(size_session[str(product.id)])
+                    product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
+                                       "quantity": product.product_quantity,
+                                       "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
 
-        order_product_data = []
-        for i in products_list:
-            products_detail = str(str(i.name) + "#" + str(i.price)+ "#" +str(i.product_quantity) + "#" +str(i.subtotal))
-            order_product_data.append(products_detail)
-        
-        email =  request.user.email
-        
+                    product_in_cart_Json = json.dumps(product_in_cart)
+                    order_product_data.append(product_in_cart_Json)
+                    products_list.append(product)
+                except Exception as e:
+                    continue
+
+        user = request.user
+        if not user.is_authenticated:
+            messages.error(request, "Please Login or Register First")
+            return redirect("/register/")
+
+        email = request.user.email
         if cart_data.objects.filter(email=email).exists():
             if order_product_data != "":
-                user = cart_data.objects.get(email=email)
-                user.products_detail = order_product_data
-                user.order_total = product_total
-                user.save()
+                users = cart_data.objects.get(email=email)
+                users.products_detail = order_product_data
+                users.order_total = product_total
+                users.save()
+
+            user_cart_fill = cart_data.objects.filter(email=email)
+            for i in user_cart_fill:
+                f = []
+                for j in i.products_detail:
+                    JsonExtractedData = json.loads(j)
+                    GetPrice = JsonExtractedData["price"]
+                    GetSize = JsonExtractedData["size"]
+                    GetSize_id = JsonExtractedData["size_id"]
+                    GetQuantity = JsonExtractedData["quantity"]
+                    Getsubtotal = JsonExtractedData["subtotal"]
+                    getDataForCart = Product_Details.objects.filter(id=JsonExtractedData["product_id"])
+                    for getDataForCartEdit in getDataForCart:
+                        getDataForCartEdit.price = GetPrice
+                        getDataForCartEdit.size = GetSize
+                        getDataForCartEdit.size_id = GetSize_id
+                        getDataForCartEdit.quantity = GetQuantity
+                        getDataForCartEdit.subtotal = Getsubtotal
+                        f.append(getDataForCartEdit)
+
                 return render(request, 'cart_checkout/Cart.html',
-                                {'products': products_list, 'product_total': product_total})
+                              {'products': f, 'product_total': i.order_total})
             else:
-                pass
+                user_cart_fill = cart_data.objects.filter(email=email)
+                for i in user_cart_fill:
+                    f = []
+                    for j in i.products_detail:
+                        JsonExtractedData = json.loads(j)
+                        GetPrice = JsonExtractedData["price"]
+                        GetSize = JsonExtractedData["size"]
+                        GetSize_id = JsonExtractedData["size_id"]
+                        GetQuantity = JsonExtractedData["quantity"]
+                        Getsubtotal = JsonExtractedData["subtotal"]
+                        getDataForCart = Product_Details.objects.filter(id=JsonExtractedData["product_id"])
+                        for getDataForCartEdit in getDataForCart:
+                            getDataForCartEdit.price = GetPrice
+                            getDataForCartEdit.size = GetSize
+                            getDataForCartEdit.size_id = GetSize_id
+                            getDataForCartEdit.quantity = GetQuantity
+                            getDataForCartEdit.subtotal = Getsubtotal
+                            f.append(getDataForCartEdit)
+
+                    return render(request, 'cart_checkout/Cart.html',
+                                  {'products': f, 'product_total': i.order_total})
         else:
             if order_product_data != "":
+                print(order_product_data, "data111")
                 b = cart_data(email=email, products_detail=order_product_data,
-                                order_total=product_total)
+                              order_total=product_total)
                 cart_data.save(b)
                 return render(request, 'cart_checkout/Cart.html',
-                                {'products': products_list, 'product_total': product_total})
+                              {'products': products_list, 'product_total': product_total})
             else:
-                pass
+                messages.info(request, "Please Choose the Product First")
+                return redirect("/")
 
         return render(request, 'cart_checkout/cart.html',
                       {'products': products_list, 'product_total': product_total})
-        try:
-            try:
-                email = request.user.email
-                order_product_data = []
-                for i in products_list:
-                    products_detail = str(str(i.name) + "#" + str(i.price))
-                    order_product_data.append(products_detail)
-                try:
-                    c = user_data.objects.get(email=email)
-                    address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
-                        c.pincode) + " , " + str(c.city) + " , " + str(c.state)
 
-                    if cart_data.objects.filter(email=email).exists():
-                        if order_product_data != "":
-                            user = cart_data.objects.get(email=email)
-                            user.products_detail = order_product_data
-                            user.order_total = product_total
-                            user.address_1 = address
-                            user.save()
-                            return render(request, 'cart_checkout/Cart.html',
-                                          {'products': products_list, 'product_total': product_total})
-                        else:
-                            pass
-                    else:
-                        if order_product_data != "":
-                            b = cart_data(email=email, address_1=address, products_detail=order_product_data,
-                                          order_total=product_total)
-                            cart_data.save(b)
-                            return render(request, 'cart_checkout/Cart.html',
-                                          {'products': products_list, 'product_total': product_total})
-                        else:
-                            pass
-                except:
-                    context = "you have to add your address first"
-                    messages.success(request, context)
-                    after_edit = f"ProductDetails/{slug}"
-                    request.session['edit_redirect'] = after_edit
-                    return redirect('/edit_user_data/', {"context": context})
-            except:
-                context = "you have't login yet"
-                messages.success(request, context)
-                return redirect('/login/', {"context": context})
-        except:
-            product_total = 0
-            products_list = []
-            return render(request, 'cart_checkout/cart.html',
-                          {'products': products_list, 'product_total': product_total})
+
+class WishListAddView(View):
+
+    def post(self, request, *args, **kwargs):
+        favitem_id = request.POST.get("Favitem")
+        try:
+            addFavItem = WishList(product_id=favitem_id).save()
+        except Exception as e:
+            print(e)
+        return redirect("/wishlist/")
+
+
+class WishListView(View):
+
+    def get(self, request, *args, **kwargs):
+        try:
+            FavList = []
+            getFavItem = WishList.objects.all()
+            print(getFavItem, "fav")
+            for item in getFavItem:
+                print(item.product_id, "fav item")
+                favitem = Product_Details.objects.filter(id=item.product_id)
+                for data in favitem:
+                    print(data.price, "data")
+                    data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+
+                FavList.append(data)
+                print(FavList, "list")
+            return render(request, "wishlist.html", {"FV": FavList})
+
+        except Exception as e:
+            print(e)
+
+
+class RemoveWishListItem(View):
+
+    def post(self, request, *args, **kwargs):
+        RemoveWishItem_id = request.POST.get("removeWishListItem")
+        try:
+            addFavItem = WishList.objects.filter(product_id=RemoveWishItem_id).delete()
+        except Exception as e:
+            print(e)
+        return redirect("/wishlist/")
 
 
 class Update_cart_view(View):
 
     def post(self, request, *args, **kwargs):
-        Product_id = request.POST.get("Update_product_quantity")
-        print(Product_id, "ID")
+        Size_id = request.POST.get("Update_product_quantity")
         Mode_of_Operations = request.POST.get("minus")
-        product = Size.objects.filter(men_id=Product_id)
-        if not product:
-            product = Size.objects.filter(kid_id=Product_id)
-        if not product:
-            product = Size.objects.filter(women_id=Product_id)
-        print(product)
+        size_session = request.session.get("size_session", {})
+
+        product = Size.objects.filter(id=Size_id)
+
         for detail in product:
             print(detail.quantity)
         if Mode_of_Operations == "-":
-            cart_session = request.session.get('cart_session', {})
-            cart_session[Product_id] = cart_session.get(Product_id) - 1
-            request.session['cart_session'] = cart_session
-            if cart_session.get(Product_id) == 0:
-                del cart_session[Product_id]
+            size_session[Size_id] = size_session.get(Size_id) - 1
+            request.session['size_session'] = size_session
+            if size_session.get(Size_id) == 0:
+                del size_session[Size_id]
         else:
-            cart_session = request.session.get('cart_session', {})
-            if not cart_session.get(Product_id) == detail.quantity:
-                cart_session[Product_id] = cart_session.get(Product_id) + 1
-                request.session['cart_session'] = cart_session
+            if not size_session.get(Size_id) == detail.quantity:
+                size_session[Size_id] = size_session.get(Size_id) + 1
+                request.session['size_session'] = size_session
             else:
                 pass
         return redirect("/cart/")
@@ -239,10 +283,26 @@ class RemoveItemView(View):
     def post(self, request, *args, **kwargs):
         GetRemoveItemId = request.POST.get("removeItem")
         cart_session = request.session.get('cart_session', {})
-        if GetRemoveItemId in cart_session:
-            del cart_session[GetRemoveItemId]
-            request.session['cart_session'] = cart_session
+        size_session = request.session.get("size_session", {})
+        if GetRemoveItemId in size_session:
+            del size_session[GetRemoveItemId]
+            request.session["size_session"] = size_session
+
+        print(size_session, cart_session, "sessions")
         return redirect("/cart/")
+
+
+class SubscribeView(CreateView):
+    model = SubscribeNow
+    form_class = SubscribeForm
+    template_name = "About.html"
+    success_url = "/about/"
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
 
 class mail:
@@ -457,18 +517,18 @@ class user_datas:
                 print("user data already stored ")
                 username = (User.objects.get(email=email)).username
                 print("111")
-                building = user_data.objects.get(email=email).building
+                building = user_address.objects.get(email=email).building
                 print(building)
-                phone_number = user_data.objects.get(email=email).phone_number
-                street = (user_data.objects.get(email=email)).street
-                area = (user_data.objects.get(email=email)).area
-                pincode = (user_data.objects.get(email=email)).pincode
-                city = (user_data.objects.get(email=email)).city
-                state = (user_data.objects.get(email=email)).state
+                phone_number = user_address.objects.get(email=email).phone_number
+                street = (user_address.objects.get(email=email)).street
+                area = (user_address.objects.get(email=email)).area
+                pincode = (user_address.objects.get(email=email)).pincode
+                city = (user_address.objects.get(email=email)).city
+                state = (user_address.objects.get(email=email)).state
                 context = {"email": email, "phone_number": phone_number, 'username': username, 'building': building,
                            'street': street, 'area': area, 'pincode': pincode, 'city': city, 'state': state}
                 print(context)
-                request.session['edit_redirect'] = "user_data"
+                request.session['edit_redirect'] = "user_address"
                 print(request.session['edit_redirect'], "request.session['edit_redirect']")
                 return render(request, 'user_data/user_data.html', {'context': context})
 
@@ -490,19 +550,21 @@ class user_datas:
             city = request.POST['city']
             state = request.POST['state']
             phone_number = request.POST['phone_number']
-            address = str(str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(state) + ',' + str(phone_number))
+            address = str(
+                str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(
+                    state) + ',' + str(phone_number))
             print(address)
             if cart_data.objects.filter(email=email).exists():
                 user = cart_data.objects.get(email=email)
                 user.address_1 = address
                 user.save()
             else:
-                b = cart_data(email=email,address_1=address)
+                b = cart_data(email=email, address_1=address)
                 cart_data.save(b)
 
-            if user_data.objects.filter(email=email).exists():
+            if user_address.objects.filter(email=email).exists():
                 print("your data is saved")
-                user = user_data.objects.get(email=email)
+                user = user_address.objects.get(email=email)
                 user.building = building
                 user.street = street
                 user.area = area
@@ -520,34 +582,14 @@ class user_datas:
 
             else:
                 print("user data is not saved")
-                b = user_data(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
-                              phone_number=phone_number, state=state)
-                user_data.save(b)
+                b = user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
+                                 phone_number=phone_number, state=state)
+                user_address.save(b)
                 edit_change = request.session.get('edit_redirect')
                 if edit_change == "initiate_payment":
                     return redirect('/{}/'.format(edit_change))
                 else:
-                    return redirect('/'.format(edit_change))
-
-            if cart_data.objects.filter(email=email).exists():
-                if order_product_data != "":
-                    user = cart_data.objects.get(email=email)
-                    user.products_detail = order_product_data
-                    user.order_total = product_total
-                    user.save()
-                    return render(request, 'cart_checkout/Cart.html',
-                                    {'products': products_list, 'product_total': product_total})
-                else:
-                    pass
-            else:
-                if order_product_data != "":
-                    b = cart_data(email=email, products_detail=order_product_data,
-                                    order_total=product_total)
-                    cart_data.save(b)
-                    return render(request, 'cart_checkout/Cart.html',
-                                    {'products': products_list, 'product_total': product_total})
-                else:
-                    pass
+                    return redirect('/{}/'.format(edit_change))
 
         else:
             print("GET")
@@ -570,9 +612,9 @@ def terms_conditions(request):
 class shipment:
 
     def take_user_data(self, email):
-        # take billing data ffrom user_data table and order data table
+        # take billing data ffrom user_address table and order data table
         print("taking user data")
-        user = user_data.objects.get(email="ladoladhruv5218@gmail.com")
+        user = user_address.objects.get(email="ladoladhruv5218@gmail.com")
         user_billing_city = user.city
         user_billing_pincode = user.pincode
         user_billing_state = user.state
@@ -670,7 +712,7 @@ class shipment:
         }
         return order_data
 
-    def shiprocket_key():
+    def shiprocket_key(self):
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
         headers = {
             "Content-Type": "application/json"}
@@ -706,10 +748,10 @@ class razor_payment:
     # authorize razorpay client with API Keys.
     razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 
-    def check_user_data(request,email):
+    def check_user_data(request, email):
         try:
-            c = user_data.objects.get(email=email)
-            print(c,"data is there")
+            c = user_address.objects.get(email=email)
+            print(c, "data is there")
             return True
         except:
             context = "you have to add your address first"
@@ -718,7 +760,7 @@ class razor_payment:
             print("you have to add ypur data first")
             # request.session['edit_redirect'] = after_edit
             # return redirect('/edit_user_data/', {"context": context})
-    
+
         # try:
         #     try:
         #         email = email
@@ -727,7 +769,7 @@ class razor_payment:
         #             products_detail = str(str(i.name) + "#" + str(i.price))
         #             order_product_data.append(products_detail)
         #         try:
-        #             c = user_data.objects.get(email=email)
+        #             c = user_address.objects.get(email=email)
         #             address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
         #                 c.pincode) + " , " + str(c.city) + " , " + str(c.state)
 
@@ -767,26 +809,27 @@ class razor_payment:
         #     return render(request, 'cart_checkout/cart.html',
         #                   {'products': products_list, 'product_total': product_total})
 
-
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
         email = request.user.email
-        check_data = razor_payment.check_user_data(request=request,email=email)
+        check_data = razor_payment.check_user_data(request=request, email=email)
         print("razor front page")
         if check_data:
             order_user = cart_data.objects.get(email=email)
             print("razor front page ")
             order_address = order_user.address_1
+            print(order_user)
             order_total = order_user.order_total
-            order_product = ast.literal_eval(order_user.products_detail)
+            order_product = order_user.products_detail
 
+            print(order_user, order_address, order_total, order_product, "initial")
 
             currency = 'INR'
             amount = order_total * 100  # Rs. 200
 
             # Create a Razorpay Order
             razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                            currency=currency,
-                                                            payment_capture='0'))
+                                                               currency=currency,
+                                                               payment_capture='0'))
 
             # order id of newly created order.
             razorpay_order_id = razorpay_order['id']
@@ -799,7 +842,7 @@ class razor_payment:
             context['razorpay_amount'] = amount
             context['currency'] = currency
             context['callback_url'] = callback_url
-            # c = user_data.objects.get(email=email)
+            # c = user_address.objects.get(email=email)
             # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)    
             # print(address)
             context['address'] = order_address
@@ -807,9 +850,10 @@ class razor_payment:
             msg = ""
             for i in order_product:
                 print(i, len(i), "hiiiiiiiiiiiiiiiiii")
-                name = i.split("#")[0]
-                quantity = i.split("#")[1]
-                price = i.split("#")[2]
+                i = json.loads(i)
+                name = i["product_id"]
+                quantity = i["quantity"]
+                price = i["price"]
                 msg += "\n{}-{}-{}".format(name, quantity, price)
             context["order_product"] = msg
             return render(request, 'cart_checkout/razor_front.html', context=context)
@@ -819,9 +863,6 @@ class razor_payment:
             messages.success(request, context)
             request.session['edit_redirect'] = 'initiate_payment'
             return redirect('/edit_user_data/', {"context": context})
-
-
-
 
     @csrf_exempt
     def paymenthandler(self, request, razorpay_client=razorpay_client):
@@ -845,7 +886,8 @@ class razor_payment:
                     params_dict)
                 print(result, "result")
                 if result is not None:
-                    email = "ladoladhruv5218@gmail.com"
+                    # email = "ladoladhruv5218@gmail.com"
+                    email = request.user.email
                     print(email)
                     order_user = cart_data.objects.get(email=email)
                     print("order_user")
@@ -859,6 +901,7 @@ class razor_payment:
                         print("payment captured")
                         # render success page on successful caputre of payment
                         a = shipment.shiprockeet_order_function(request)
+                        print(a, "aa")
 
                         print(a.status_code)
                         if a.status_code == 200 and a.json()['status'] == "NEW":
