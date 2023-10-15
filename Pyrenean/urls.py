@@ -36,6 +36,7 @@ urlpatterns = [
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
     path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
 
+    path('TermsConditions/',views.terms_conditions, name='TermsConditions'),
 
 
 ]

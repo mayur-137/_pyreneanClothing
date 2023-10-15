@@ -11,6 +11,10 @@ from django.views import View
 from django.contrib import messages
 import random, smtplib, requests, ast, razorpay
 from django.db.models import Max
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
 
 global product_total, getSize_id, getSize, slug
 
@@ -37,7 +41,7 @@ class AboutView(TemplateView):
 
 
 class ContactView(TemplateView):
-    template_name = "Contact.html"
+    template_name = "contact_term/Contact.html"
 
     def get_context_data(self, **kwargs):
         contact = super().get_context_data()
@@ -75,7 +79,7 @@ class ProductDetailsView(TemplateView):
 
 
 class CustomerServiceView(TemplateView):
-    template_name = "Customer-Service.html"
+    template_name = "contact_term/Customer-Service.html"
 
     def get_context_data(self, **kwargs):
         customerService = super().get_context_data()
@@ -155,54 +159,7 @@ class CartView(View):
 
         return render(request, 'cart_checkout/cart.html',
                       {'products': products_list, 'product_total': product_total})
-        try:
-            try:
-                email = request.user.email
-                order_product_data = []
-                for i in products_list:
-                    products_detail = str(str(i.name) + "#" + str(i.price))
-                    order_product_data.append(products_detail)
-                try:
-                    c = user_data.objects.get(email=email)
-                    address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
-                        c.pincode) + " , " + str(c.city) + " , " + str(c.state)
-
-                    if cart_data.objects.filter(email=email).exists():
-                        if order_product_data != "":
-                            user = cart_data.objects.get(email=email)
-                            user.products_detail = order_product_data
-                            user.order_total = product_total
-                            user.address_1 = address
-                            user.save()
-                            return render(request, 'cart_checkout/Cart.html',
-                                          {'products': products_list, 'product_total': product_total})
-                        else:
-                            pass
-                    else:
-                        if order_product_data != "":
-                            b = cart_data(email=email, address_1=address, products_detail=order_product_data,
-                                          order_total=product_total)
-                            cart_data.save(b)
-                            return render(request, 'cart_checkout/Cart.html',
-                                          {'products': products_list, 'product_total': product_total})
-                        else:
-                            pass
-                except:
-                    context = "you have to add your address first"
-                    messages.success(request, context)
-                    after_edit = f"ProductDetails/{slug}"
-                    request.session['edit_redirect'] = after_edit
-                    return redirect('/edit_user_data/', {"context": context})
-            except:
-                context = "you have't login yet"
-                messages.success(request, context)
-                return redirect('/login/', {"context": context})
-        except:
-            product_total = 0
-            products_list = []
-            return render(request, 'cart_checkout/cart.html',
-                          {'products': products_list, 'product_total': product_total})
-
+        
 
 class Update_cart_view(View):
 
@@ -264,23 +221,65 @@ class mail:
         server.sendmail(sender, receiver, msg)
         server.quit()
 
-    def confirm_order_mail(self, email):
+    def confirm_order_mail(self, email,id):
         order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         order_user = final_order.objects.get(order_id=order_id)
+        # order_user = final_order_list.objects.filter(order_id=order_id).first()
         order_total = order_user.order_total
         order_address = order_user.address
         order_product = ast.literal_eval(order_user.products_detail)
-        msg = ""
-        for i in order_product:
-            name = i.split("#")[0]
-            quantity = i.split("#")[1]
-            price = i.split("#")[2]
-            msg += ",name->{},quantity->{},price->{}".format(name, quantity, price)
-        print(msg)
-        text = ("Thanks {} for shopping with us ,\n\n Your order {} with order id {}, on address {} \n\n your total is "
-                "{}").format(
-            "dhruv", msg, order_id, order_address, order_total)
-        return text
+        
+        print('text is generating')
+        order_date = "09-10-2023"
+        
+        # Email configuration
+        sender_email = "dhruv.180670107033@gmail.com"
+        sender_password = "nqdf jevl qqwx guvo"
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+
+        # Create a multipart message
+        msg = MIMEMultipart()
+        msg["From"] = sender_email
+        msg["To"] = email
+        msg["Subject"] = "Congratulations! Your Order Details"
+
+        # Email body
+        email_body = f"""
+        <html>
+            <body>
+                <img src="cid:logo" alt="Your Logo" width="200">
+                <h2>Congratulations! You placed your order successfully</h2>
+                <p>Here are your order details:</p>
+                <ul>
+                    <li><strong>Order ID:</strong> {order_id}</li>
+                    <li><strong>Tracking Id:</strong> {id}</li>
+                    <li><strong>Order Details:</strong> {order_product}</li>
+                    <li><strong>Date of Order:</strong> {order_date}</li>
+                    <li><strong>Shipping Address:</strong> {order_address}</li>
+                    <li><strong>order total:</strong> {order_total}</li>
+                </ul>
+            </body>
+        </html>
+        """
+        msg.attach(MIMEText(email_body, "html"))
+
+        # Attach your logo image
+        with open("C:/vittsu/Vittzios/static/images/VitaminGummiesvittLOGO-removebg-preview.png", "rb") as logo_image:
+            image = MIMEImage(logo_image.read(), name="logo.png")
+            image.add_header("Content-ID", "<logo>")
+            msg.attach(image)
+
+        # Send the email
+        try:
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, email, msg.as_string())
+            server.quit()
+            print("Email sent successfully")
+        except Exception as e:
+            print(f"Error sending email: {str(e)}")
 
     def store_otp(self, email, otp):
         if user_email.objects.filter(email=email).exists():
@@ -529,26 +528,6 @@ class user_datas:
                 else:
                     return redirect('/'.format(edit_change))
 
-            if cart_data.objects.filter(email=email).exists():
-                if order_product_data != "":
-                    user = cart_data.objects.get(email=email)
-                    user.products_detail = order_product_data
-                    user.order_total = product_total
-                    user.save()
-                    return render(request, 'cart_checkout/Cart.html',
-                                    {'products': products_list, 'product_total': product_total})
-                else:
-                    pass
-            else:
-                if order_product_data != "":
-                    b = cart_data(email=email, products_detail=order_product_data,
-                                    order_total=product_total)
-                    cart_data.save(b)
-                    return render(request, 'cart_checkout/Cart.html',
-                                    {'products': products_list, 'product_total': product_total})
-                else:
-                    pass
-
         else:
             print("GET")
             return render(request, 'user_data/edit_user_data.html')
@@ -559,7 +538,7 @@ UserData = user_datas()
 
 def terms_conditions(request):
     if request.method:
-        return render(request, 'cont_term/terms_conditions.html')
+        return render(request, 'contact_term/terms_conditions.html')
     else:
         return redirect("/")
 
@@ -718,54 +697,6 @@ class razor_payment:
             print("you have to add ypur data first")
             # request.session['edit_redirect'] = after_edit
             # return redirect('/edit_user_data/', {"context": context})
-    
-        # try:
-        #     try:
-        #         email = email
-        #         order_product_data = []
-        #         for i in products_list:
-        #             products_detail = str(str(i.name) + "#" + str(i.price))
-        #             order_product_data.append(products_detail)
-        #         try:
-        #             c = user_data.objects.get(email=email)
-        #             address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
-        #                 c.pincode) + " , " + str(c.city) + " , " + str(c.state)
-
-        #             if cart_data.objects.filter(email=email).exists():
-        #                 if order_product_data != "":
-        #                     user = cart_data.objects.get(email=email)
-        #                     user.products_detail = order_product_data
-        #                     user.order_total = product_total
-        #                     user.address_1 = address
-        #                     user.save()
-        #                     return render(request, 'cart_checkout/Cart.html',
-        #                                   {'products': products_list, 'product_total': product_total})
-        #                 else:
-        #                     pass
-        #             else:
-        #                 if order_product_data != "":
-        #                     b = cart_data(email=email, address_1=address, products_detail=order_product_data,
-        #                                   order_total=product_total)
-        #                     cart_data.save(b)
-        #                     return render(request, 'cart_checkout/Cart.html',
-        #                                   {'products': products_list, 'product_total': product_total})
-        #                 else:
-        #                     pass
-        #         except:
-        #             context = "you have to add your address first"
-        #             messages.success(request, context)
-        #             after_edit = f"ProductDetails/{slug}"
-        #             request.session['edit_redirect'] = after_edit
-        #             return redirect('/edit_user_data/', {"context": context})
-        #     except:
-        #         context = "you have't login yet"
-        #         messages.success(request, context)
-        #         return redirect('/login/', {"context": context})
-        # except:
-        #     product_total = 0
-        #     products_list = []
-        #     return render(request, 'cart_checkout/cart.html',
-        #                   {'products': products_list, 'product_total': product_total})
 
 
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
@@ -868,21 +799,23 @@ class razor_payment:
                             order.shiprocket_dashboard = True
                             order.save()
 
-                            text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
-                            text
-                            print(text)
-                            mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
-
-                            print("shipment done")
+                            #send  confirmation mail
                             try:
-                                order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
-                                order_user.delete()
+                                mail.confirm_order_mail(email=request.user.email,id=a.json()['order_id'])
+                                try :
+                                    order_user = cart_data.objects.get(email=email)
+                                    order_user.delete()
+                                    print("cart empty")
+                                    print("cart data is deleted")
+                                except:
+                                    print(KeyError)
+                                    return render(request, 'cart_checkout/paymentfail.html')
                             except:
-                                print(KeyError)
-
-                            print("cart empty")
-                            print("cart data is deleted")
-                            return redirect('/')
+                                print("there is some issue with mail ")
+                                return render(request, 'cart_checkout/paymentfail.html')
+                            
+                            print("shipment done")
+                            return render(request, 'cart_checkout/paymentsuccess.html')
                         else:
                             pass
                         print(a.status_code)
