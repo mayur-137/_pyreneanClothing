@@ -1,0 +1,51 @@
+{% extends 'Base.html' %}  
+{% load static %}
+{% block title %} About | Vittzios {% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/About.css' %}" media="screen"/>
+{% endblock head %}
+{% block body %}
+<body class="u-body u-overlap u-overlap-transparent u-xl-mode" data-lang="en">
+  <section class="u-align-center u-clearfix u-grey-5 u-section-1" id="sec-d77a">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h1 class="u-text u-text-default u-text-1">Design Perfection</h1>
+      <p class="u-text u-text-2">
+        We’re a small creative design studio based in New York, working with
+        adventurous clients and providing Creative Concept, Branding, Graphic
+        Design, Art Direction and Digital Communication services.
+      </p>
+      <a
+        href="#"
+        class="u-btn u-btn-rectangle u-button-style u-color-scheme-summer-time u-palette-2-base u-radius-0 u-btn-1"
+        >Learn more</a
+      >
+    </div>
+  </section>
+  <section class="u-align-center u-clearfix u-section-2" id="sec-4e46">
+    <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+      <h2 class="u-text u-text-default u-text-1">subscribe</h2>
+      <div class="u-form u-form-1">
+        <form
+          action="/Subscribe/" method="post"
+          class="u-clearfix u-form-horizontal u-form-spacing-15 u-inner-form"
+          style="padding: 15px"
+          source="email"
+        >
+        {% csrf_token %}
+          <div class="u-form-email u-form-group u-label-none">
+            <label for="email-ef64" class="u-label">Email</label>
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              class="u-input u-input-rectangle"
+              required=""
+            />
+          </div>
+          <button type="submit" class="u-btn u-btn-submit u-button-style">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</body>
+{% endblock body %}

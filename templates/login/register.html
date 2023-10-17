@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% block content %} 
+
+{% load crispy_forms_tags %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Registration| Pyrenean </title>
+    <link rel="stylesheet" href="../static/css/register.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+      {% if messages %}
+          {% for message in messages %}
+            <div class="alert" role="alert"> {{ message }} </div>
+        {% endfor %}
+      {% endif %}
+    <div class="content">
+      <form method="POST">
+      <div class="title"> <h6> {{ context.error }} </h6> </div>
+		{% csrf_token %}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Full Name</span>
+            <input type="text" placeholder="Enter your name" required name="username">
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input type="email" placeholder="Enter your email" required name="email">
+          </div>
+          <div class="input-box">
+            <span class="details">Password</span>
+            <input type="text" placeholder="Enter your password" required name="password">
+          </div>
+          <div class="input-box">
+            <span class="details">Confirm Password</span>
+            <input type="text" placeholder="Confirm your password" required>
+          </div>
+        </div>
+        <div class="button">
+          <input type="submit" value="Register">
+          <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+{% endblock %}
+</html>

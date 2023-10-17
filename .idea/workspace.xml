@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2UHcdjPxMFSrLnS4jAQ36oINio3" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "15-10",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\_Code_PlayGround\_pyreneanClothing\templatetags" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="_pyreneanClothing" type="Python.DjangoServer" factoryName="Django server">
+      <module name="_pyreneanClothing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="_pyreneanClothing.settings" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\mayur\anaconda3\envs\vittenv\python.exe" />
+      <option name="SDK_NAME" value="vittenv" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="0.0.0.0" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="" />
+      <created>1692600036229</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692600036229</updated>
+      <workItem from="1692600040293" duration="7373000" />
+      <workItem from="1692693682279" duration="329000" />
+      <workItem from="1692783167651" duration="860000" />
+      <workItem from="1692856950391" duration="642000" />
+      <workItem from="1692860850877" duration="3102000" />
+      <workItem from="1692867675040" duration="2202000" />
+      <workItem from="1692908451154" duration="7911000" />
+      <workItem from="1692952811831" duration="626000" />
+      <workItem from="1692998597491" duration="4351000" />
+      <workItem from="1693006754929" duration="3441000" />
+      <workItem from="1693036860830" duration="4746000" />
+      <workItem from="1693067929788" duration="1968000" />
+      <workItem from="1693132294774" duration="614000" />
+      <workItem from="1693332575917" duration="2694000" />
+      <workItem from="1693510738373" duration="11372000" />
+      <workItem from="1693555259719" duration="4744000" />
+      <workItem from="1693636129212" duration="18263000" />
+      <workItem from="1693682749903" duration="213000" />
+      <workItem from="1693730016626" duration="1536000" />
+      <workItem from="1693736026229" duration="3054000" />
+      <workItem from="1693898896952" duration="1955000" />
+      <workItem from="1694875615520" duration="369000" />
+      <workItem from="1695488581806" duration="660000" />
+      <workItem from="1695555087467" duration="22229000" />
+      <workItem from="1695621355245" duration="7316000" />
+      <workItem from="1695706515458" duration="13474000" />
+      <workItem from="1695805714283" duration="2192000" />
+      <workItem from="1695878320744" duration="4604000" />
+      <workItem from="1695886173478" duration="6372000" />
+      <workItem from="1695972861844" duration="3507000" />
+      <workItem from="1696023034714" duration="2405000" />
+      <workItem from="1696062312369" duration="10189000" />
+      <workItem from="1696096783953" duration="10322000" />
+      <workItem from="1696145233118" duration="9818000" />
+      <workItem from="1696157664233" duration="7413000" />
+      <workItem from="1696179214483" duration="6402000" />
+      <workItem from="1696185855685" duration="754000" />
+      <workItem from="1696225042968" duration="2625000" />
+      <workItem from="1696688112600" duration="272000" />
+      <workItem from="1696692781813" duration="13029000" />
+      <workItem from="1696768554981" duration="368000" />
+      <workItem from="1696783427883" duration="107000" />
+      <workItem from="1696783553732" duration="11300000" />
+      <workItem from="1696795019213" duration="13703000" />
+      <workItem from="1696878647652" duration="5381000" />
+      <workItem from="1696922128745" duration="7079000" />
+      <workItem from="1696967953676" duration="9639000" />
+      <workItem from="1697009026561" duration="1284000" />
+      <workItem from="1697141622556" duration="3466000" />
+      <workItem from="1697184144156" duration="3856000" />
+      <workItem from="1697230027507" duration="465000" />
+      <workItem from="1697230654956" duration="2612000" />
+      <workItem from="1697280275020" duration="3971000" />
+      <workItem from="1697310603988" duration="7520000" />
+      <workItem from="1697353026418" duration="7999000" />
+      <workItem from="1697364567630" duration="280000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User Data | Pyrenean </title>
+    <link rel="stylesheet" href="../static/css/edit_user_data.css">
+</head>
+<body>
+<div class="contact_us_2">
+    <div class="responsive-container-block big-container">
+      <div class="blueBG">
+      </div>
+      <div class="responsive-container-block container">
+        
+        <form class="form-box"  method="post">
+          {% csrf_token %}
+          <div class="container-block form-wrapper">
+            {% if messages %}
+              {% for message in messages %}
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+              {% endfor %}
+          {% endif %}
+            <p class="text-blk contactus-head">
+              Personal Data
+            </p>
+            <p class="text-blk contactus-subhead">
+            </p>
+            <div class="responsive-container-block">
+              <div class="responsive-cell-block wk-ipadp-6 wk-tab-12 wk-mobile-12 wk-desk-6" id="i10mt">
+                <p class="text-blk input-title">
+                  FIRST NAME
+                </p>
+                <input class="input" id="ijowk" name="FirstName" placeholder="Please enter first name...">
+              </div>
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  EMAIL
+                </p>
+                <input class="input" id="email" name="email" placeholder="Please enter email...">
+              </div>
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  PHONE NUMBER
+                </p>
+                <input class="input" id="imgis" name="phone_number" placeholder="Please enter phone number...">
+              </div>
+              <p class="text-blk contactus-head">
+                Address Data
+              </p>
+
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  building or Home 
+                </p>
+                <input class="input" id="imgis" name="building" placeholder="Please enter phone number...">
+              </div>
+
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                    street 
+                </p>
+                <input class="input" id="imgis" name="street" placeholder="Please enter phone number...">
+              </div>
+
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  area 
+                </p>
+                <input class="input" id="imgis" name="area" placeholder="Please enter phone number...">
+              </div>
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  pincode 
+                </p>
+                <input class="input" id="imgis" name="pincode" placeholder="Please enter phone number...">
+              </div>
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  city 
+                </p>
+                <input class="input" id="imgis" name="city" placeholder="Please enter phone number...">
+              </div>
+              <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
+                <p class="text-blk input-title">
+                  state 
+                </p>
+                <input class="input" id="state" name="state" placeholder="Please enter phone number...">
+              </div>
+             
+            </div>
+             <button class="submit-btn" onclick="GotoHome()">submit</button>
+            <script>
+                function GotoHome() {
+                    location.replace("/")
+                    alert("hhh")
+                }
+            </script>
+
+          </div>
+     
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %} Contact | Pyrenean {% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/Contact.css' %}" media="screen" />
+{% endblock head %}
+{% block body %}
+
+<body class="u-body u-xl-mode" data-lang="en">
+
+  <section class="u-align-center u-clearfix u-grey-5 u-section-1" id="sec-0f7b">
+    <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+      <h1 class="u-text u-text-default u-text-1">Contact Us</h1>
+      <div class="u-form u-form-1">
+        <form action="/contactForm/"
+          class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" style="padding: 10px" source="email"
+          name="form" method="post">
+          {% csrf_token %}
+          <div class="u-form-group u-form-name u-label-none">
+            <input type="text" placeholder="Enter your Name"  name="name"
+              class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-1"
+              required>
+          </div>
+          <div class="u-form-email u-form-group u-label-none">
+            <input type="email" placeholder="Enter a valid email address" name="email"
+              class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-2"
+              required>
+          </div>
+          <div class="u-form-group u-form-message u-label-none">
+            <textarea placeholder="Enter your message" rows="4" cols="50"  name="message"
+              class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-3"
+              required></textarea>
+          </div>
+          <button type="submit" style="margin: 0px auto;" class="u-border-2 u-border-black u-btn u-btn-rectangle u-btn-submit u-button-style u-none u-btn-1">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+
+  
+
+</body>
+
+{% endblock body %}

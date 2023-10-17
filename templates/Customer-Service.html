@@ -1,0 +1,75 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %} Contact | Pyrenean {% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/Customer-Service.css' %}" media="screen" />
+{% endblock head %}
+{% block body %}
+
+<body class="u-body u-xl-mode" data-lang="en">
+
+  <section class="u-align-center u-clearfix u-palette-2-base u-valign-middle u-section-1" id="carousel_a4da">
+    <div class="u-clearfix u-expanded-width u-gutter-0 u-layout-wrap u-layout-wrap-1">
+      <div class="u-layout">
+        <div class="u-layout-row">
+          <div
+            class="u-align-center u-container-align-left-lg u-container-align-left-xl u-container-style u-layout-cell u-left-cell u-size-30 u-white u-layout-cell-1"
+            data-animation-name="customAnimationIn" data-animation-duration="1500">
+            <div class="u-container-layout u-container-layout-1">
+              <h3 class="u-align-center-md u-align-center-sm u-align-center-xs u-text u-text-palette-1-base u-text-1"> I
+                WANT TO KNOW WHERE MY ORDER IS?</h3>
+              <p
+                class="u-align-center-sm u-align-center-xs u-large-text u-text u-text-palette-1-base u-text-variant u-text-2">
+                Enter the order number found in the order confirmation email</p>
+              <div class="u-form u-form-1">
+                <form action=""
+                  class="u-clearfix u-form-spacing-21 u-form-vertical u-inner-form" style="padding: 0px;" source="number"
+                  name="form">
+                  <div class="u-form-group u-form-group-1">
+                    <label for="phone-fbbe" class="u-label" wfd-invisible="true">Your Order Number</label>
+                    <input type="number" placeholder="Order No." id="phone-fbbe" name="number"
+                      class="u-border-2 u-border-white u-input u-input-rectangle u-radius-7 u-input-1"
+                      required="required" autofocus="autofocus">
+                  </div>
+                  <div class="u-align-left u-form-group u-form-submit">
+                    <a href="#"
+                      class="u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-7 u-btn-1">Track
+                      Your Order</a>
+                    <input type="submit" value="submit" class="u-form-control-hidden" wfd-invisible="true">
+                  </div>
+                  <div class="u-form-send-message u-form-send-success" wfd-invisible="true"> Thank you! Your message has
+                    been sent. </div>
+                  <div class="u-form-send-error u-form-send-message" wfd-invisible="true"> Unable to send your message.
+                    Please fix errors then try again. </div>
+                  <input type="hidden" value="" name="recaptchaResponse" wfd-invisible="true">
+                  <input type="hidden" name="formServices" value="48bdb258-09bd-8424-08d4-08ca921a10bc">
+                </form>
+              </div>
+            </div>
+          </div>
+          <div
+            class="u-align-left u-container-align-left u-container-style u-layout-cell u-right-cell u-size-30 u-white u-layout-cell-2"
+            data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="250">
+            <div class="u-container-layout u-valign-middle u-container-layout-2">
+              <p class="u-align-left u-text u-text-palette-1-light-1 u-text-3">Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas maecenas
+                pharetra convallis posuere morbi.</p>
+              <div class="u-image u-image-circle u-preserve-proportions u-image-1" alt="" data-image-width="328"
+                data-image-height="328"></div>
+              <h4 class="u-align-left u-text u-text-palette-2-base u-text-4"> James Oliver</h4>
+              <h5 class="u-align-left u-text u-text-palette-2-base u-text-5">App Developer</h5>
+              <p class="u-align-left u-text u-text-palette-1-light-1 u-text-6">Quis viverra nibh cras pulvinar mattis.
+                Ornare arcu dui vivamus arcu felis bibendum ut tristique.<br>
+                <br>Image from <a href="https://freepik.com/photos/people"
+                  class="u-active-none u-border-1 u-border-no-left u-border-no-right u-border-no-top u-border-palette-1-light-2 u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-light-2 u-btn-2">Freepik</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+{% endblock body %}
