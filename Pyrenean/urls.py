@@ -3,13 +3,14 @@ from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductD
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
                             RegisterView, ResetView,
                             UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView)
+                            Terms_ConditionView, TestView)
 from . import views
 
 app_name = "main"
 
 urlpatterns = [
-    path('', HomeView.as_view(), name="index"),
+    path('', HomeView, name="index"),
+    path('test/', TestView.as_view(), name="test"),
     path('about/', AboutView.as_view(), name="about"),
     path('contact/', ContactView.as_view(), name="contact"),
     path('cart/', CartView.as_view(), name="cart"),

@@ -17,12 +17,17 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 
 from .forms import ContactFormModel, SubscribeForm
-from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, SubscribeNow
+from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, \
+    SubscribeNow
 
 global product_total, slug
 
 
-class HomeView(TemplateView):
+def HomeView(request):
+    return render(request, "Comming-Soon.html")
+
+
+class TestView(TemplateView):
     template_name = "Home.html"
 
     def get_context_data(self, **kwargs):
@@ -311,6 +316,7 @@ class Terms_ConditionView(TemplateView):
     def get_context_data(self, **kwargs):
         Terms = super().get_context_data()
         return Terms
+
 
 class mail:
 

@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/images/Cazibe Men's Striped Regular fit T-Shirt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/static/images/Cazibe Men's Striped Regular fit T-Shirt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_pyreneanClothing/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/_pyreneanClothing/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +44,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;15-10&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -146,7 +150,8 @@
       <workItem from="1697353026418" duration="7999000" />
       <workItem from="1697364567630" duration="999000" />
       <workItem from="1697392900292" duration="1389000" />
-      <workItem from="1697520474563" duration="663000" />
+      <workItem from="1697520474563" duration="3666000" />
+      <workItem from="1697615118579" duration="2417000" />
     </task>
     <servers />
   </component>
