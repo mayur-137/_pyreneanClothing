@@ -9,16 +9,15 @@ from .forms import ContactFormModel
 from django.contrib.auth.models import User, auth
 from django.views import View
 from django.contrib import messages
-import random, smtplib, requests, ast, razorpay
+import random, smtplib, ast, razorpay
 from django.db.models import Max
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-
+from django.views.decorators.csrf import csrf_exempt
+from .paytm import Checksum
 
 global product_total, getSize_id, getSize, slug
-
-
 class HomeView(TemplateView):
     template_name = "Home.html"
 
@@ -194,6 +193,7 @@ class Update_cart_view(View):
 class RemoveItemView(View):
 
     def post(self, request, *args, **kwargs):
+        
         GetRemoveItemId = request.POST.get("removeItem")
         cart_session = request.session.get('cart_session', {})
         if GetRemoveItemId in cart_session:
@@ -208,7 +208,8 @@ class mail:
         print("generate otp")
         n = random.randint(100000, 999999)
         print(n)
-        return n
+        return n 
+     
 
     def send_mail(self, email, msg):
         server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -702,6 +703,8 @@ class razor_payment:
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
         email = request.user.email
         check_data = razor_payment.check_user_data(request=request,email=email)
+        MERCHANT_KEY =""
+        
         print("razor front page")
         if check_data:
             order_user = cart_data.objects.get(email=email)
@@ -743,16 +746,28 @@ class razor_payment:
                 price = i.split("#")[2]
                 msg += "\n{}-{}-{}".format(name, quantity, price)
             context["order_product"] = msg
-            return render(request, 'cart_checkout/razor_front.html', context=context)
+            
+            param_dict = {
+
+                'MID': 'CEhOrt75024298170926',
+                'ORDER_ID': str(1),
+                'TXN_AMOUNT': str(amount),
+                'CUST_ID': email,
+                'INDUSTRY_TYPE_ID': 'Retail',
+                'WEBSITE': 'WEBSTAGING',
+                'CHANNEL_ID': 'WEB',
+                'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
+
+        }
+            param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+            return render(request, 'cart_checkout/paytm_template.html', {'param_dict': param_dict})            
+            # return render(request, 'cart_checkout/razor_front.html', context=context)
         else:
             print("you have to add your address first")
             context = "you have to add your address first"
             messages.success(request, context)
             request.session['edit_redirect'] = 'initiate_payment'
             return redirect('/edit_user_data/', {"context": context})
-
-
-
 
     @csrf_exempt
     def paymenthandler(self, request, razorpay_client=razorpay_client):
@@ -840,5 +855,91 @@ class razor_payment:
             # if other than POST request is made.
             return HttpResponseBadRequest()
 
-
 Rozor = razor_payment()
+
+class paytm_payment():
+    
+    @csrf_exempt
+    def handlerequest(request):
+        MERCHANT_KEY = ""
+         # paytm will send you post request here
+        form = request.POST
+        response_dict = {}
+        for i in form.keys():
+            response_dict[i] = form[i]
+            if i == 'CHECKSUMHASH':
+                checksum = form[i]
+
+        verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+        if verify:
+            if response_dict['RESPCODE'] == '01':
+                print('order successful')
+                order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+                order = final_order.objects.get(order_id=order_id)
+                order.shiprocket_dashboard = True
+                order.save()
+                email =  request.user.email
+                #send  confirmation mail
+                try:
+                    mail.confirm_order_mail(email=request.user.email,id=a.json()['order_id'])
+                    try :
+                        order_user = cart_data.objects.get(email=email)
+                        order_user.delete()
+                        print("cart empty")
+                        print("cart data is deleted")
+                    except:
+                        print(KeyError)
+                        return render(request, 'cart_checkout/paymentfail.html')
+                except:
+                    print("there is some issue with mail ")
+                    return render(request, 'cart_checkout/paymentfail.html')
+                
+                print("shipment done")
+                return render(request, 'cart_checkout/paymentsuccess.html')
+                return render("cart_checkout/paymentsuccess.html")
+            else:
+                print('order was not successful because' + response_dict['RESPMSG'])
+                return render('cart_checkout/paymentfail.html')
+                
+    # import requests
+    # import json
+
+    # # import checksum generation utility
+    # # You can get this utility from https://developer.paytm.com/docs/checksum/
+    # import PaytmChecksum
+
+    # paytmParams = dict()
+
+    # paytmParams["body"] = {
+    # "requestType"   : "Payment",
+    # "mid"           : "YOUR_MID_HERE",
+    # "websiteName"   : "YOUR_WEBSITE_NAME",
+    # "orderId"       : "ORDERID_98765",
+    #     "callbackUrl"   : "https://<callback URL to be used by merchant>",
+    #     "txnAmount"     : {
+    #         "value"     : "1.00",
+    #         "currency"  : "INR",
+    #     },
+    #     "userInfo"      : {
+    #         "custId"    : "CUST_001",
+    #     },
+    # }
+
+    # # Generate checksum by parameters we have in body
+    # # Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
+    # checksum = PaytmChecksum.generateSignature(json.dumps(paytmParams["body"]), "YOUR_MERCHANT_KEY")
+
+    # paytmParams["head"] = {
+    #     "signature"    : checksum
+    # }
+
+    # post_data = json.dumps(paytmParams)
+
+    # # for Staging
+    # url = "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=YOUR_MID_HERE&orderId=ORDERID_98765"
+
+    # # for Production
+    # # url = "https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=YOUR_MID_HERE&orderId=ORDERID_98765"
+    # response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
+    # print(response)
+
