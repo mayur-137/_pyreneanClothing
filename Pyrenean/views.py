@@ -77,6 +77,7 @@ class ProductDetailsView(TemplateView):
         PD["size"] = self.kwargs.get("size")
         PD["size_id"] = self.kwargs.get("id")
         PD['Size'] = Size.objects.all()
+        PD["slug"] = self.kwargs.get("slug")
         PD["PRD"] = Product_Details.objects.filter(slug=slug)
         for data in PD['PRD']:
             data.discounted_price = float(data.price - (data.price * data.discount / 100))
@@ -100,9 +101,10 @@ class AddToCartView(View):
             
         if getSize_id == str(None):
             print("select size you idiot")
+            slug = request.POST.get("slug")
             messages.error(request, "Please select a size first")
-            print("redirecting")
-            return redirect(f"/ProductDetails/1")
+            print("redirecting",slug)
+            return redirect(f"/ProductDetails/{slug}")
 
         else:
             print("size is selected")
