@@ -94,19 +94,32 @@ class CustomerServiceView(TemplateView):
 class AddToCartView(View):
 
     def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('product_id')
+        print("add to cart")
         getSize_id = request.POST.get("size_id")
-        getSize_id = getSize_id.split("=")[1]
-        size_session = request.session.get("size_session", {})
-        product = Size.objects.filter(id=getSize_id)
-        for detail in product:
-            pass
+        print("size is",getSize_id,type(getSize_id))
+            
+        if getSize_id == str(None):
+            print("select size you idiot")
+            messages.error(request, "Please select a size first")
+            print("redirecting")
+            return redirect(f"/ProductDetails/1")
 
-        if size_session.get(getSize_id) is None or size_session.get(getSize_id) < detail.quantity:
-            size_session[getSize_id] = size_session.get(getSize_id, 0) + 1
-            request.session["size_session"] = size_session
+        else:
+            print("size is selected")
+            product_id = request.POST.get('product_id')
+            getSize_id = request.POST.get("size_id")
+            getSize_id = getSize_id.split("=")[1]
+            size_session = request.session.get("size_session", {})
+            product = Size.objects.filter(id=getSize_id)
+            print("size is ",getSize_id,size_session)
+            for detail in product:
+                pass
 
-        return redirect("/cart/")
+            if size_session.get(getSize_id) is None or size_session.get(getSize_id) < detail.quantity:
+                size_session[getSize_id] = size_session.get(getSize_id, 0) + 1
+                request.session["size_session"] = size_session
+
+            return redirect("/cart/")
 
 
 class CartView(View):
