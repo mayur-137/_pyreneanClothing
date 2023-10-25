@@ -16,9 +16,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 
-from .forms import ContactFormModel, SubscribeForm
+from .forms import ContactFormModel, SubscribeForm, PromoCodeForm
 from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, \
-    SubscribeNow
+    SubscribeNow, PromoCode
 
 global product_total, slug
 
@@ -35,7 +35,8 @@ class TestView(TemplateView):
         context["Products"] = Product_Details.objects.all()
         context['Size'] = Size.objects.all()
         for data in context["Products"]:
-            data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+            if data.discount != 0:
+                data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
         return context
 
 
@@ -79,7 +80,8 @@ class ProductDetailsView(TemplateView):
         PD['Size'] = Size.objects.all()
         PD["PRD"] = Product_Details.objects.filter(slug=slug)
         for data in PD['PRD']:
-            data.discounted_price = float(data.price - (data.price * data.discount / 100))
+            if data.discount != 0:
+                data.discounted_price = float(data.price - (data.price * data.discount / 100))
         return PD
 
 
@@ -95,18 +97,27 @@ class AddToCartView(View):
 
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id')
-        getSize_id = request.POST.get("size_id")
-        getSize_id = getSize_id.split("=")[1]
-        size_session = request.session.get("size_session", {})
-        product = Size.objects.filter(id=getSize_id)
-        for detail in product:
-            pass
+        slug = request.POST.get("slug")
+        GetSize_id = request.POST.get("size_id")
+        print(type(GetSize_id), "size id", GetSize_id)
+        try:
+            GetSize_id = GetSize_id.split("=")[1]
+            print(product_id, "hi", GetSize_id, "ids")
+            size_session = request.session.get("size_session", {})
+            print(size_session, "sizesession000")
+            product = Size.objects.filter(id=GetSize_id)
+            for detail in product:
+                print(detail)
 
-        if size_session.get(getSize_id) is None or size_session.get(getSize_id) < detail.quantity:
-            size_session[getSize_id] = size_session.get(getSize_id, 0) + 1
-            request.session["size_session"] = size_session
+            if size_session.get(GetSize_id) is None or size_session.get(GetSize_id) < detail.quantity:
+                size_session[GetSize_id] = size_session.get(GetSize_id, 0) + 1
+                request.session["size_session"] = size_session
+                print(size_session, "sizesession111")
 
-        return redirect("/cart/")
+            return redirect("/cart/")
+        except Exception as e:
+            print(e, "e")
+            return redirect(f"/ProductDetails/{slug}")
 
 
 class CartView(View):
@@ -118,6 +129,12 @@ class CartView(View):
         products_list = []
         product_total = 0
         size_session = request.session.get("size_session", {})
+        try:
+            discount = request.session["discount"]
+            discounted_price_coupen = request.session["discounted_price"]
+            print(discount, discounted_price_coupen, "hey")
+        except:
+            pass
         try:
             itm = Size.objects.filter(id__in=size_session.keys())
             if itm:
@@ -131,6 +148,7 @@ class CartView(View):
                         product.product.price - (product.product.price * product.product.discount / 100)) + 1
                     product.subtotal = product.discounted_price * size_session[str(product.id)]
                     product_total = product.subtotal + product_total
+                    product_size = product.size
                     product.product_quantity = str(size_session[str(product.id)])
                     product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
                                        "quantity": product.product_quantity,
@@ -173,9 +191,14 @@ class CartView(View):
                         getDataForCartEdit.quantity = GetQuantity
                         getDataForCartEdit.subtotal = Getsubtotal
                         f.append(getDataForCartEdit)
-
+                    if discounted_price_coupen == 0:
+                        discounted_price_coupen = i.order_total
+                    elif i.order_total < 1500:
+                        discount = 0
+                        discounted_price_coupen = i.order_total
+                    else:pass
                 return render(request, 'cart_checkout/Cart.html',
-                              {'products': f, 'product_total': i.order_total})
+                              {'products': f, 'product_total': i.order_total, "discount": discount, "discounted_price": discounted_price_coupen})
             else:
                 user_cart_fill = cart_data.objects.filter(email=email)
                 for i in user_cart_fill:
@@ -209,7 +232,6 @@ class CartView(View):
             else:
                 messages.info(request, "Please Choose the Product First")
                 return redirect("/")
-
         return render(request, 'cart_checkout/cart.html',
                       {'products': products_list, 'product_total': product_total})
 
@@ -308,6 +330,32 @@ class SubscribeView(CreateView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+
+class PromoCodeView(View):
+    model = PromoCode
+    template_name = "cart_checkout/Cart.html"
+
+    def post(self, request, *args, **kwargs):
+        All_promos = PromoCode.objects.all()
+        GetPromo = request.POST.get("code")
+        GetDiscount = int(request.POST.get("discount_coupen"))
+        print(GetDiscount, "id")
+        print(GetPromo, "123")
+        for promo in All_promos:
+            if GetPromo == promo.code:
+                print("yes")
+                if int(GetDiscount) >= 1500:
+                    discounted_price_coupen = GetDiscount - promo.discount_percent
+                    request.session["discount"] = promo.discount_percent
+                    request.session["discounted_price"] = discounted_price_coupen
+                else:
+                    print(f"not applied because your price is {GetDiscount} less then 1500")
+            else:
+                request.session["discount"] = 0
+                request.session["discounted_price"] = 0
+
+        return redirect("/cart/")
 
 
 class Terms_ConditionView(TemplateView):
@@ -856,7 +904,7 @@ class razor_payment:
             context['currency'] = currency
             context['callback_url'] = callback_url
             # c = user_address.objects.get(email=email)
-            # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)    
+            # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)
             # print(address)
             context['address'] = order_address
             context["order_total"] = order_total

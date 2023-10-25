@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ContactModel, user_address, Size, user_email, cart_data, final_order, Product_Details, WishList, \
-    SubscribeNow
+    SubscribeNow, PromoCode
 
 
 # Register your models here.# Register your models here.
@@ -64,3 +64,8 @@ class WishListAdmin(admin.ModelAdmin):
 @admin.register(SubscribeNow)
 class WishListAdmin(admin.ModelAdmin):
     list_display = ["id", "email"]
+
+
+@admin.register(PromoCode)
+class PromoCodeAdmin(admin.ModelAdmin):
+    list_display = ["active", "code", "discount_percent"]

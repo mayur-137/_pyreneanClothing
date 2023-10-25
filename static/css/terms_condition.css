@@ -96,8 +96,8 @@ a:hover {
 .card {
     margin-top: 50px;
     margin-bottom: 40px;
-    height : 2070px;
-    width: 1200px;
+    height : 100%;
+    width: 96%;
     border-radius: 20px;
     background-color: #333541;
     margin-left: auto;
@@ -141,8 +141,8 @@ a:hover {
     .card {
         margin-top: 60px;
         margin-bottom: 50px;
-        height : 2260px;
-        width: 1000px;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;
@@ -154,8 +154,8 @@ a:hover {
     .card {
         margin-top: 45px;
         margin-bottom: 45px;
-        height : 2440px;
-        width: 800px;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;
@@ -167,8 +167,8 @@ a:hover {
     .card {
         margin-top: 40px;
         margin-bottom: 30px;
-        height : 2920px;
-        width: 600px;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;
@@ -187,8 +187,8 @@ a:hover {
     .card {
         margin-top: 37px;
         margin-bottom: 30px;
-        height : 3630px;
-        width: 450px;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;
@@ -212,8 +212,8 @@ a:hover {
     .card {
         margin-top: 15px;
         margin-bottom: 20px;
-        height : 4620px;
-        width: 350px;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;
@@ -229,8 +229,8 @@ a:hover {
     .card {
         margin-top: 35px;
         margin-bottom: 25px;
-        height : 4300px;
-        width: auto;
+        height : 100%;
+        width: 96%;
         border-radius: 20px;
         background-color: #333541;
         margin-left: auto;

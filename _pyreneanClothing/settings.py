@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u2+tus=5lsq^m5k+#8jsgp_^&pjs0#c@l1dv%myber@s0dx!kx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Pyrenean.apps.PyreneanConfig',
     'crispy_forms',
+    'rest_framework',
 
 ]
 

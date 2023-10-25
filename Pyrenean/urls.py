@@ -3,7 +3,7 @@ from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductD
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
                             RegisterView, ResetView,
                             UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView, TestView)
+                            Terms_ConditionView, TestView, PromoCodeView)
 from . import views
 
 app_name = "main"
@@ -21,6 +21,7 @@ urlpatterns = [
     path('Subscribe/', SubscribeView.as_view(), name="SubscribeView"),
     path('ProductDetails/<slug:slug>', ProductDetailsView.as_view(), name="ProductDetails"),
     path('ProductDetails/<slug:slug>/<str:size>/<str:id>', ProductDetailsView.as_view(), name="ProductDetails"),
+    path('PromoCode/', PromoCodeView.as_view(), name="PromoCode"),
 
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),

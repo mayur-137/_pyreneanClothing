@@ -13,7 +13,7 @@
 {% if not user.is_authenticated  %}
     {% if messages %}
         {% for message in messages %}
-            <div class="alert" role="alert"> {{ message }} </div>
+            <div id="alert" class="alert" role="alert"> {{ message }} </div>
         {% endfor %}
     {% endif %}
 {% endif %}
@@ -109,9 +109,14 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
               <!--/product_old_price--><!--product_regular_price-->
 
               <div class="u-price u-text-palette-2-base" style="font-size: 1.5rem; font-weight: 600;">
-                  <span><strong>&#8377;{{ item.discounted_price }}</strong></span>
+                  {% if item.discount == 0 %}
+                    <span style="color: grey; margin-right: 293px">&#8377;{{item.price}}</span>
+                {% endif %}
+              {% if item.discount != 0 %}
+                <span><strong>&#8377;{{ item.discounted_price }}</strong></span>
                 <span style="text-decoration: line-through; color: grey;">&#8377;{{item.price}}</span>
                 <span style="color: green">Discount {{ item.discount }}% off</span>
+              {% endif %}
               </div>
             </div>
           </div>
@@ -128,7 +133,12 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
         </div>
           <p class="u-text u-text-2">
            <strong>Description :</strong><br>
-            {{ item.description }}
+
+{#            {% for line in  item.description|linebreaksbr|safe %}#}
+{#                <ul>#}
+{#                    <li>{{ line }}</li>#}
+{#                </ul>#}
+{#            {% endfor %}#}
           </p>
           <form method="post" action="/add_to_cart/">
             {% csrf_token %}
@@ -136,7 +146,7 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
             <input type="hidden" name="size_id" value="{{ size_id }}">
             <input type="hidden" name="size" value="{{ size }}">
             <input type="hidden" name="slug" value="{{ item.slug }}">
-            <button type="submit" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-product-control u-text-black u-text-hover-white u-btn-7">Add to Cart</button>
+            <button type="submit" id="addToCartButton" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-product-control u-text-black u-text-hover-white u-btn-7">Add to Cart</button>
           </form>
 
           {% endfor %}
