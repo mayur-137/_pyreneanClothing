@@ -1,12 +1,13 @@
 {% extends 'Base.html' %}
 {% load static %}
 {% block title %} Cart | Pyrenean {% endblock title %}
+{% block script %} <script src="https://js.stripe.com/v3/"></script> {% endblock script%} 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/Cart.css' %}" media="screen">
 {% endblock head %}
 {% block body %}
 
-<body class="u-body u-xl-mode" data-lang="en">
+<body class="u-body u-xl-mode" data-lang="en">  
 
 
   <section class="u-clearfix u-section-1" id="sec-6fa9">
@@ -157,9 +158,13 @@
                       </tr>
                     </tbody>
                   </table>
+                  <form  action = "/create-checkout-session/" method="post">
+                    {% csrf_token %}
+                     <button  type="submit" class="u-btn u-btn-round u-button-style u-cart-checkout-btn u-radius-50 u-btn-4">Proceed to
+                    Checkout</button>              
+                  </form>
                 </div>
-                <a href="/initiate_payment/" class="u-btn u-btn-round u-button-style u-cart-checkout-btn u-radius-50 u-btn-4">Proceed to
-                  Checkout</a>
+                
               </div>
             </div>
           </div>

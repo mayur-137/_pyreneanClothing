@@ -980,3 +980,55 @@ class razor_payment:
 
 
 Rozor = razor_payment()
+
+#stripe 
+
+import stripe
+from django.conf import settings
+from django.shortcuts import redirect
+from django.views import View
+from django.conf import settings
+    
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+class CreateStripeCheckoutSessionView(View):
+    print("strip is starting")
+    """
+    Create a checkout session and redirect the user to Stripe's checkout page
+    """
+
+    def post(self, request, *args, **kwargs):
+        print("request")
+        price = str("444")
+        print("data is being prepared")
+       
+        checkout_session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[
+                {
+                    "price_data": {
+                        "currency": "inr",
+                        "unit_amount": 5000,
+                        "product_data": {
+                            "name": "cat socks",
+                            "description": "smoothing experience",
+                        },
+                    },
+                    "quantity": 1,
+                }
+            ],
+            metadata={"product_id": 2112},
+            mode="payment",
+            success_url=settings.PAYMENT_SUCCESS_URL,
+            cancel_url=settings.PAYMENT_CANCEL_URL,
+        )
+        print("data is ready")
+        return redirect(checkout_session.url)
+    
+from django.views.generic import TemplateView
+
+class SuccessView(TemplateView):
+    template_name = "products/success.html"
+
+class CancelView(TemplateView):
+    template_name = "products/cancel.html"
