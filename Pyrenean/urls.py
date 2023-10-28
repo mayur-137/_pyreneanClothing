@@ -1,9 +1,8 @@
 from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
-                            RegisterView, ResetView,
-                            UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView, TestView, PromoCodeView)
+                            RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
+                            Terms_ConditionView, TestView)
 from . import views
 
 app_name = "main"
@@ -45,5 +44,9 @@ urlpatterns = [
 
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
     path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
+    #
+    # path("create-checkout-session/",CreateStripeCheckoutSessionView.as_view(),name="create-checkout-session"),
+    # path("success/", SuccessView.as_view(), name="success"),
+    # path("cancel/", CancelView.as_view(), name="cancel"),
 
 ]
