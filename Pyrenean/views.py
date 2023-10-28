@@ -5,22 +5,24 @@ import razorpay
 import requests
 import smtplib
 
+from math import ceil
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from django.db.models import Max
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
+from django.core.mail import EmailMessage
 
-from .forms import ContactFormModel, SubscribeForm, PromoCodeForm
+from .forms import ContactFormModel, SubscribeForm
 from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, \
     SubscribeNow, PromoCode
 
-global product_total, slug
+global product_total, slug, discounted_price_coupen, discount_coupen, promo_code
 
 
 def HomeView(request):
@@ -35,7 +37,7 @@ class TestView(TemplateView):
         context["Products"] = Product_Details.objects.all()
         context['Size'] = Size.objects.all()
         for data in context["Products"]:
-            data.discounted_price = float(data.price - (data.price * data.discount / 100))
+            data.discounted_price = ceil(data.price - (data.price * data.discount / 100))
         return context
 
 
@@ -47,6 +49,17 @@ class AboutView(TemplateView):
         return about
 
 
+class MailView(View):
+    email = "Pyrenean Clothing <info@pyreneanclothing.com>"
+    signature = "\n\nBest Regards,\nPyrenean Clothing"
+
+    def send_email(self, subject, message, to_email):
+        message += self.signature
+        email = EmailMessage(subject, message, self.email, [to_email])
+        print(subject, message, self.email, to_email, "contact")
+        email.send()
+
+
 class ContactView(TemplateView):
     template_name = "Contact.html"
 
@@ -55,7 +68,7 @@ class ContactView(TemplateView):
         return contact
 
 
-class ContactFormView(CreateView):
+class ContactFormView(CreateView, MailView):
     model = ContactModel
     form_class = ContactFormModel
     template_name = "Contact.html"
@@ -63,13 +76,24 @@ class ContactFormView(CreateView):
 
     def form_valid(self, form):
         contact = super().form_valid(form)
-        contact["res"] = "Your Query is Submitted."
+        email = form.cleaned_data["email"]
+        message = form.cleaned_data["message"]
+        message = message+"""\n\nDear User,
+
+Thank you for reaching out to us. We appreciate you taking the time to contact us. Your query has been received and is being reviewed by our support staff. We aim to respond as quickly as possible.
+
+Please note that our working hours are from 9:00 AM to 6:00 PM from Monday to Saturday. If you've reached out outside of these hours, we'll get back to you during our working hours.
+
+Thank you for your patience and understanding.
+
+"""
+        self.send_email("Regrading For Contacting Pyrenean", message, email)
         print("yes, submit")
+        messages.success(self.request, "Thanks for contacting us")
         return contact
 
     def form_invalid(self, form):
         contact = super().form_invalid(form)
-        contact["res"] = "Your Query Doesn't submitted."
         print("no not submit")
         return contact
 
@@ -87,7 +111,7 @@ class ProductDetailsView(TemplateView):
         PD["PRD"] = Product_Details.objects.filter(slug=slug)
         for data in PD['PRD']:
             if data.discount != 0:
-                data.discounted_price = float(data.price - (data.price * data.discount / 100))
+                data.discounted_price = ceil(data.price - (data.price * data.discount / 100))
         return PD
 
 
@@ -105,7 +129,7 @@ class AddToCartView(View):
         print("add to cart")
         getSize_id = request.POST.get("size_id")
         print("size is", getSize_id, type(getSize_id))
-            
+
         if getSize_id == str(None):
             print("select size you idiot")
             slug = request.POST.get("slug")
@@ -120,7 +144,7 @@ class AddToCartView(View):
             getSize_id = getSize_id.split("=")[1]
             size_session = request.session.get("size_session", {})
             product = Size.objects.filter(id=getSize_id)
-            print("size is ",getSize_id,size_session)
+            print("size is ", getSize_id, size_session)
             for detail in product:
                 pass
 
@@ -135,17 +159,21 @@ class CartView(View):
 
     def get(self, request, *args, **kwargs):
 
+        global discounted_price_coupen, discount_coupen, promo_code
         products_in_cart = []
         order_product_data = []
         products_list = []
         product_total = 0
         size_session = request.session.get("size_session", {})
         try:
-            discount = request.session["discount"]
+            discount_coupen = request.session["discount_coupen"]
             discounted_price_coupen = request.session["discounted_price"]
-            print(discount, discounted_price_coupen, "hey")
-        except:
-            pass
+            promo_code = request.session["PromoMessage"]
+            print(discount_coupen, discounted_price_coupen, promo_code, "hey")
+        except Exception as e:
+            discount_coupen = 0
+            discounted_price_coupen = 0
+            print(e, "Promo error")
         try:
             itm = Size.objects.filter(id__in=size_session.keys())
             if itm:
@@ -155,7 +183,7 @@ class CartView(View):
         for products in products_in_cart:
             for product in products:
                 try:
-                    product.discounted_price = float(
+                    product.discounted_price = ceil(
                         product.product.price - (product.product.price * product.product.discount / 100))
                     product.subtotal = product.discounted_price * size_session[str(product.id)]
                     product_total = product.subtotal + product_total
@@ -205,11 +233,13 @@ class CartView(View):
                     if discounted_price_coupen == 0:
                         discounted_price_coupen = i.order_total
                     elif i.order_total < 1500:
-                        discount = 0
+                        discount_coupen = 0
                         discounted_price_coupen = i.order_total
-                    else:pass
+                    else:
+                        pass
                 return render(request, 'cart_checkout/Cart.html',
-                              {'products': f, 'product_total': i.order_total, "discount": discount, "discounted_price": discounted_price_coupen})
+                              {'products': f, 'product_total': i.order_total, "discount": discount_coupen,
+                               "discounted_price": discounted_price_coupen, "PromoMessage": promo_code})
             else:
                 user_cart_fill = cart_data.objects.filter(email=email)
                 for i in user_cart_fill:
@@ -270,7 +300,7 @@ class WishListView(View):
                 favitem = Product_Details.objects.filter(id=item.product_id)
                 for data in favitem:
                     print(data.price, "data")
-                    data.discounted_price = float(data.price - (data.price * data.discount / 100))
+                    data.discounted_price = ceil(data.price - (data.price * data.discount / 100))
 
                 FavList.append(data)
                 print(FavList, "list")
@@ -354,17 +384,30 @@ class PromoCodeView(View):
         print(GetDiscount, "id")
         print(GetPromo, "123")
         for promo in All_promos:
-            if GetPromo == promo.code:
-                print("yes")
-                if int(GetDiscount) >= 1500:
-                    discounted_price_coupen = GetDiscount - promo.discount_percent
-                    request.session["discount"] = promo.discount_percent
-                    request.session["discounted_price"] = discounted_price_coupen
+            try:
+                print(type(GetPromo), type(promo.code))
+                if GetPromo == promo.code:
+                    print("yes")
+                    if int(GetDiscount) >= 1500:
+                        discounted_price_coupen = GetDiscount - promo.discount_percent
+                        request.session["discount_coupen"] = promo.discount_percent
+                        request.session["discounted_price"] = discounted_price_coupen
+                        request.session["PromoMessage"] = f"Congratulations, Your Coupon Code {promo.code} Applied."
+                        print(request.session["discounted_price"], request.session["discount_coupen"], "0")
+                        return redirect("/cart/")
+                    else:
+                        print(f"not applied because your price is {GetDiscount} less then 1500")
+                        request.session[
+                            "PromoMessage"] = f"Your Coupon Code Not Applied, Add {1500 - GetDiscount} to Applied."
+                        print("1")
+                        return redirect("/cart/")
                 else:
-                    print(f"not applied because your price is {GetDiscount} less then 1500")
-            else:
-                request.session["discount"] = 0
-                request.session["discounted_price"] = 0
+                    request.session["discount_coupen"] = 0
+                    request.session["discounted_price"] = 0
+                    request.session["PromoMessage"] = None
+                    print("21")
+            except Exception as e:
+                print(e, "set promo")
 
         return redirect("/cart/")
 

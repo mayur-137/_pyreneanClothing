@@ -2,7 +2,7 @@ from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
                             RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView, TestView)
+                            Terms_ConditionView, TestView, PromoCodeView)
 from . import views
 
 app_name = "main"
