@@ -1,12 +1,12 @@
 from pathlib import Path
-from decouple import config
+# from decouple import config
 
 #STRIPE
-STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
-STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
-BACKEND_DOMAIN = config("BACKEND_DOMAIN")
-PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
-PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
+# STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+# BACKEND_DOMAIN = config("BACKEND_DOMAIN")
+# PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
+# PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u2+tus=5lsq^m5k+#8jsgp_^&pjs0#c@l1dv%myber@s0dx!kx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 

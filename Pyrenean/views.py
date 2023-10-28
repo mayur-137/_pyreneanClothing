@@ -35,7 +35,7 @@ class TestView(TemplateView):
         context["Products"] = Product_Details.objects.all()
         context['Size'] = Size.objects.all()
         for data in context["Products"]:
-            data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+            data.discounted_price = float(data.price - (data.price * data.discount / 100))
         return context
 
 
@@ -62,10 +62,16 @@ class ContactFormView(CreateView):
     success_url = "/contact/"
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        contact = super().form_valid(form)
+        contact["res"] = "Your Query is Submitted."
+        print("yes, submit")
+        return contact
 
     def form_invalid(self, form):
-        return super().form_invalid(form)
+        contact = super().form_invalid(form)
+        contact["res"] = "Your Query Doesn't submitted."
+        print("no not submit")
+        return contact
 
 
 class ProductDetailsView(TemplateView):
@@ -97,13 +103,13 @@ class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         print("add to cart")
         getSize_id = request.POST.get("size_id")
-        print("size is",getSize_id,type(getSize_id))
+        print("size is", getSize_id, type(getSize_id))
             
         if getSize_id == str(None):
             print("select size you idiot")
             slug = request.POST.get("slug")
             messages.error(request, "Please select a size first")
-            print("redirecting",slug)
+            print("redirecting", slug)
             return redirect(f"/ProductDetails/{slug}")
 
         else:
@@ -142,8 +148,8 @@ class CartView(View):
         for products in products_in_cart:
             for product in products:
                 try:
-                    product.discounted_price = int(
-                        product.product.price - (product.product.price * product.product.discount / 100)) + 1
+                    product.discounted_price = float(
+                        product.product.price - (product.product.price * product.product.discount / 100))
                     product.subtotal = product.discounted_price * size_session[str(product.id)]
                     product_total = product.subtotal + product_total
                     product.product_quantity = str(size_session[str(product.id)])
@@ -252,7 +258,7 @@ class WishListView(View):
                 favitem = Product_Details.objects.filter(id=item.product_id)
                 for data in favitem:
                     print(data.price, "data")
-                    data.discounted_price = int(data.price - (data.price * data.discount / 100)) + 1
+                    data.discounted_price = float(data.price - (data.price * data.discount / 100))
 
                 FavList.append(data)
                 print(FavList, "list")
@@ -382,8 +388,11 @@ class mail:
 
     def verification(self, email, user_otp):
         print(user_otp, email)
-        user = user_email.objects.get(email=email)
-        otp = user.otp
+        try:
+            user = user_email.objects.get(email=email)
+            otp = user.otp
+        except Exception as e:
+            print(e, "eee1")
 
         if int(user_otp) == int(otp):
             return "yes"
@@ -458,6 +467,7 @@ class ResetView(View):
         if request.session.get('otp_verified'):
             print(request.session.get('otp_verified'), "hooooooooooooooooooooooooooo")
             print("yeeeeessss it's verified")
+            return render(request, "forget/reset_password.html")
         else:
             print("you need verify via otp first")
             context = "you need verify via otp first"
@@ -477,8 +487,13 @@ class ResetView(View):
                 print(user.password)
                 print("user data changed")
                 return redirect('/login/')
-            except:
-                print("no not saved")
+            except Exception as e:
+                if "User matching query does not exist" in str(e):
+                    context = "Email Not Found, Please Register First."
+                    return render(request, 'forget/reset_password.html', {'context': context})
+                else:
+                    context = "Please Try Again !!"
+                    return render(request, 'forget/reset_password.html', {'context': context})
         else:
             context = "enter same password"
             return render(request, 'forget/reset_password.html', {'context': context})
@@ -515,10 +530,17 @@ def register_verified(request):
 def forget_password(request):
     if request.method == "POST":
         email = request.POST['email']
-        otp = mail.otp_generation()
-        mail.send_mail(email=email, msg="your otp is {}".format(otp))
-        mail.store_otp(email, otp)
-        return redirect('/reset_verified/')
+        try:
+            user = user_email.objects.get(email=email)
+            otp = mail.otp_generation()
+            mail.send_mail(email=email, msg="your otp is {}".format(otp))
+            mail.store_otp(email, otp)
+            return redirect('/reset_verified/')
+        except Exception as e:
+            print(e, "reser e")
+            if "user_email matching query does not exist" in str(e):
+                context = "Your Email Dose Not Exist, Please Register First."
+                return render(request, 'forget/forget.html', {"messages": context})
     else:
         return render(request, 'forget/forget.html')
 
@@ -526,10 +548,16 @@ def forget_password(request):
 def forget_username(request):
     if request.method == "POST":
         email = request.POST['email']
-        user_username = (User.objects.get(email=email)).username
-        print("username", user_username)
-        mail.send_mail(email=email, msg="your username is {}".format(user_username))
-        return redirect('/login/')
+        try:
+            user_username = (User.objects.get(email=email)).username
+            print("username", user_username)
+            mail.send_mail(email=email, msg="your username is {}".format(user_username))
+            context = "Your Username Will Send Via Your Mail Please Check It."
+            return render(request, 'forget/forget_username.html', {'messages': context})
+        except:
+            context = "Your Email Dose Not Exits !!"
+            return render(request, 'forget/forget_username.html', {'messages': context})
+
     else:
         return render(request, 'forget/forget_username.html')
 
@@ -785,7 +813,7 @@ class razor_payment:
             context = "you have to add your address first"
             return False
             # messages.success(request, context)
-            print("you have to add ypur data first")
+            # print("you have to add ypur data first")
             # request.session['edit_redirect'] = after_edit
             # return redirect('/edit_user_data/', {"context": context})
 
@@ -980,55 +1008,3 @@ class razor_payment:
 
 
 Rozor = razor_payment()
-
-#stripe 
-
-import stripe
-from django.conf import settings
-from django.shortcuts import redirect
-from django.views import View
-from django.conf import settings
-    
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-class CreateStripeCheckoutSessionView(View):
-    print("strip is starting")
-    """
-    Create a checkout session and redirect the user to Stripe's checkout page
-    """
-
-    def post(self, request, *args, **kwargs):
-        print("request")
-        price = str("444")
-        print("data is being prepared")
-       
-        checkout_session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        line_items=[
-                {
-                    "price_data": {
-                        "currency": "inr",
-                        "unit_amount": 5000,
-                        "product_data": {
-                            "name": "cat socks",
-                            "description": "smoothing experience",
-                        },
-                    },
-                    "quantity": 1,
-                }
-            ],
-            metadata={"product_id": 2112},
-            mode="payment",
-            success_url=settings.PAYMENT_SUCCESS_URL,
-            cancel_url=settings.PAYMENT_CANCEL_URL,
-        )
-        print("data is ready")
-        return redirect(checkout_session.url)
-    
-from django.views.generic import TemplateView
-
-class SuccessView(TemplateView):
-    template_name = "products/success.html"
-
-class CancelView(TemplateView):
-    template_name = "products/cancel.html"
