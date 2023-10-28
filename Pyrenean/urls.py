@@ -20,6 +20,7 @@ urlpatterns = [
     path('Subscribe/', SubscribeView.as_view(), name="SubscribeView"),
     path('ProductDetails/<slug:slug>', ProductDetailsView.as_view(), name="ProductDetails"),
     path('ProductDetails/<slug:slug>/<str:size>/<str:id>', ProductDetailsView.as_view(), name="ProductDetails"),
+    path('PromoCode/', PromoCodeView.as_view(), name="PromoCode"),
 
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),

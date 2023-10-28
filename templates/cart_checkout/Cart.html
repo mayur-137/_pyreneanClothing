@@ -65,7 +65,7 @@
                         <button type="submit"
                           style="border: none; background: unset; font-weight: 900;padding: 4px 13px;" value="-"
                           name="minus">-</button>
-                        <input class="u-input" type="number" value="{{item.quantity}}" min="0"
+                        <input class="u-input" type="text" value="{{item.quantity}}" min="0"
                           max="{{item.max_quantity}}" name="quantity">
                         <input type="hidden" name="Update_product_quantity" value="{{item.size_id}}">
                         <button type="submit"
@@ -111,22 +111,19 @@
               <h5 class="u-cart-block-header u-text">Promotion Code</h5>
               <div class="u-cart-block-content u-text">
                 <div class="u-cart-form u-form">
-                  <form action="#" method="post" class="u-clearfix u-form-horizontal u-form-spacing-10 u-inner-form"
-                    source="custom" name="form">
+                  <form action="/PromoCode/" method="post" class="u-clearfix u-form-horizontal u-form-spacing-10 u-inner-form"
+                    name="form">
+                      {% csrf_token %}
                     <div class="u-form-group">
                       <label for="name-5861" class="u-form-control-hidden u-label">Coupon code</label>
-                      <input type="text" placeholder="Coupon code" id="name-5861" name="coupon"
+                      <input type="text" placeholder="Coupon code" id="name-5861" name="code"
                         class="u-input u-input-rectangle" required="">
+                        <input type="hidden" name="discount_coupen" value="{{ product_total }}">
                     </div>
                     <div class="u-align-left u-form-group u-form-submit">
-                      <a href="#" class="u-btn u-btn-round u-btn-submit u-button-style u-radius-50 u-btn-3">Apply
-                        Coupon</a>
-                      <input type="submit" value="submit" class="u-form-control-hidden">
+                      <button type="submit" class="u-btn u-btn-round u-btn-submit u-button-style u-radius-50 u-btn-3">Apply
+                          Coupon</button>
                     </div>
-                    <div class="u-form-send-message u-form-send-success">Thank you! Your message has been sent.</div>
-                    <div class="u-form-send-error u-form-send-message">Unable to send your message. Please fix errors
-                      then try again.</div>
-                    <input type="hidden" value="" name="recaptchaResponse">
                   </form>
                 </div>
               </div>
@@ -152,8 +149,15 @@
                       <tr style="height: 46px;">
                         <td
                           class="u-align-left u-border-1 u-border-grey-15 u-first-column u-table-cell u-table-cell-19">
+                          Discount</td>
+                        <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-20">&#8377; {{discount}}
+                        </td>
+                      </tr>
+                      <tr style="height: 46px;">
+                        <td
+                          class="u-align-left u-border-1 u-border-grey-15 u-first-column u-table-cell u-table-cell-19">
                           Total</td>
-                        <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-20">&#8377; {{product_total}}
+                        <td class="u-border-1 u-border-grey-15 u-table-cell u-table-cell-20">&#8377; {{discounted_price}}
                         </td>
                       </tr>
                     </tbody>

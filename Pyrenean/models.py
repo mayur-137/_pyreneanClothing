@@ -67,7 +67,7 @@ class Product_Details(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=10)
     name = models.CharField(max_length=255)
-    description = models.TextField(max_length=1080)
+    description = models.TextField(max_length=5000)
     price = models.IntegerField()
     discount = models.PositiveIntegerField()
     slug = models.SlugField(unique=True, max_length=255)
@@ -107,3 +107,13 @@ class WishList(models.Model):
 class SubscribeNow(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
+
+
+class PromoCode(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(default="")
+    discount_percent = models.IntegerField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code

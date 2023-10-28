@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactModel, SubscribeNow
+from .models import ContactModel, SubscribeNow, PromoCode
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -27,13 +27,13 @@ class NewUserForm(UserCreationForm):
         return user
 
 
-class ContactFormModel(forms.ModelForm):
-    class Meta:
-        model = ContactModel
-        fields = ["name", "email", "message"]
-
-
 class SubscribeForm(forms.ModelForm):
     class Meta:
         model = SubscribeNow
         fields = ["email"]
+
+
+class PromoCodeForm(forms.ModelForm):
+    class Meta:
+        model = PromoCode
+        fields = ["code"]

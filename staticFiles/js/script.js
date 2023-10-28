@@ -1,3 +1,31 @@
+// Get elements
+const addToCartButton = document.getElementById("addToCartButton");
+const popup = document.getElementById("popup");
+const popupOverlay = document.createElement("div");
+popupOverlay.className = "popup-overlay";
+
+// Add an event listener to the "Add to Cart" button
+addToCartButton.addEventListener("click", function() {
+    // Check if a size is selected (you'll need to implement this part)
+    const sizeSelected = false; // Replace with your logic to check if a size is selected
+
+    if (!sizeSelected) {
+        // Show the popup
+        document.body.appendChild(popupOverlay);
+        popup.style.display = "block";
+
+        // Add an event listener to close the popup when the overlay is clicked
+        popupOverlay.addEventListener("click", function() {
+            popup.style.display = "none";
+            document.body.removeChild(popupOverlay);
+        });
+    } else {
+        // Add the product to the cart or perform other actions
+        // ...
+    }
+});
+
+
 !(function (t) {
   function e(i) {
     if (n[i]) return n[i].exports;

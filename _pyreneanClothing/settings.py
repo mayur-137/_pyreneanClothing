@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Pyrenean.apps.PyreneanConfig',
     'crispy_forms',
+    'rest_framework',
 
 ]
 
