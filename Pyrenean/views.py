@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from django.db.models import Max
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -21,6 +21,8 @@ from django.core.mail import EmailMessage
 from .forms import ContactFormModel, SubscribeForm
 from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, \
     SubscribeNow, PromoCode
+
+from .configurations import email_content
 
 global product_total, slug, discounted_price_coupen, discount_coupen, promo_code
 
@@ -59,6 +61,13 @@ class MailView(View):
         print(subject, message, self.email, to_email, "contact")
         email.send()
 
+    @staticmethod
+    def OtpGeneration():
+        print("generate otp")
+        OTP = random.randint(100000, 999999)
+        print(OTP)
+        return OTP
+
 
 class ContactView(TemplateView):
     template_name = "Contact.html"
@@ -78,15 +87,9 @@ class ContactFormView(CreateView, MailView):
         contact = super().form_valid(form)
         email = form.cleaned_data["email"]
         message = form.cleaned_data["message"]
-        message = message+"""\n\nDear User,
-
-Thank you for reaching out to us. We appreciate you taking the time to contact us. Your query has been received and is being reviewed by our support staff. We aim to respond as quickly as possible.
-
-Please note that our working hours are from 9:00 AM to 6:00 PM from Monday to Saturday. If you've reached out outside of these hours, we'll get back to you during our working hours.
-
-Thank you for your patience and understanding.
-
-"""
+        a = email_content["contact_us"]["body"]
+        print(a, "aa")
+        message = message
         self.send_email("Regrading For Contacting Pyrenean", message, email)
         print("yes, submit")
         messages.success(self.request, "Thanks for contacting us")
@@ -495,14 +498,14 @@ class RegisterView(View):
         email = request.POST['email']
 
         print(username, email, password, "register")
-        if User.objects.filter(email=email).exists():
-            print("this email is already taken try another one")
-            context = {"error": "this email is already taken try another one"}
+        if User.objects.filter(email=email).exists() or User.objects.filter(username=username).exists():
+            print("this email or username is already taken try another one")
+            context = {"error": "this email or username is already taken try another one"}
             return render(request, 'login/register.html', {"context": context})
         else:
             user = User.objects.create_user(username=username, password=password, email=email)
             # user.save()
-            otp = mail.otp_generation()
+            otp = self.OtpGeneration()
             mail.send_mail(email=email, msg="welcome {}, your otp is {}".format(username, otp))
             mail.store_otp(email=email, otp=otp)
             user.save()
