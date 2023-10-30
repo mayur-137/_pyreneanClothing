@@ -53,7 +53,7 @@ class AuthorAdmin_order(admin.ModelAdmin):
 
 @admin.register(final_order)
 class AuthorAdmin_final_order(admin.ModelAdmin):
-    list_display = ["order_id", "email", "address", "products_detail", "order_total", "shiprocket_dashboard"]
+    list_display = ["order_id", "email", "address", "products_detail", "order_total", "shiprocket_dashboard","link_id"]
 
 
 @admin.register(WishList)

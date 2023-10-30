@@ -56,6 +56,7 @@ class final_order(models.Model):
     products_detail = models.CharField(max_length=1000, default='empty')
     order_total = models.IntegerField()
     shiprocket_dashboard = models.BooleanField(default=False)
+    link_id = models.CharField(max_length=1000,default=000)
 
 
 class Product_Details(models.Model):

@@ -754,7 +754,7 @@ class shipment:
     def take_user_data(self, email):
         # take billing data ffrom user_address table and order data table
         print("taking user data")
-        user = user_address.objects.get(email="ladoladhruv5218@gmail.com")
+        user = user_address.objects.get(email=email)
         user_billing_city = user.city
         user_billing_pincode = user.pincode
         user_billing_state = user.state
@@ -762,17 +762,17 @@ class shipment:
         user_billing_phone = user.phone_number
         print("user data taked")
         # take cart data
-        order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
+        order_user = cart_data.objects.get(email=email)
         print(order_user)
         order_address = order_user.address_1
         order_total = order_user.order_total
         print('11')
         order_product = ast.literal_eval(order_user.products_detail)
-
+        user_name = User.objects.get(email=email).username
         print("products", order_product)
 
         # add value to final order list
-        b = final_order(email="ladoladhruv5218@gmail.com", address=order_address, products_detail=order_product,
+        b = final_order(email=email, address=order_address, products_detail=order_product,
                         order_total=order_total,
                         shiprocket_dashboard=False)
         final_order.save(b)
@@ -804,15 +804,15 @@ class shipment:
             l2.append(d1)
 
         order_data = {
-            "order_id": 45,
+            "order_id": order_id,
             "shipping_is_billing": True,
             "order_date": "2023-08-28 17:17",
             "pickup_location": "Home",
             "channel_id": "",
             "comment": "",
-            "reseller_name": "dhruv",
+            "reseller_name": "dhruvil",
             "company_name": "",
-            "billing_customer_name": "dhruv",
+            "billing_customer_name": user_name,
             "billing_last_name": "patel",
             "billing_address": order_address,
             "billing_address_2": order_address,
@@ -852,7 +852,7 @@ class shipment:
         }
         return order_data
 
-    def shiprocket_key(self):
+    def shiprocket_key():
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
         headers = {
             "Content-Type": "application/json"}
@@ -862,7 +862,7 @@ class shipment:
         a = response.json()
         return a['token']
 
-    def shiprockeet_order_function(request):
+    def shiprockeet_order_function(request,email):
         url = "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc"
 
         # Your API key
@@ -871,7 +871,7 @@ class shipment:
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        order_data = shipment.take_user_data(email="ladoladhruv5218@gmail.com")
+        order_data = shipment.take_user_data(email=email)
         print(order_data)
         # Send the POST request
         response = requests.post(url, json=order_data, headers=headers)
@@ -1090,5 +1090,123 @@ class razor_payment:
             # if other than POST request is made.
             return HttpResponseBadRequest()
 
+    def cashfree(email):
+        #prepeare data
+        # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+        # linkid = "00"+"{}".format(order_id)
+        # order = final_order.objects.get(order_id=order_id)
+        # order.link_id = linkid
+        # order.save()
+        order_id = 66
+        # order_user = cart_data.objects.get(email=email)
+        # order_total = order_user.order_total
+        # amount = order_total * 100  # Rs. 200
+        amount = 100
+        # name = User.objects.get(email=email).username
+        # number = user_address.objects.get(email=email).phone_number
+        name = "dhruv"
+        number = 9033474857
+        
+        url = "https://sandbox.cashfree.com/pg/links"
 
+        payload = {
+             "customer_details": {
+                    "customer_phone": "{}".format(number),
+                    "customer_email": email,
+                    "customer_name": "{}".format(name)
+                },
+             
+            "link_notify": {
+                "send_sms": True,
+                "send_email": True
+            },
+            "link_meta": { "return_url": "http://127.0.0.1:8000/cashfree_handle" },
+            "link_id": "{}".format("00"+"{}".format(order_id)),
+            "link_amount": amount,
+            "link_currency": "INR",
+            "link_purpose": "Payment for PlayStation 11",
+            # "link_expiry_time": "2021-10-14T15:04:05+05:30"
+        }
+        headers = {
+            "accept": "application/json",
+            "x-api-version": "2022-09-01",
+            "content-type": "application/json",
+            "x-client-id": "TEST10048875274ada62a720a9b6c35757884001",
+            "x-client-secret": "TEST820409eead5db1fa07b95f96212cb4f2a0650a8"
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+        print(response.text)
+        return response
+    
+    def cashfree_dashboard(request):
+        print(request.user.email)
+        dashboard = razor_payment.cashfree(email=request.user.email)
+        dashboard
+        data = dashboard.text
+        print(type(data))
+        data_a = json.loads(data)
+        link = data_a["link_url"]
+        return redirect(link)
+
+    def cashfree_handle(request):
+        # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+        # order = final_order.objects.get(order_id=order_id)
+        # linkid = order.link_id 
+        # email = order.email
+        email = request.user.email
+        
+        print(request)
+        linkid = "0066"
+        url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
+        print(url)
+        
+        headers = {
+            "accept": "application/json",
+            "x-api-version": "2022-09-01",
+            "x-client-id": "TEST10048875274ada62a720a9b6c35757884001",
+            "x-client-secret": "TEST820409eead5db1fa07b95f96212cb4f2a0650a8"
+        }
+
+        response = requests.get(url, headers=headers)
+        data =  json.loads(response.text)
+        payment_status = data["link_status"]
+        
+        if payment_status == "PAID":
+                pass
+            # a = shipment.shiprockeet_order_function(request,email=email)
+            # print(a.status_code)
+            
+            # if a.status_code == 200 and a.json()['status'] == "NEW":
+            #     print("readyyyyy")
+            #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+            #     order = final_order.objects.get(order_id=order_id)
+            #     order.shiprocket_dashboard = True
+            #     order.save()
+
+            #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+            #     text
+                
+            #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+
+            #     print("shipment done")
+            #     try:
+            #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
+            #         order_user.delete()
+            #     except:
+            #         print(KeyError)
+
+            #     print("cart empty")
+            #     print("cart data is deleted")
+            #     print(a.status_code)
+            #     print(a.json()['status'])
+            #     print("ship rocket api is succefully done")
+                
+                return render(request, 'cart_checkout/paymentsuccess.html')
+            # else:
+            #     # pass
+            #     re?turn render(request, 'cart_checkout/paymentfail.html')
+        else:
+            return HttpResponseBadRequest("payment fail")
+        # return redirect('/')
 Rozor = razor_payment()
