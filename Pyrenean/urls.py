@@ -43,7 +43,7 @@ urlpatterns = [
     path('removeItem/', RemoveItemView.as_view(), name='removeItem'),
 
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
-    path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
+    # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
     path("cashfree/",razor_payment.cashfree_dashboard,name="cashfree"),
     path("cashfree_handle/",razor_payment.cashfree_handle, name="cashfree_handle"),

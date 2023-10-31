@@ -176,6 +176,7 @@ class CartView(View):
         except Exception as e:
             discount_coupen = 0
             discounted_price_coupen = 0
+            promo_code = 0
             print(e, "Promo error")
         try:
             itm = Size.objects.filter(id__in=size_session.keys())
