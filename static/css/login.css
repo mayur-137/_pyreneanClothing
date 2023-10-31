@@ -10,7 +10,9 @@ html,body{
   height: 100%;
   width: 100%;
   place-items: center;
-  background: #f2f2f2;
+  /* background: #cacaca; */
+  background: linear-gradient(135deg, #868484, rgb(255, 255, 255));
+
   /* background: linear-gradient(-135deg, #c850c0, #4158d0); */
 }
 ::selection{
@@ -28,10 +30,10 @@ html,body{
   font-weight: 600;
   text-align: center;
   line-height: 100px;
-  color: #fff;
+  color: #000000;
   user-select: none;
   border-radius: 15px 15px 0 0;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(135deg, #1b1b1b, rgb(255, 255, 255));
 }
 .wrapper form{
   padding: 10px 30px 50px 30px;
@@ -54,7 +56,7 @@ html,body{
 }
 .wrapper form .field input:focus,
 form .field input:valid{
-  border-color: #4158d0;
+  border-color: #000000;
 }
 .wrapper form .field label{
   position: absolute;
@@ -71,7 +73,7 @@ form .field input:focus ~ label,
 form .field input:valid ~ label{
   top: 0%;
   font-size: 16px;
-  color: #4158d0;
+  color: #2a2a2b;
   background: #fff;
   transform: translateY(-50%);
 }
@@ -102,14 +104,14 @@ form .content .pass-link{
   color: "";
 }
 form .field input[type="submit"]{
-  color: #fff;
+  color: #000000;
   border: none;
   padding-left: 0;
   margin-top: -10px;
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(135deg, #868484, rgb(255, 255, 255));
   transition: all 0.3s ease;
 }
 form .field input[type="submit"]:active{
@@ -122,7 +124,7 @@ form .signup-link{
 }
 form .pass-link a,
 form .signup-link a{
-  color: #4158d0;
+  color: #000000;
   text-decoration: none;
 }
 form .pass-link a:hover,

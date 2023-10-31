@@ -40,7 +40,7 @@
     background-attachment: initial;
     background-origin: initial;
     background-clip: initial;
-    background-color: #0381fe;
+    background : linear-gradient(135deg, #333232, rgb(0, 0, 0));
   }
   
   .contact_us_2 .responsive-container-block {
@@ -82,7 +82,8 @@
   }
   
   .contact_us_2 .container-block.form-wrapper {
-    background-color: white;
+    background-color: rgb(228, 226, 226) ;
+    /* background: linear-gradient(135deg, #d8d6d6, rgb(255, 255, 255)); */
     max-width: 799px;
     text-align: center;
     padding-top: 50px;
@@ -189,7 +190,7 @@
   
   .contact_us_2 .submit-btn {
     width: 98%;
-    background-color: #03a9f4;
+    background: linear-gradient(135deg, #000000, rgb(139, 139, 139));
     height: 60px;
     font-size: 20px;
     font-weight: 700;
@@ -251,7 +252,7 @@
     margin-right: 0px;
     margin-bottom: 5px;
     margin-left: 0px;
-    color: #9c9c9c;
+    color: #000000;
   }
   
   .contact_us_2 ::placeholder {
@@ -263,8 +264,8 @@
     width: 100%;
     left: 0px;
     top: 0px;
-    height: 300px;
-    background-color: #03a9f4;
+    height: 1041px;
+    background: linear-gradient(135deg, #575555, rgb(255, 255, 255));
   }
   
   @media (max-width: 768px) {
