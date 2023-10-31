@@ -1097,7 +1097,7 @@ class razor_payment:
         # order = final_order.objects.get(order_id=order_id)
         # order.link_id = linkid
         # order.save()
-        order_id = 66
+        order_id = 82
         # order_user = cart_data.objects.get(email=email)
         # order_total = order_user.order_total
         # amount = order_total * 100  # Rs. 200
@@ -1150,14 +1150,17 @@ class razor_payment:
         return redirect(link)
 
     def cashfree_handle(request):
+        print(request)
+        
         # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         # order = final_order.objects.get(order_id=order_id)
-        # linkid = order.link_id 
+        # linkid = order.link_id
+        # ship_Status = order.shiprocket_dashboard
         # email = order.email
         email = request.user.email
         
         print(request)
-        linkid = "0066"
+        linkid = "0082"
         url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
         print(url)
         
@@ -1172,40 +1175,42 @@ class razor_payment:
         data =  json.loads(response.text)
         payment_status = data["link_status"]
         
-        if payment_status == "PAID":
-                pass
-            # a = shipment.shiprockeet_order_function(request,email=email)
-            # print(a.status_code)
-            
-            # if a.status_code == 200 and a.json()['status'] == "NEW":
-            #     print("readyyyyy")
-            #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
-            #     order = final_order.objects.get(order_id=order_id)
-            #     order.shiprocket_dashboard = True
-            #     order.save()
-
-            #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
-            #     text
+        if payment_status == "PAID" :
+            if ship_status == False:
+                # a = shipment.shiprockeet_order_function(request,email=email)
+                # print(a.status_code)
                 
-            #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+                # if a.status_code == 200 and a.json()['status'] == "NEW":
+                #     print("readyyyyy")
+                #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+                #     order = final_order.objects.get(order_id=order_id)
+                #     order.shiprocket_dashboard = True
+                #     order.save()
 
-            #     print("shipment done")
-            #     try:
-            #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
-            #         order_user.delete()
-            #     except:
-            #         print(KeyError)
+                #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+                #     text
+                    
+                #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
 
-            #     print("cart empty")
-            #     print("cart data is deleted")
-            #     print(a.status_code)
-            #     print(a.json()['status'])
-            #     print("ship rocket api is succefully done")
-                
+                #     print("shipment done")
+                #     try:
+                #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
+                #         order_user.delete()
+                #     except:
+                #         print(KeyError)
+
+                #     print("cart empty")
+                #     print("cart data is deleted")
+                #     print(a.status_code)
+                #     print(a.json()['status'])
+                #     print("ship rocket api is succefully done")
                 return render(request, 'cart_checkout/paymentsuccess.html')
-            # else:
-            #     # pass
-            #     re?turn render(request, 'cart_checkout/paymentfail.html')
+                # else:
+                    # pass
+                    # return render(request, 'cart_checkout/paymentfail.html')
+
+            else:
+                return render(request,'cart_checkout/paymentsuccess.html')
         else:
             return HttpResponseBadRequest("payment fail")
         # return redirect('/')
