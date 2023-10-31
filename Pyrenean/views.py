@@ -536,8 +536,8 @@ class LoginView(View):
                 context = {'error': 'email and password does not match.'}
                 return render(request, 'login/login.html', {'context': context})
         except:
-            context = {'error': 'user not found go to register'}
-            return render(request, 'login/register.html', {'context': context})
+            context = {'error': 'user not found register first'}
+            return render(request, 'login/login.html', {'context': context})
 
 
 def logout_request(request):
@@ -562,36 +562,52 @@ class ResetView(View):
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
         email = request.POST['email']
-        print(email, password)
-        if password == confirm_password:
-            try:
-                user = User.objects.get(email=email)
-                print(user.password)
-                user.set_password(password)
-                user.save()
-                print(user.password)
-                print("user data changed")
-                return redirect('/login/')
-            except Exception as e:
-                if "User matching query does not exist" in str(e):
-                    context = "Email Not Found, Please Register First."
-                    return render(request, 'forget/reset_password.html', {'context': context})
+        same_email = request.session.get('same_email')
+        try:
+            username = User.objects.get(email=email)
+            if email == same_email:
+                print(email, password)
+                if password == confirm_password:
+                    try:
+                        user = User.objects.get(email=email)
+                        print(user.password)
+                        user.set_password(password)
+                        user.save()
+                        print(user.password)
+                        print("user data changed")
+                        return redirect('/login/')
+                    except Exception as e:
+                        if "User matching query does not exist" in str(e):
+                            context = "Email Not Found, Please Register First."
+                            return render(request, 'forget/reset_password.html', {'context': context})
+                        else:
+                            context = "Please Try Again !!"
+                            return render(request, 'forget/reset_password.html', {'context': context})
                 else:
-                    context = "Please Try Again !!"
+                    context = "enter same password"
                     return render(request, 'forget/reset_password.html', {'context': context})
-        else:
-            context = "enter same password"
-            return render(request, 'forget/reset_password.html', {'context': context})
-
-
+            else:
+                print("mail is not same")
+                context = " mail is not valid"
+                return render(request,'forget/reset_password.html',{'context':context})
+        except:
+            print("user not found")
+            context = {'error': 'user not found  register first'}
+            return render(request, 'login/register.html', {'context': context})
+        
+        
 def reset_verified(request):
     if request.method == "POST":
         user_otp = request.POST['otp']
         email = request.POST['email']
         site = mail.verification(email, user_otp)
         request.session['otp_verified'] = True
+        request.session['same_email'] = email
         if site == "yes":
             return redirect('/reset_password/')
+        else:
+            context = "otp not matched"
+            return render(request,'login/verification.html',{"context":context})
     else:
         site = '/reset_verified/'
         return render(request, 'login/verification.html', {'site': site})
@@ -1158,61 +1174,63 @@ class razor_payment:
         # linkid = order.link_id
         # ship_Status = order.shiprocket_dashboard
         # email = order.email
-        email = request.user.email
-        
-        print(request)
-        linkid = "0082"
-        url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
-        print(url)
-        
-        headers = {
-            "accept": "application/json",
-            "x-api-version": "2022-09-01",
-            "x-client-id": "TEST10048875274ada62a720a9b6c35757884001",
-            "x-client-secret": "TEST820409eead5db1fa07b95f96212cb4f2a0650a8"
-        }
+        # email = request.user.email
+        if email == request.user.email:
+            linkid = "0082"
+            url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
+            print(url)
+            
+            headers = {
+                "accept": "application/json",
+                "x-api-version": "2022-09-01",
+                "x-client-id": "TEST10048875274ada62a720a9b6c35757884001",
+                "x-client-secret": "TEST820409eead5db1fa07b95f96212cb4f2a0650a8"
+            }
 
-        response = requests.get(url, headers=headers)
-        data =  json.loads(response.text)
-        payment_status = data["link_status"]
-        
-        if payment_status == "PAID" :
-            if ship_status == False:
-                # a = shipment.shiprockeet_order_function(request,email=email)
-                # print(a.status_code)
-                
-                # if a.status_code == 200 and a.json()['status'] == "NEW":
-                #     print("readyyyyy")
-                #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
-                #     order = final_order.objects.get(order_id=order_id)
-                #     order.shiprocket_dashboard = True
-                #     order.save()
-
-                #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
-                #     text
+            response = requests.get(url, headers=headers)
+            data =  json.loads(response.text)
+            payment_status = data["link_status"]
+            
+            if payment_status == "PAID" :
+                if ship_status == False:
+                    # a = shipment.shiprockeet_order_function(request,email=email)
+                    # print(a.status_code)
                     
-                #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+                    # if a.status_code == 200 and a.json()['status'] == "NEW":
+                    #     print("readyyyyy")
+                    #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+                    #     order = final_order.objects.get(order_id=order_id)
+                    #     order.shiprocket_dashboard = True
+                    #     order.save()
 
-                #     print("shipment done")
-                #     try:
-                #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
-                #         order_user.delete()
-                #     except:
-                #         print(KeyError)
+                    #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+                    #     text
+                        
+                    #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
 
-                #     print("cart empty")
-                #     print("cart data is deleted")
-                #     print(a.status_code)
-                #     print(a.json()['status'])
-                #     print("ship rocket api is succefully done")
-                return render(request, 'cart_checkout/paymentsuccess.html')
-                # else:
-                    # pass
-                    # return render(request, 'cart_checkout/paymentfail.html')
+                    #     print("shipment done")
+                    #     try:
+                    #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
+                    #         order_user.delete()
+                    #     except:
+                    #         print(KeyError)
 
+                    #     print("cart empty")
+                    #     print("cart data is deleted")
+                    #     print(a.status_code)
+                    #     print(a.json()['status'])
+                    #     print("ship rocket api is succefully done")
+                    return render(request, 'cart_checkout/paymentsuccess.html')
+                    # else:
+                        # pass
+                        # return render(request, 'cart_checkout/paymentfail.html')
+
+                else:
+                    return render(request,'cart_checkout/paymentsuccess.html')
             else:
-                return render(request,'cart_checkout/paymentsuccess.html')
+                return HttpResponseBadRequest("payment fail")
+            # return redirect('/')
         else:
-            return HttpResponseBadRequest("payment fail")
-        # return redirect('/')
+            print("email not match")
+            return render(request,("cart_checkout/paymentsuccess.html"))
 Rozor = razor_payment()
