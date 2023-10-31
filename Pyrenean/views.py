@@ -4,9 +4,12 @@ import random
 import razorpay
 import requests
 import smtplib
+import datetime
+from datetime import timedelta
 
 from math import ceil
 from django.contrib import messages
+from django.utils import timezone
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from django.db.models import Max
@@ -68,6 +71,20 @@ class MailView(View):
         print(OTP)
         return OTP
 
+    @staticmethod
+    def Verification(email, user_otp):
+        print(user_otp, email)
+        try:
+            user = user_email.objects.get(email=email)
+            otp = user.otp
+        except Exception as e:
+            print(e, "eee1")
+
+        if int(user_otp) == int(otp):
+            return True
+        else:
+            return False
+
 
 class ContactView(TemplateView):
     template_name = "Contact.html"
@@ -87,12 +104,11 @@ class ContactFormView(CreateView, MailView):
         contact = super().form_valid(form)
         email = form.cleaned_data["email"]
         message = form.cleaned_data["message"]
-        a = email_content["contact_us"]["body"]
-        print(a, "aa")
-        message = message
-        self.send_email("Regrading For Contacting Pyrenean", message, email)
-        print("yes, submit")
-        messages.success(self.request, "Thanks for contacting us")
+        contact_email_json = email_content.email_content
+        contact_email_json_subject = contact_email_json["contact_us"]["subject"]
+        contact_email_json_body = contact_email_json["contact_us"]["body"]
+        message = message + contact_email_json_body
+        self.send_email(contact_email_json_subject, message, email)
         return contact
 
     def form_invalid(self, form):
@@ -426,12 +442,6 @@ class Terms_ConditionView(TemplateView):
 
 class mail:
 
-    def otp_generation(self):
-        print("generate otp")
-        n = random.randint(100000, 999999)
-        print(n)
-        return n
-
     def send_mail(self, email, msg):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -471,24 +481,11 @@ class mail:
             b = user_email(email=email, otp=otp)
             user_email.save(b)
 
-    def verification(self, email, user_otp):
-        print(user_otp, email)
-        try:
-            user = user_email.objects.get(email=email)
-            otp = user.otp
-        except Exception as e:
-            print(e, "eee1")
-
-        if int(user_otp) == int(otp):
-            return "yes"
-        else:
-            return "no"
-
 
 mail = mail()
 
 
-class RegisterView(View):
+class RegisterView(MailView):
 
     def get(self, request):
         return render(request, 'login/register.html')
@@ -498,19 +495,25 @@ class RegisterView(View):
         password = request.POST['password']
         email = request.POST['email']
 
-        print(username, email, password, "register")
         if User.objects.filter(email=email).exists() or User.objects.filter(username=username).exists():
-            print("this email or username is already taken try another one")
             context = {"error": "this email or username is already taken try another one"}
             return render(request, 'login/register.html', {"context": context})
         else:
-            user = User.objects.create_user(username=username, password=password, email=email)
-            # user.save()
             otp = self.OtpGeneration()
-            mail.send_mail(email=email, msg="welcome {}, your otp is {}".format(username, otp))
-            mail.store_otp(email=email, otp=otp)
-            user.save()
-            print("user created")
+            OTP_email_json = email_content.email_content
+            OTP_email_json_subject = OTP_email_json["OTP_Send"]["subject"]
+            OTP_email_json_body1 = OTP_email_json["OTP_Send"]["body1"]
+            OTP_email_json_body2 = OTP_email_json["OTP_Send"]["body2"]
+            message = OTP_email_json_body1 + f"\nYour OTP: {otp}\n" + OTP_email_json_body2
+            self.send_email(OTP_email_json_subject, message, email)
+
+            # Store the OTP and timestamp in the session
+            request.session['username'] = username
+            request.session['password'] = password
+            request.session['email'] = email
+            request.session['otp'] = otp
+            request.session['otp_timestamp'] = str(timezone.now())
+
             return redirect('/register_verified/')
 
 
@@ -588,7 +591,7 @@ def reset_verified(request):
     if request.method == "POST":
         user_otp = request.POST['otp']
         email = request.POST['email']
-        site = mail.verification(email, user_otp)
+        site = MailView.Verification(email, user_otp)
         request.session['otp_verified'] = True
         if site == "yes":
             return redirect('/reset_password/')
@@ -597,19 +600,66 @@ def reset_verified(request):
         return render(request, 'login/verification.html', {'site': site})
 
 
-def register_verified(request):
-    if request.method == "POST":
-        user_otp = request.POST['otp']
-        email = request.POST['email']
-        site = mail.verification(email, user_otp)
-        if site == "yes":
-            request.session['edit_redirect'] = "login"
-            return redirect('/edit_user_data/')
+class VerifyOTPView(MailView):
+
+    def get(self, request):
+        return render(request, 'login/verification.html')
+
+    def post(self, request):
+        user_otp = request.POST.get('otp')
+        a = request.session.get('otp')
+        print("my otp", type(user_otp), type(a))
+        otp_timestamp_str = request.session.get('otp_timestamp')
+
+        if otp_timestamp_str:
+            otp_timestamp = datetime.datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
+
+            # Check if the OTP has expired (more than 15 minutes old)
+            if timezone.now() > otp_timestamp + timedelta(seconds=30):
+                context = {"error": "The OTP has expired. Please try again."}
+                return render(request, 'login/register.html', {"context": context})
+
+            # Check if the entered OTP matches the one in the session
+            if int(user_otp) == int(request.session.get('otp')):
+                username = request.session.get('username')
+                password = request.session.get('password')
+                email = request.session.get('email')
+
+                user = User.objects.create_user(username=username, password=password, email=email)
+                user.save()
+
+                return redirect("/login/")
+
+        context = "Invalid OTP. Please try again."
+        return render(request, 'login/verification.html', {"context": context})
+
+
+class ResetOTPView(MailView):
+
+    def get(self, request):
+        return render(request, 'login/reset_otp.html')
+
+    def post(self, request):
+        email = request.POST.get('resetEmail')
+
+        if User.objects.filter(email=email).exists():
+            otp = self.OtpGeneration()
+            OTP_email_json = email_content.email_content
+            OTP_email_json_subject = OTP_email_json["OTP_Send"]["subject"]
+            OTP_email_json_body1 = OTP_email_json["OTP_Send"]["body1"]
+            OTP_email_json_body2 = OTP_email_json["OTP_Send"]["body2"]
+            message = OTP_email_json_body1 + f"\nYour new OTP: {otp}\n" + OTP_email_json_body2
+            self.send_email(OTP_email_json_subject, message, email)
+
+            # Store the new OTP and timestamp in the session
+            request.session['otp'] = otp
+            request.session['otp_timestamp'] = str(timezone.now())
+
+            context = {"message": "A new OTP has been sent to your email."}
         else:
-            return render(request, 'login/verification.html', {'context': "otp does't match to email id"})
-    else:
-        site = '/register_verified/'
-        return render(request, 'login/verification.html', {'site': site})
+            context = {"error": "This email does not exist."}
+
+        return render(request, 'login/reset_otp.html', context)
 
 
 def forget_password(request):
@@ -863,7 +913,7 @@ class shipment:
         a = response.json()
         return a['token']
 
-    def shiprockeet_order_function(request,email):
+    def shiprockeet_order_function(request, email):
         url = "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc"
 
         # Your API key
@@ -1092,7 +1142,7 @@ class razor_payment:
             return HttpResponseBadRequest()
 
     def cashfree(email):
-        #prepeare data
+        # prepeare data
         # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         # linkid = "00"+"{}".format(order_id)
         # order = final_order.objects.get(order_id=order_id)
@@ -1107,22 +1157,22 @@ class razor_payment:
         # number = user_address.objects.get(email=email).phone_number
         name = "dhruv"
         number = 9033474857
-        
+
         url = "https://sandbox.cashfree.com/pg/links"
 
         payload = {
-             "customer_details": {
-                    "customer_phone": "{}".format(number),
-                    "customer_email": email,
-                    "customer_name": "{}".format(name)
-                },
-             
+            "customer_details": {
+                "customer_phone": "{}".format(number),
+                "customer_email": email,
+                "customer_name": "{}".format(name)
+            },
+
             "link_notify": {
                 "send_sms": True,
                 "send_email": True
             },
-            "link_meta": { "return_url": "http://127.0.0.1:8000/cashfree_handle" },
-            "link_id": "{}".format("00"+"{}".format(order_id)),
+            "link_meta": {"return_url": "http://127.0.0.1:8000/cashfree_handle"},
+            "link_id": "{}".format("00" + "{}".format(order_id)),
             "link_amount": amount,
             "link_currency": "INR",
             "link_purpose": "Payment for PlayStation 11",
@@ -1139,7 +1189,7 @@ class razor_payment:
         response = requests.post(url, json=payload, headers=headers)
         print(response.text)
         return response
-    
+
     def cashfree_dashboard(request):
         print(request.user.email)
         dashboard = razor_payment.cashfree(email=request.user.email)
@@ -1152,19 +1202,19 @@ class razor_payment:
 
     def cashfree_handle(request):
         print(request)
-        
+
         # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         # order = final_order.objects.get(order_id=order_id)
         # linkid = order.link_id
         # ship_Status = order.shiprocket_dashboard
         # email = order.email
         email = request.user.email
-        
+
         print(request)
         linkid = "0082"
         url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
         print(url)
-        
+
         headers = {
             "accept": "application/json",
             "x-api-version": "2022-09-01",
@@ -1173,14 +1223,14 @@ class razor_payment:
         }
 
         response = requests.get(url, headers=headers)
-        data =  json.loads(response.text)
+        data = json.loads(response.text)
         payment_status = data["link_status"]
-        
-        if payment_status == "PAID" :
+
+        if payment_status == "PAID":
             if ship_status == False:
                 # a = shipment.shiprockeet_order_function(request,email=email)
                 # print(a.status_code)
-                
+
                 # if a.status_code == 200 and a.json()['status'] == "NEW":
                 #     print("readyyyyy")
                 #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
@@ -1190,7 +1240,7 @@ class razor_payment:
 
                 #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
                 #     text
-                    
+
                 #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
 
                 #     print("shipment done")
@@ -1207,12 +1257,14 @@ class razor_payment:
                 #     print("ship rocket api is succefully done")
                 return render(request, 'cart_checkout/paymentsuccess.html')
                 # else:
-                    # pass
-                    # return render(request, 'cart_checkout/paymentfail.html')
+                # pass
+                # return render(request, 'cart_checkout/paymentfail.html')
 
             else:
-                return render(request,'cart_checkout/paymentsuccess.html')
+                return render(request, 'cart_checkout/paymentsuccess.html')
         else:
             return HttpResponseBadRequest("payment fail")
         # return redirect('/')
+
+
 Rozor = razor_payment()

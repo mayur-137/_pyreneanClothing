@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reset OTP</title>
+    <!-- Your CSS styles go here -->
+  </head>
+  <body>
+    <div class="container">
+      {% if error %}
+        <h2>{{error}}</h2>
+      {% endif %}
+      {% if message %}
+        <h2>{{message}}</h2>
+      {% endif %}
+      <h1>Reset OTP</h1>
+      <form id="resetOtpForm" action="{{reset_site}}" method="POST">
+        {% csrf_token %}
+        <label for="email">Enter your email to reset OTP:</label>
+        <input type="text" id="resetEmail" name="resetEmail" placeholder="ENTER YOUR EMAIL" required>
+        <button type="submit">Reset OTP</button>
+      </form>
+    </div>
+
+    <!-- Responsive design -->
+    <style>
+      @media only screen and (max-width: 600px) {
+        .container {
+          width: 100%;
+          padding: 10px;
+        }
+      }
+    </style>
+
+  </body>
+</html>

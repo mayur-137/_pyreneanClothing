@@ -2,7 +2,7 @@ from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
                             RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView, TestView, PromoCodeView,razor_payment)
+                            Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView)
 from . import views
 
 app_name = "main"
@@ -26,7 +26,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", views.logout_request, name="logout"),
 
-    path("register_verified/", views.register_verified, name="register_verified"),
+    path("register_verified/", VerifyOTPView.as_view(), name="register_verified"),
     path("forget_password/", views.forget_password, name="register_verified"),
     path("reset_verified/", views.reset_verified, name="reset_verified"),
     path("reset_password/", ResetView.as_view(), name="reset_passsowrd"),
