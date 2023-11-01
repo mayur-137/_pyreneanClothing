@@ -13,12 +13,12 @@ class ContactModel(models.Model):
 class user_data(models.Model):
     id = models.AutoField
     email = models.EmailField(max_length=100, unique=True)
-    building = models.CharField(max_length=100)
+    building = models.CharField(max_length=20)
     street = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
-    pincode = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=10)
+    city = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=13)
 
 
 class user_email(models.Model):
@@ -28,14 +28,14 @@ class user_email(models.Model):
 
 class user_address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
     building = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
-    pincode = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100, default="GUJRAT")
-    phone_number = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=10)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50, default="GUJRAT")
+    phone_number = models.CharField(max_length=13)
 
 
 class cart_data(models.Model):

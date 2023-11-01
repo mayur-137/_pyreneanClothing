@@ -1,9 +1,9 @@
 from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
-                            RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem,
+                            RegisterView, ResetView, Rozor, WishListView, WishListAddView, RemoveWishListItem,
                             SubscribeView,Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView,
-                            forget_password, reset_verified, forget_username)
+                            forget_password, reset_verified, forget_username, ProfileView, EditProfileView)
 from . import views
 
 app_name = "main"
@@ -33,8 +33,11 @@ urlpatterns = [
     path("reset_password/", ResetView.as_view(), name="reset_passsowrd"),
     path("forget_username/", forget_username.as_view(), name="forget_username"),
 
-    path('edit_user_data/', views.UserData.edit_user_data, name="edit_user_data"),
-    path("user_address/", UserData.user_data_function, name="user_address"),
+    # path('edit_user_data/', views.UserData.edit_user_data, name="edit_user_data"),
+    # path("user_address/", UserData.user_data_function, name="user_address"),
+
+    path("profile/", ProfileView.as_view(), name="profile"),
+    path("EditProfile/", EditProfileView.as_view(), name="editProfile"),
 
     # path('edit_user_data/', views.edit_user_data, name="edit_user_data"),
     path('customerService/', CustomerServiceView.as_view(), name="customerService"),

@@ -12,8 +12,7 @@
       <div class="blueBG">
       </div>
       <div class="responsive-container-block container">
-        
-        <form class="form-box"  action="/edit_user_data/">
+        <form class="form-box"  action="/EditProfile/" method="get">
           <div class="container-block form-wrapper">
             <p class="text-blk contactus-head">
               Personal Data
@@ -26,19 +25,19 @@
                 <p class="text-blk input-title">
                   FIRST NAME
                 </p>
-                <h6 class="text-lbl"> : {{context.username}}</h6>
+                <h6 class="text-lbl"> : {{userData.username}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   EMAIL
                 </p>
-                <h6 class="text-lbl"> : {{context.email}}</h6>
+                <h6 class="text-lbl"> : {{userData.email}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   PHONE NUMBER
                 </p>
-                <h6 class="text-lbl"> : {{context.phone_number}}</h6>
+                <h6 class="text-lbl"> : {{userData.phone_number}}</h6>
               </div>
             </div>
               <p class="text-blk contactus-head">
@@ -49,63 +48,47 @@
                 <p class="text-blk input-title">
                   building or Home 
                 </p>
-                <h6 class="text-lbl"> : {{context.building}}</h6>
+                <h6 class="text-lbl"> : {{userData.building}}</h6>
               </div>
 
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                     street 
                 </p>
-                <h6 class="text-lbl"> : {{context.street}}</h6>
+                <h6 class="text-lbl"> : {{userData.street}}</h6>
               </div>
 
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   area 
                 </p>
-                <h6 class="text-lbl"> : {{context.area}}</h6>
+                <h6 class="text-lbl"> : {{userData.area}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   pincode 
                 </p>
-                <h6 class="text-lbl"> : {{context.pincode}}</h6>
+                <h6 class="text-lbl"> : {{userData.pincode}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   city 
                 </p>
-                <h6 class="text-lbl"> : {{context.city}}</h6>
+                <h6 class="text-lbl"> : {{userData.city}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
                   state 
                 </p>
-                <h6 class="text-lbl"> : {{context.state}}</h6>
+                <h6 class="text-lbl"> : {{userData.state}}</h6>
               </div>
               </div>
-             
             </div>
-            <button class="submit-btn">edit address</button>
-          </div>
-          <div class="social-media-links">
-            <a href="#" id="ix94i-2">
-              <img class="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-twitter.png">
-            </a>
-            <a href="#">
-              <img class="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-facebook.png">
-            </a>
-            <a href="#">
-              <img class="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-google.png">
-            </a>
-            <a href="#" id="izldf-2">
-              <img class="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-instagram.png">
-            </a>
+            <button href="/EditProfile/" class="submit-btn">edit address</button>
           </div>
         </form>
       </div>
     </div>
   </div>
-
 </body>
 </html>

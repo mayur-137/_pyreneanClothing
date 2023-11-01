@@ -572,8 +572,10 @@ class ResetView(MailView):
                 user.save()
                 print(user.password)
                 success_reset_passwd_email_json = email_content.email_content
-                success_reset_passwd_email_json_subject = success_reset_passwd_email_json["successfullyResetPassword"]["subject"]
-                success_reset_passwd_email_json_body = success_reset_passwd_email_json["successfullyResetPassword"]["body"]
+                success_reset_passwd_email_json_subject = success_reset_passwd_email_json["successfullyResetPassword"][
+                    "subject"]
+                success_reset_passwd_email_json_body = success_reset_passwd_email_json["successfullyResetPassword"][
+                    "body"]
                 message = f"\nDear {user},\n\n" + success_reset_passwd_email_json_body
                 self.send_email(success_reset_passwd_email_json_subject, message, email)
                 return redirect('/login/')
@@ -708,105 +710,132 @@ class forget_username(MailView):
             return render(request, 'forget/forget_username.html', {'messages': context})
 
 
-class user_datas:
+class ProfileView(View):
 
-    def user_data_function(self, request):
+    def get(self, request, *args, **kwargs):
         try:
-            user = request.user
             email = request.user.email
-            print(email, "email-----------------")
-            try:
-                print("user data already stored ")
-                username = (User.objects.get(email=email)).username
-                print("111")
-                building = user_address.objects.get(email=email).building
-                print(building)
-                phone_number = user_address.objects.get(email=email).phone_number
-                street = (user_address.objects.get(email=email)).street
-                area = (user_address.objects.get(email=email)).area
-                pincode = (user_address.objects.get(email=email)).pincode
-                city = (user_address.objects.get(email=email)).city
-                state = (user_address.objects.get(email=email)).state
-                context = {"email": email, "phone_number": phone_number, 'username': username, 'building': building,
-                           'street': street, 'area': area, 'pincode': pincode, 'city': city, 'state': state}
-                print(context)
-                request.session['edit_redirect'] = "user_address"
-                print(request.session['edit_redirect'], "request.session['edit_redirect']")
-                return render(request, 'user_data/user_data.html', {'context': context})
-
-            except:
-                return render(request, 'user_data/user_data.html')
-        except:
-            print('no user found')
-            return redirect('/login/', {"context": "you have't logged in "})
-
-    def edit_user_data(self, request, *args, **kwargs):
-        print("edit user data")
-        if request.method == "POST":
-            print("edit user data222")
-            email = request.POST['email']
-            building = request.POST['building']
-            street = request.POST['street']
-            area = request.POST['area']
-            pincode = request.POST['pincode']
-            city = request.POST['city']
-            state = request.POST['state']
-            phone_number = request.POST['phone_number']
-            address = str(
-                str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(
-                    state) + ',' + str(phone_number))
-            print(address)
-            if cart_data.objects.filter(email=email).exists():
-                user = cart_data.objects.get(email=email)
-                user.address_1 = address
-                user.save()
-            else:
-                b = cart_data(email=email, address_1=address)
-                cart_data.save(b)
-
-            if user_address.objects.filter(email=email).exists():
-                print("your data is saved")
-                user = user_address.objects.get(email=email)
-                user.building = building
-                user.street = street
-                user.area = area
-                user.pincode = pincode
-                user.city = city
-                user.phone_number = phone_number
-                user.state = state
-                user.save()
-
-                edit_change = request.session.get('edit_redirect')
-                print(edit_change, "edit_change")
-                # return redirect('/ProductDetails/2')
-
-                return redirect('/{}/'.format(edit_change))
-
-            else:
-                print("user data is not saved")
-                b = user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
-                                 phone_number=phone_number, state=state)
-                user_address.save(b)
-                edit_change = request.session.get('edit_redirect')
-                if edit_change == "initiate_payment":
-                    return redirect('/{}/'.format(edit_change))
-                else:
-                    return redirect('/{}/'.format(edit_change))
-
-        else:
-            print("GET")
-            return render(request, 'user_data/edit_user_data.html')
+            userData = user_address.objects.get(email=email)
+            print(type(userData), "data")
+            userData.username = request.user
+            return render(request, "user_data/user_data.html", {"userData": userData})
+        except Exception as e:
+            print(e)
+        return render(request, "user_data/user_data.html")
 
 
-UserData = user_datas()
+class EditProfileView(View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, "user_data/edit_user_data.html")
+
+    def post(self, request, *args, **kwargs):
+        firstname = request.POST["FirstName"]
+        email = request.POST['email']
+        phone_number = request.POST['phone_number']
+        building = request.POST['building']
+        street = request.POST['street']
+        area = request.POST['area']
+        pincode = request.POST['pincode']
+        city = request.POST['city']
+        state = request.POST['state']
+        print(firstname, email, phone_number, building, street, area, pincode, city, state)
+        user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city, state=state,
+                     phone_number=phone_number).save()
+        return redirect("/profile/")
 
 
-def terms_conditions(request):
-    if request.method:
-        return render(request, 'cont_term/terms_conditions.html')
-    else:
-        return redirect("/")
-
+# class user_datas:
+#
+#     def user_data_function(self, request):
+#         try:
+#             user = request.user
+#             email = request.user.email
+#             print(email, "email-----------------")
+#             try:
+#                 print("user data already stored ")
+#                 username = (User.objects.get(email=email)).username
+#                 print("111")
+#                 building = user_address.objects.get(email=email).building
+#                 print(building)
+#                 phone_number = user_address.objects.get(email=email).phone_number
+#                 street = (user_address.objects.get(email=email)).street
+#                 area = (user_address.objects.get(email=email)).area
+#                 pincode = (user_address.objects.get(email=email)).pincode
+#                 city = (user_address.objects.get(email=email)).city
+#                 state = (user_address.objects.get(email=email)).state
+#                 context = {"email": email, "phone_number": phone_number, 'username': username, 'building': building,
+#                            'street': street, 'area': area, 'pincode': pincode, 'city': city, 'state': state}
+#                 print(context)
+#                 request.session['edit_redirect'] = "user_address"
+#                 print(request.session['edit_redirect'], "request.session['edit_redirect']")
+#                 return render(request, 'user_data/user_data.html', {'context': context})
+#
+#             except:
+#                 return render(request, 'user_data/user_data.html')
+#         except:
+#             print('no user found')
+#             return redirect('/login/', {"context": "you have't logged in "})
+#
+#     def edit_user_data(self, request, *args, **kwargs):
+#         print("edit user data")
+#         if request.method == "POST":
+#             print("edit user data222")
+#             email = request.POST['email']
+#             building = request.POST['building']
+#             street = request.POST['street']
+#             area = request.POST['area']
+#             pincode = request.POST['pincode']
+#             city = request.POST['city']
+#             state = request.POST['state']
+#             phone_number = request.POST['phone_number']
+#             address = str(
+#                 str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(
+#                     state) + ',' + str(phone_number))
+#             print(address)
+#             if cart_data.objects.filter(email=email).exists():
+#                 user = cart_data.objects.get(email=email)
+#                 user.address_1 = address
+#                 user.save()
+#             else:
+#                 b = cart_data(email=email, address_1=address)
+#                 cart_data.save(b)
+#
+#             if user_address.objects.filter(email=email).exists():
+#                 print("your data is saved")
+#                 user = user_address.objects.get(email=email)
+#                 user.building = building
+#                 user.street = street
+#                 user.area = area
+#                 user.pincode = pincode
+#                 user.city = city
+#                 user.phone_number = phone_number
+#                 user.state = state
+#                 user.save()
+#
+#                 edit_change = request.session.get('edit_redirect')
+#                 print(edit_change, "edit_change")
+#                 # return redirect('/ProductDetails/2')
+#
+#                 return redirect('/{}/'.format(edit_change))
+#
+#             else:
+#                 print("user data is not saved")
+#                 b = user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
+#                                  phone_number=phone_number, state=state)
+#                 user_address.save(b)
+#                 edit_change = request.session.get('edit_redirect')
+#                 if edit_change == "initiate_payment":
+#                     return redirect('/{}/'.format(edit_change))
+#                 else:
+#                     return redirect('/{}/'.format(edit_change))
+#
+#         else:
+#             print("GET")
+#             return render(request, 'user_data/edit_user_data.html')
+#
+#
+# UserData = user_datas()
 
 """shipment code """
 
@@ -914,7 +943,7 @@ class shipment:
         }
         return order_data
 
-    def shiprocket_key():
+    def shiprocket_key(self):
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
         headers = {
             "Content-Type": "application/json"}
@@ -1064,7 +1093,7 @@ class razor_payment:
             context = "you have to add your address first"
             messages.success(request, context)
             request.session['edit_redirect'] = 'initiate_payment'
-            return redirect('/edit_user_data/', {"context": context})
+            return redirect('/EditProfile/', {"context": context})
 
     @csrf_exempt
     def paymenthandler(self, request, razorpay_client=razorpay_client):
