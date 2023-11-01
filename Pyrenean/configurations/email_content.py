@@ -58,6 +58,14 @@ If you need further assistance, feel free to reply to this email or contact our 
 
 If you need further assistance, feel free to reply to this email or contact our support team.
 """
+    },
+    "successfullyResetPassword": {
+        "subject": "Your Password Reset Confirmation",
+        "body": """We are pleased to confirm that your password has been successfully reset. You can now log in to your account using your new password.
+
+For security reasons, we recommend that you do not share your password with anyone. If you did not request this password reset, please ignore this email or contact us immediately.
+
+If you need further assistance, feel free to reply to this email or contact our support team."""
     }
 
 }

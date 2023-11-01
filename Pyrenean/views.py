@@ -547,7 +547,7 @@ def logout_request(request):
     return redirect("/")
 
 
-class ResetView(View):
+class ResetView(MailView):
 
     def get(self, request, *args, **kwargs):
         if request.session.get('otp_verified'):
@@ -571,9 +571,14 @@ class ResetView(View):
                 user.set_password(password)
                 user.save()
                 print(user.password)
-                print("user data changed")
+                success_reset_passwd_email_json = email_content.email_content
+                success_reset_passwd_email_json_subject = success_reset_passwd_email_json["successfullyResetPassword"]["subject"]
+                success_reset_passwd_email_json_body = success_reset_passwd_email_json["successfullyResetPassword"]["body"]
+                message = f"\nDear {user},\n\n" + success_reset_passwd_email_json_body
+                self.send_email(success_reset_passwd_email_json_subject, message, email)
                 return redirect('/login/')
             except Exception as e:
+                print(e, "ee")
                 if "User matching query does not exist" in str(e):
                     context = "Email Not Found, Please Register First."
                     return render(request, 'forget/reset_password.html', {'context': context})
