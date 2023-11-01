@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>OTP Code Verification Form</title>
+    <title>OTP Code Verification | Pyrenean Clothing</title>
     <style>
       * {
         box-sizing: border-box;
@@ -59,12 +59,10 @@
   </head>
   <body>
     <div class="container">
-      <h2>{{context}}</h2>
+      <h2>{{context.error}}</h2>
       <h1>OTP Code Verification for</h1>
       <form id="otpForm"  action="{{site}}" method="POST">
         {% csrf_token %}
-        <label for="otpCode">Enter the Email and  OTP code sent to your phone:</label>
-        <input type="text" id="email" name="email" placeholder="ENTER YOUR EMAI" required>
         <input type="number" id="otp" name="otp" maxlength="6" minlength="6" placeholder="ENTER YOUR OTP" required>
         <button type="submit">Verify OTP Code</button>
       </form>

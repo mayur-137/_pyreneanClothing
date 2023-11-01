@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/login/reset_otp.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forget/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forget/reset_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login/verification.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/terms_conditions.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/terms_conditions.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +168,9 @@
       <workItem from="1698486795847" duration="10618000" />
       <workItem from="1698515895600" duration="742000" />
       <workItem from="1698587859597" duration="2374000" />
-      <workItem from="1698734566712" duration="9944000" />
+      <workItem from="1698734566712" duration="10086000" />
+      <workItem from="1698781918352" duration="2933000" />
+      <workItem from="1698819453108" duration="7789000" />
     </task>
     <servers />
   </component>
@@ -184,16 +190,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Pyrenean/views.py</url>
-          <line>1150</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

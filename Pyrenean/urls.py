@@ -1,8 +1,9 @@
 from django.urls import path
 from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductDetailsView, ContactFormView, \
                             CustomerServiceView, AddToCartView, Update_cart_view, RemoveItemView, LoginView,
-                            RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem, SubscribeView,
-                            Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView)
+                            RegisterView, ResetView, UserData, Rozor, WishListView, WishListAddView, RemoveWishListItem,
+                            SubscribeView,Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView,
+                            forget_password, reset_verified, forget_username)
 from . import views
 
 app_name = "main"
@@ -27,10 +28,10 @@ urlpatterns = [
     path("logout/", views.logout_request, name="logout"),
 
     path("register_verified/", VerifyOTPView.as_view(), name="register_verified"),
-    path("forget_password/", views.forget_password, name="register_verified"),
-    path("reset_verified/", views.reset_verified, name="reset_verified"),
+    path("forget_password/", forget_password.as_view(), name="register_verified"),
+    path("reset_verified/", reset_verified.as_view(), name="reset_verified"),
     path("reset_password/", ResetView.as_view(), name="reset_passsowrd"),
-    path("forget_username/", views.forget_username, name="forget_username"),
+    path("forget_username/", forget_username.as_view(), name="forget_username"),
 
     path('edit_user_data/', views.UserData.edit_user_data, name="edit_user_data"),
     path("user_address/", UserData.user_data_function, name="user_address"),
@@ -45,7 +46,7 @@ urlpatterns = [
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
     # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
-    path("cashfree/",razor_payment.cashfree_dashboard,name="cashfree"),
-    path("cashfree_handle/",razor_payment.cashfree_handle, name="cashfree_handle"),
+    path("cashfree/", Rozor.cashfree_dashboard,name="cashfree"),
+    path("cashfree_handle/", Rozor.cashfree_handle, name="cashfree_handle"),
 
 ]

@@ -72,18 +72,29 @@ class MailView(View):
         return OTP
 
     @staticmethod
-    def Verification(email, user_otp):
-        print(user_otp, email)
+    def Verification(request, email, user_otp):
+        print(user_otp, email, "verification")
+        resetpassword_opt = request.session.get("otp")
         try:
             user = user_email.objects.get(email=email)
             otp = user.otp
         except Exception as e:
             print(e, "eee1")
 
-        if int(user_otp) == int(otp):
+        if int(user_otp) == int(resetpassword_opt):
             return True
         else:
             return False
+
+    def Store_otp(self, email, otp):
+        if user_email.objects.filter(email=email).exists():
+            user = user_email.objects.get(email=email)
+            user.email = email
+            user.otp = otp
+            user.save()
+        else:
+            b = user_email(email=email, otp=otp)
+            user_email.save(b)
 
 
 class ContactView(TemplateView):
@@ -380,13 +391,21 @@ class RemoveItemView(View):
         return redirect("/cart/")
 
 
-class SubscribeView(CreateView):
+class SubscribeView(CreateView, MailView):
     model = SubscribeNow
     form_class = SubscribeForm
     template_name = "About.html"
     success_url = "/about/"
 
     def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        subscribe_email_json = email_content.email_content
+        subscribe_email_json_subject = subscribe_email_json["subscribe"]["subject"]
+        subscribe_email_json_body = subscribe_email_json["subscribe"]["body"]
+        message = f"""Dear {email}, \n
+        {subscribe_email_json_body}
+        """
+        self.send_email(subscribe_email_json_subject, message, email)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -442,17 +461,6 @@ class Terms_ConditionView(TemplateView):
 
 class mail:
 
-    def send_mail(self, email, msg):
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        email_id = "dhruv.180670107033@gmail.com"
-        password = 'nqdf jevl qqwx guvo'
-        server.login(email_id, password)
-        sender = 'dhruv.180670107033@gmail.com'
-        receiver = email
-        server.sendmail(sender, receiver, msg)
-        server.quit()
-
     def confirm_order_mail(self, email):
         order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         order_user = final_order.objects.get(order_id=order_id)
@@ -470,16 +478,6 @@ class mail:
                 "{}").format(
             "dhruv", msg, order_id, order_address, order_total)
         return text
-
-    def store_otp(self, email, otp):
-        if user_email.objects.filter(email=email).exists():
-            user = user_email.objects.get(email=email)
-            user.email = email
-            user.otp = otp
-            user.save()
-        else:
-            b = user_email(email=email, otp=otp)
-            user_email.save(b)
 
 
 mail = mail()
@@ -564,7 +562,7 @@ class ResetView(View):
     def post(self, request, *args, **kwargs):
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
-        email = request.POST['email']
+        email = request.session.get("reset_email")
         print(email, password)
         if password == confirm_password:
             try:
@@ -587,15 +585,21 @@ class ResetView(View):
             return render(request, 'forget/reset_password.html', {'context': context})
 
 
-def reset_verified(request):
-    if request.method == "POST":
+class reset_verified(MailView):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'login/verification.html')
+
+    def post(self, request, *args, **kwargs):
+        reset_email = request.session.get("reset_email")
         user_otp = request.POST['otp']
-        email = request.POST['email']
-        site = MailView.Verification(email, user_otp)
+        site = self.Verification(request, reset_email, user_otp)
         request.session['otp_verified'] = True
-        if site == "yes":
+        if site:
+            print("reset_password")
             return redirect('/reset_password/')
-    else:
+        else:
+            print("reset_password fail")
         site = '/reset_verified/'
         return render(request, 'login/verification.html', {'site': site})
 
@@ -614,7 +618,7 @@ class VerifyOTPView(MailView):
         if otp_timestamp_str:
             otp_timestamp = datetime.datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
 
-            # Check if the OTP has expired (more than 15 minutes old)
+            # Check if the OTP has expired (more than 30 seconds old)
             if timezone.now() > otp_timestamp + timedelta(seconds=30):
                 context = {"error": "The OTP has expired. Please try again."}
                 return render(request, 'login/register.html', {"context": context})
@@ -627,6 +631,13 @@ class VerifyOTPView(MailView):
 
                 user = User.objects.create_user(username=username, password=password, email=email)
                 user.save()
+                Register_email_content = email_content.email_content
+                Register_email_content_subject = Register_email_content["Register"]["subject"]
+                Register_email_content_body = Register_email_content["Register"]["body"]
+                message = f"""Dear {username},
+                 {Register_email_content_body}
+                """
+                self.send_email(Register_email_content_subject, message, email)
 
                 return redirect("/login/")
 
@@ -634,67 +645,62 @@ class VerifyOTPView(MailView):
         return render(request, 'login/verification.html', {"context": context})
 
 
-class ResetOTPView(MailView):
+class forget_password(MailView):
 
-    def get(self, request):
-        return render(request, 'login/reset_otp.html')
+    def get(self, request, *args, **kwargs):
+        return render(request, 'forget/forget.html')
 
-    def post(self, request):
-        email = request.POST.get('resetEmail')
-
-        if User.objects.filter(email=email).exists():
-            otp = self.OtpGeneration()
-            OTP_email_json = email_content.email_content
-            OTP_email_json_subject = OTP_email_json["OTP_Send"]["subject"]
-            OTP_email_json_body1 = OTP_email_json["OTP_Send"]["body1"]
-            OTP_email_json_body2 = OTP_email_json["OTP_Send"]["body2"]
-            message = OTP_email_json_body1 + f"\nYour new OTP: {otp}\n" + OTP_email_json_body2
-            self.send_email(OTP_email_json_subject, message, email)
-
-            # Store the new OTP and timestamp in the session
-            request.session['otp'] = otp
-            request.session['otp_timestamp'] = str(timezone.now())
-
-            context = {"message": "A new OTP has been sent to your email."}
-        else:
-            context = {"error": "This email does not exist."}
-
-        return render(request, 'login/reset_otp.html', context)
-
-
-def forget_password(request):
-    if request.method == "POST":
+    def post(self, request, *args, **kwargs):
         email = request.POST['email']
         try:
-            user = user_email.objects.get(email=email)
-            otp = mail.otp_generation()
-            mail.send_mail(email=email, msg="your otp is {}".format(otp))
-            mail.store_otp(email, otp)
-            return redirect('/reset_verified/')
+            user = user_email.objects.filter(email=email)
+            print(user, "user")
+            if user:
+                otp = self.OtpGeneration()
+                OTP_email_json = email_content.email_content
+                OTP_email_json_subject = OTP_email_json["ResetPassword"]["subject"]
+                OTP_email_json_body1 = OTP_email_json["ResetPassword"]["body1"]
+                OTP_email_json_body2 = OTP_email_json["ResetPassword"]["body2"]
+                message = OTP_email_json_body1 + f"\nYour One-Time Password (OTP) for resetting your password is: {otp}. Please use this OTP to proceed with resetting your password.\n\n" + OTP_email_json_body2
+                self.send_email(OTP_email_json_subject, message, email)
+
+                request.session['otp'] = otp
+                request.session['otp_timestamp'] = str(timezone.now())
+                request.session["reset_email"] = email
+
+                request.session["reset_email"] = email
+                return redirect('/reset_verified/')
         except Exception as e:
-            print(e, "reser e")
+            print(e, "reset e")
             if "user_email matching query does not exist" in str(e):
                 context = "Your Email Dose Not Exist, Please Register First."
                 return render(request, 'forget/forget.html', {"messages": context})
-    else:
+
         return render(request, 'forget/forget.html')
 
 
-def forget_username(request):
-    if request.method == "POST":
+class forget_username(MailView):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'forget/forget_username.html')
+
+    def post(self, request, *args, **kwargs):
         email = request.POST['email']
         try:
             user_username = (User.objects.get(email=email)).username
             print("username", user_username)
-            mail.send_mail(email=email, msg="your username is {}".format(user_username))
+            username_email_json = email_content.email_content
+            username_email_json_subject = username_email_json["RetriveUsername"]["subject"]
+            username_email_json_body1 = username_email_json["RetriveUsername"]["body1"]
+            username_email_json_body2 = username_email_json["RetriveUsername"]["body2"]
+            message = username_email_json_body1 + f"\n\nYour username for your account is: {user_username}\n\n" + username_email_json_body2
+            self.send_email(username_email_json_subject, message, email)
+            self.send_email(username_email_json_subject, message, email)
             context = "Your Username Will Send Via Your Mail Please Check It."
             return render(request, 'forget/forget_username.html', {'messages': context})
         except:
             context = "Your Email Dose Not Exits !!"
             return render(request, 'forget/forget_username.html', {'messages': context})
-
-    else:
-        return render(request, 'forget/forget_username.html')
 
 
 class user_datas:
