@@ -4,7 +4,7 @@ from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductD
                             RegisterView, ResetView, Rozor, WishListView, WishListAddView, RemoveWishListItem,
                             SubscribeView,Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView,
                             forget_password, reset_verified, forget_username, ProfileView, EditProfileView,
-                            CashOnDelivery, SuccessPlacedOrder)
+                            CashOnDelivery, SuccessPlacedOrder,shipment)
 from . import views
 
 app_name = "main"
@@ -50,10 +50,12 @@ urlpatterns = [
     path("CashOnDelivery/", CashOnDelivery.as_view(), name="CashOnDelivery"),
     path("successDelivery/", SuccessPlacedOrder.as_view(), name="SuccessPlacedOrder"),
 
-    path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
+    path('initiate_payment/', shipment.return_order, name="initiate_payment"),
+    # path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
     # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
     path("COD/",razor_payment.Cash_on_delivery,name="Cash on delivery"),
+    path('cancel_order/', shipment.cancel_order, name="initiate_payment"),
     # path("cashfree/", Rozor.cashfree_dashboard,name="cashfree"),
     # path("cashfree_handle/", Rozor.cashfree_handle, name="cashfree_handle"),
 
