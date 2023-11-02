@@ -219,10 +219,12 @@ class CartView(View):
                     product_total = product.subtotal + product_total
                     product_size = product.size
                     product.product_quantity = str(size_session[str(product.id)])
-                    product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
-                                       "quantity": product.product_quantity,
-                                       "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
-
+                    # product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
+                    #                    "quantity": product.product_quantity,
+                    #                    "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
+                    
+                    product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
+                    
                     product_in_cart_Json = json.dumps(product_in_cart)
                     order_product_data.append(product_in_cart_Json)
                     products_list.append(product)
@@ -716,6 +718,7 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         try:
+            print(request.user.email,"request email ")
             email = request.user.email
             userData = user_address.objects.get(email=email)
             print(type(userData), "data")
@@ -769,7 +772,7 @@ class SuccessPlacedOrder(MailView):
 
 class shipment:
 
-    def take_user_data(self, email):
+    def take_user_data(email):
         # take billing data ffrom user_address table and order data table
         print("taking user data")
         user = user_address.objects.get(email=email)
@@ -784,8 +787,9 @@ class shipment:
         print(order_user)
         order_address = order_user.address_1
         order_total = order_user.order_total
-        print('11')
-        order_product = ast.literal_eval(order_user.products_detail)
+        print(order_user.products_detail)
+        # order_product = ast.literal_eval(order_user.products_detail)
+        order_product = order_user.products_detail
         user_name = User.objects.get(email=email).username
         print("products", order_product)
 
@@ -804,7 +808,11 @@ class shipment:
         # add products  
         print("order_product", order_product, type(order_product))
         for i in order_product:
-            print("0000", i)
+            print("0000", i,type(i))
+            # name = i["product_id"]
+            # price = i["price"]
+            # size = i["size"]
+            # quantity = i["quantity"]
             name = i.split('#')[0]
             price = i.split('#')[1]
             size = i.split('#')[2]
@@ -870,7 +878,7 @@ class shipment:
         }
         return order_data
 
-    def shiprocket_key(self):
+    def shiprocket_key():
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
         headers = {
             "Content-Type": "application/json"}
@@ -1232,5 +1240,68 @@ class razor_payment:
             return HttpResponseBadRequest("payment fail")
         # return redirect('/')
 
+    def Cash_on_delivery(request):
+        email = request.user.email
+        # ship_status = cart_data.object.get()
+        
+        # if ship_Status == False:
+        a = shipment.shiprockeet_order_function(request,email=email)
+        print(a.status_code)
+
+        if a.status_code == 200 and a.json()['status'] == "NEW":
+            print("readyyyyy")
+            order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+            order = final_order.objects.get(order_id=order_id)
+            ship_Status = order.shiprocket_dashboard
+            print("order id is",order_id)
+            print("order is",order)
+            print("ship status is",ship_Status)
+    
+            order.shiprocket_dashboard = True            
+            order.save()
+
+            # text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+            # text
+
+            # mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+
+            print("shipment done")
+            try:
+                order_user = cart_data.objects.get(email=email)
+                order_user.delete()
+            except:
+                print(KeyError)
+
+            print("cart empty")
+            print("cart data is deleted")
+            print(a.status_code)
+            print(a.json()['status'])
+            print("ship rocket api is succefully done")
+            return render(request, 'cart_checkout/paymentsuccess.html')
+
+        else:
+                print("some issue  in ship rocket")
+                return HttpResponseBadRequest("there is some issue with our delivery agent we will reach put to  you soon")
+
+                # return render(request, 'cart_checkout/paymentfail.html')
+        # else:
+        #     return render(request, 'cart_checkout/paymentsuccess.html')
+        
 
 Rozor = razor_payment()
+
+# prevent_refresh_middleware.py
+
+from django.http import HttpResponseRedirect
+
+class PreventRefreshMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.path == '/COD/':
+            # Prevent refreshing for the specific page
+            return HttpResponseRedirect('/')  # Redirect to the home page
+
+        response = self.get_response(request)
+        return response
