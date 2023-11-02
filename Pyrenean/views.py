@@ -742,12 +742,21 @@ class EditProfileView(View):
         city = request.POST['city']
         state = request.POST['state']
         print(firstname, email, phone_number, building, street, area, pincode, city, state)
-        user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city, state=state,
-                     phone_number=phone_number).save()
+        user_address.objects.filter(account_email=request.user.email).update(email=email, building=building,
+                                                                             street=street, area=area, pincode=pincode,
+                                                                             city=city, state=state,
+                                                                             phone_number=phone_number)
+
         return redirect("/profile/")
 
 
 class CashOnDelivery(MailView):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, "order.html")
+
+
+class SuccessPlacedOrder(MailView):
 
     def post(self, request, *args, **kwargs):
         otp = self.OtpGeneration()

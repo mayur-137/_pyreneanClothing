@@ -29,6 +29,7 @@ class user_email(models.Model):
 class user_address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=100, unique=True)
+    account_email = models.EmailField(max_length=100, unique=True, default="")
     building = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
