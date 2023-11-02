@@ -219,11 +219,11 @@ class CartView(View):
                     product_total = product.subtotal + product_total
                     product_size = product.size
                     product.product_quantity = str(size_session[str(product.id)])
-                    # product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
-                    #                    "quantity": product.product_quantity,
-                    #                    "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
+                    product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
+                                       "quantity": product.product_quantity,
+                                       "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
                     
-                    product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
+                    # product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
                     
                     product_in_cart_Json = json.dumps(product_in_cart)
                     order_product_data.append(product_in_cart_Json)
@@ -754,20 +754,22 @@ class EditProfileView(View):
 
 
 class CashOnDelivery(MailView):
+    otp = None
 
     def get(self, request, *args, **kwargs):
+        self.otp = self.OtpGeneration()
         return render(request, "order.html")
 
 
-class SuccessPlacedOrder(MailView):
+class SuccessPlacedOrder(CashOnDelivery):
 
     def post(self, request, *args, **kwargs):
-        otp = self.OtpGeneration()
+        print(self.otp)
         user_otp = request.POST.get("otp")
         print(user_otp, "otps")
-        if otp == user_otp:
+        if self.otp == user_otp:
             print("success full")
-        return render(request, "order.html")
+        return render(request, "sucess_order.html")
 
 
 class shipment:
