@@ -297,8 +297,7 @@ class CartView(View):
         else:
             if order_product_data != "":
                 print(order_product_data, "data111")
-                b = cart_data(email=email, products_detail=order_product_data,
-                              order_total=product_total)
+                b = cart_data(email=email, products_detail=order_product_data,order_total=product_total)
                 cart_data.save(b)
                 return render(request, 'cart_checkout/Cart.html',
                               {'products': products_list, 'product_total': product_total})
@@ -749,7 +748,7 @@ class EditProfileView(View):
                                                                              street=street, area=area, pincode=pincode,
                                                                              city=city, state=state,
                                                                              phone_number=phone_number)
-
+        
         return redirect("/profile/")
 
 
@@ -783,7 +782,14 @@ class shipment:
         user_billing_state = user.state
         user_billing_email = email
         user_billing_phone = user.phone_number
+        # user_billing_city = "ahmedabad"
+        # user_billing_pincode = "380060"
+        # user_billing_state = "gujrat"
+        # user_billing_email = email
+        # user_billing_phone = "9033474857"
+        
         print("user data taked")
+        print(user_billing_city,user_billing_phone,user_billing_pincode)
         # take cart data
         order_user = cart_data.objects.get(email=email)
         print(order_user)
@@ -811,18 +817,20 @@ class shipment:
         print("order_product", order_product, type(order_product))
         for i in order_product:
             print("0000", i,type(i))
-            # name = i["product_id"]
-            # price = i["price"]
-            # size = i["size"]
-            # quantity = i["quantity"]
-            name = i.split('#')[0]
-            price = i.split('#')[1]
-            size = i.split('#')[2]
-            quantity = i.split('#')[3]
+            j = json.loads(i)
+            p_id= j["product_id"]
+            price = j["price"]
+            size = j["size"]
+            quantity = j["quantity"]
+            name =  Product_Details.objects.get(id=p_id).name
+            # name = i.split('#')[0]
+            # price = i.split('#')[1]
+            # size = i.split('#')[2]
+            # quantity = i.split('#')[3]
             print("name and quantity", name, quantity, price, size)
             d1 = {
                 "name": name,
-                "sku": i,
+                "sku": str(name)+"-"+str(size)+"-"+str(price),
                 "units": quantity,
                 "selling_price": price,
                 "discount": "00",
@@ -841,7 +849,7 @@ class shipment:
             "reseller_name": "dhruvil",
             "company_name": "",
             "billing_customer_name": user_name,
-            "billing_last_name": "patel",
+            "billing_last_name": "",
             "billing_address": order_address,
             "billing_address_2": order_address,
             "billing_isd_code": "",
@@ -863,7 +871,7 @@ class shipment:
             "shipping_email": "",
             "shipping_phone": "",
             "order_items": l2,
-            "payment_method": "prepaid",
+            "payment_method": "COD",
             "shipping_charges": "0",
             "giftwrap_charges": "0",
             "transaction_charges": "0",
