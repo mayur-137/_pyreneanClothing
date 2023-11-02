@@ -1,33 +1,71 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - codingnepalweb.com -->
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>OTP Verification Form</title>
-    <link rel="stylesheet" href="../static/css/order.css" />
-    <!-- Boxicons CSS -->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-   <script src="../static/js/order.js" defer></script>
-   <script>
-    
-   </script>
+    <title>OTP Code Verification | Pyrenean Clothing</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      form {
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        padding: 20px;
+      }
+      input[type="number"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+      }
+      button[type="submit"]:hover {
+        background-color: #45a049;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <header>
-        <i class="bx bxs-check-shield"></i>
-      </header>
-      <h4>Enter OTP Code</h4>
-      <form action="#">
-        <div class="input-field">
-          <input type="number" />
-          <input type="number" disabled />
-          <input type="number" disabled />
-          <input type="number" disabled />
-        </div>
-        <button>Verify OTP</button>
+      <h2>{{context.error}}</h2>
+      <h1>OTP Code Verification for Cash On Delivery </h1>
+      <form id="otpForm"  action="{{site}}" method="POST">
+        {% csrf_token %}
+        <input type="number" id="otp" name="otp" maxlength="6" minlength="6" placeholder="ENTER YOUR OTP" required>
+        <button type="submit">Verify OTP Code</button>
       </form>
     </div>
   </body>
