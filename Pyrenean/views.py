@@ -748,7 +748,7 @@ class EditProfileView(View):
                                                                              street=street, area=area, pincode=pincode,
                                                                              city=city, state=state,
                                                                              phone_number=phone_number)
-
+        
         return redirect("/profile/")
 
 
@@ -780,6 +780,12 @@ class shipment:
         user_billing_state = user.state
         user_billing_email = email
         user_billing_phone = user.phone_number
+        # user_billing_city = "ahmedabad"
+        # user_billing_pincode = "380060"
+        # user_billing_state = "gujrat"
+        # user_billing_email = email
+        # user_billing_phone = "9033474857"
+        
         print("user data taked")
         print(user_billing_city,user_billing_phone,user_billing_pincode)
         # take cart data
@@ -841,7 +847,7 @@ class shipment:
             "reseller_name": "dhruvil",
             "company_name": "",
             "billing_customer_name": user_name,
-            "billing_last_name": "patel",
+            "billing_last_name": "",
             "billing_address": order_address,
             "billing_address_2": order_address,
             "billing_isd_code": "",
@@ -863,7 +869,7 @@ class shipment:
             "shipping_email": "",
             "shipping_phone": "",
             "order_items": l2,
-            "payment_method": "prepaid",
+            "payment_method": "COD",
             "shipping_charges": "0",
             "giftwrap_charges": "0",
             "transaction_charges": "0",
