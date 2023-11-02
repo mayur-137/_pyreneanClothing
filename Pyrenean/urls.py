@@ -49,7 +49,8 @@ urlpatterns = [
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
     # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
-    path("cashfree/", Rozor.cashfree_dashboard,name="cashfree"),
-    path("cashfree_handle/", Rozor.cashfree_handle, name="cashfree_handle"),
+    path("COD/",razor_payment.Cash_on_delivery,name="Cash on delivery"),
+    # path("cashfree/", Rozor.cashfree_dashboard,name="cashfree"),
+    # path("cashfree_handle/", Rozor.cashfree_handle, name="cashfree_handle"),
 
 ]

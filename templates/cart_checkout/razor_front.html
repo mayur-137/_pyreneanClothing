@@ -226,7 +226,7 @@ tfoot {
         </div>
         <form>
           <div>
-            <button class="button change--edit "><a href="/user_address/">change or edit address</a></button>
+            <button class="button change--edit "><a href="/profile/">change or edit address</a></button>
             </div>
         </form >          
         
@@ -264,7 +264,7 @@ tfoot {
         </div> {% endcomment %}
       </form>
       <form
-          action="/cashfree/" method="POST"
+          action="/COD/" method="POST"
         >
           {% csrf_token %}
           <button type="submit" class="button button--full">make payment</button>
