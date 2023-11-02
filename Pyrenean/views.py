@@ -3,7 +3,6 @@ import json
 import random
 import razorpay
 import requests
-import smtplib
 import datetime
 from datetime import timedelta
 
@@ -386,6 +385,9 @@ class RemoveItemView(View):
         if GetRemoveItemId in size_session:
             del size_session[GetRemoveItemId]
             request.session["size_session"] = size_session
+            request.session["discount_coupen"] = 0
+            request.session["discounted_price"] = 0
+            request.session["PromoMessage"] = None
 
         print(size_session, cart_session, "sessions")
         return redirect("/cart/")
@@ -745,99 +747,15 @@ class EditProfileView(View):
         return redirect("/profile/")
 
 
-# class user_datas:
-#
-#     def user_data_function(self, request):
-#         try:
-#             user = request.user
-#             email = request.user.email
-#             print(email, "email-----------------")
-#             try:
-#                 print("user data already stored ")
-#                 username = (User.objects.get(email=email)).username
-#                 print("111")
-#                 building = user_address.objects.get(email=email).building
-#                 print(building)
-#                 phone_number = user_address.objects.get(email=email).phone_number
-#                 street = (user_address.objects.get(email=email)).street
-#                 area = (user_address.objects.get(email=email)).area
-#                 pincode = (user_address.objects.get(email=email)).pincode
-#                 city = (user_address.objects.get(email=email)).city
-#                 state = (user_address.objects.get(email=email)).state
-#                 context = {"email": email, "phone_number": phone_number, 'username': username, 'building': building,
-#                            'street': street, 'area': area, 'pincode': pincode, 'city': city, 'state': state}
-#                 print(context)
-#                 request.session['edit_redirect'] = "user_address"
-#                 print(request.session['edit_redirect'], "request.session['edit_redirect']")
-#                 return render(request, 'user_data/user_data.html', {'context': context})
-#
-#             except:
-#                 return render(request, 'user_data/user_data.html')
-#         except:
-#             print('no user found')
-#             return redirect('/login/', {"context": "you have't logged in "})
-#
-#     def edit_user_data(self, request, *args, **kwargs):
-#         print("edit user data")
-#         if request.method == "POST":
-#             print("edit user data222")
-#             email = request.POST['email']
-#             building = request.POST['building']
-#             street = request.POST['street']
-#             area = request.POST['area']
-#             pincode = request.POST['pincode']
-#             city = request.POST['city']
-#             state = request.POST['state']
-#             phone_number = request.POST['phone_number']
-#             address = str(
-#                 str(building) + ',' + str(street) + ',' + str(area) + ',' + str(pincode) + ',' + str(city) + ',' + str(
-#                     state) + ',' + str(phone_number))
-#             print(address)
-#             if cart_data.objects.filter(email=email).exists():
-#                 user = cart_data.objects.get(email=email)
-#                 user.address_1 = address
-#                 user.save()
-#             else:
-#                 b = cart_data(email=email, address_1=address)
-#                 cart_data.save(b)
-#
-#             if user_address.objects.filter(email=email).exists():
-#                 print("your data is saved")
-#                 user = user_address.objects.get(email=email)
-#                 user.building = building
-#                 user.street = street
-#                 user.area = area
-#                 user.pincode = pincode
-#                 user.city = city
-#                 user.phone_number = phone_number
-#                 user.state = state
-#                 user.save()
-#
-#                 edit_change = request.session.get('edit_redirect')
-#                 print(edit_change, "edit_change")
-#                 # return redirect('/ProductDetails/2')
-#
-#                 return redirect('/{}/'.format(edit_change))
-#
-#             else:
-#                 print("user data is not saved")
-#                 b = user_address(email=email, building=building, street=street, area=area, pincode=pincode, city=city,
-#                                  phone_number=phone_number, state=state)
-#                 user_address.save(b)
-#                 edit_change = request.session.get('edit_redirect')
-#                 if edit_change == "initiate_payment":
-#                     return redirect('/{}/'.format(edit_change))
-#                 else:
-#                     return redirect('/{}/'.format(edit_change))
-#
-#         else:
-#             print("GET")
-#             return render(request, 'user_data/edit_user_data.html')
-#
-#
-# UserData = user_datas()
+class CashOnDelivery(MailView):
 
-"""shipment code """
+    def post(self, request, *args, **kwargs):
+        otp = self.OtpGeneration()
+        user_otp = request.POST.get("otp")
+        print(user_otp, "otps")
+        if otp == user_otp:
+            print("success full")
+        return render(request, "order.html")
 
 
 class shipment:
@@ -1181,14 +1099,14 @@ class razor_payment:
             # if other than POST request is made.
             return HttpResponseBadRequest()
 
-    def cashfree(email):
+    def cashfree(self, email):
         # prepeare data
         # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
         # linkid = "00"+"{}".format(order_id)
         # order = final_order.objects.get(order_id=order_id)
         # order.link_id = linkid
         # order.save()
-        order_id = 82
+        order_id = 1000
         # order_user = cart_data.objects.get(email=email)
         # order_total = order_user.order_total
         # amount = order_total * 100  # Rs. 200
@@ -1230,17 +1148,16 @@ class razor_payment:
         print(response.text)
         return response
 
-    def cashfree_dashboard(request):
+    def cashfree_dashboard(self, request):
         print(request.user.email)
-        dashboard = razor_payment.cashfree(email=request.user.email)
-        dashboard
+        dashboard = self.cashfree(email=request.user.email)
         data = dashboard.text
         print(type(data))
         data_a = json.loads(data)
         link = data_a["link_url"]
         return redirect(link)
 
-    def cashfree_handle(request):
+    def cashfree_handle(self, request):
         print(request)
 
         # order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
@@ -1251,7 +1168,7 @@ class razor_payment:
         email = request.user.email
 
         print(request)
-        linkid = "0082"
+        linkid = "1000"
         url = "https://sandbox.cashfree.com/pg/links/{}".format(linkid)
         print(url)
 
