@@ -62,7 +62,7 @@
     <div class="container">
       <h2>{{context.error}}</h2>
       <h1>OTP Code Verification for Cash On Delivery </h1>
-      <form id="otpForm"  action="{{site}}" method="POST">
+      <form id="otpForm"  action="/COD/" method="POST">
         {% csrf_token %}
         <input type="number" id="otp" name="otp" maxlength="6" minlength="6" placeholder="ENTER YOUR OTP" required>
         <button type="submit">Verify OTP Code</button>

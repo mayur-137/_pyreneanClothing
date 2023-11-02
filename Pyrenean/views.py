@@ -219,11 +219,11 @@ class CartView(View):
                     product_total = product.subtotal + product_total
                     product_size = product.size
                     product.product_quantity = str(size_session[str(product.id)])
-                    # product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
-                    #                    "quantity": product.product_quantity,
-                    #                    "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
+                    product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
+                                       "quantity": product.product_quantity,
+                                       "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
                     
-                    product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
+                    # product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
                     
                     product_in_cart_Json = json.dumps(product_in_cart)
                     order_product_data.append(product_in_cart_Json)
@@ -297,8 +297,7 @@ class CartView(View):
         else:
             if order_product_data != "":
                 print(order_product_data, "data111")
-                b = cart_data(email=email, products_detail=order_product_data,
-                              order_total=product_total)
+                b = cart_data(email=email, products_detail=order_product_data,order_total=product_total)
                 cart_data.save(b)
                 return render(request, 'cart_checkout/Cart.html',
                               {'products': products_list, 'product_total': product_total})
@@ -773,6 +772,7 @@ class shipment:
         user_billing_email = email
         user_billing_phone = user.phone_number
         print("user data taked")
+        print(user_billing_city,user_billing_phone,user_billing_pincode)
         # take cart data
         order_user = cart_data.objects.get(email=email)
         print(order_user)
@@ -800,18 +800,20 @@ class shipment:
         print("order_product", order_product, type(order_product))
         for i in order_product:
             print("0000", i,type(i))
-            # name = i["product_id"]
-            # price = i["price"]
-            # size = i["size"]
-            # quantity = i["quantity"]
-            name = i.split('#')[0]
-            price = i.split('#')[1]
-            size = i.split('#')[2]
-            quantity = i.split('#')[3]
+            j = json.loads(i)
+            p_id= j["product_id"]
+            price = j["price"]
+            size = j["size"]
+            quantity = j["quantity"]
+            name =  Product_Details.objects.get(id=p_id).name
+            # name = i.split('#')[0]
+            # price = i.split('#')[1]
+            # size = i.split('#')[2]
+            # quantity = i.split('#')[3]
             print("name and quantity", name, quantity, price, size)
             d1 = {
                 "name": name,
-                "sku": i,
+                "sku": str(name)+"-"+str(size)+"-"+str(price),
                 "units": quantity,
                 "selling_price": price,
                 "discount": "00",
