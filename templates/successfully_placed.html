@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en"><head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>SuccessFully Placed Order | Pyrenean</title>
+    <link rel="stylesheet" href="{% static 'css/successfully_placed.css' %}" media="screen">
+<link rel="stylesheet" href="{% static 'css/style.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'js/script.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <meta name="generator" content="Pyrenean Clothing, www.pyreneanclothing.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+
+  <body class="u-body u-xl-mode" data-lang="en">
+    <section class="u-clearfix u-section-1" id="sec-1d3a">
+      <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-xl u-sheet-1">
+        <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
+          <div class="u-layout">
+            <div class="u-layout-col">
+              <div class="u-size-30">
+                <div class="u-layout-row">
+                  <div class="u-container-align-center u-container-style u-image u-layout-cell u-size-30 u-image-1" data-image-width="480" data-image-height="360">
+                    <div class="u-container-layout u-container-layout-1"></div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2">
+                    <div class="u-container-layout u-container-layout-2">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                        <table class="u-table-entity">
+                          <colgroup>
+                            <col width="55.7%">
+                            <col width="17.4%">
+                            <col width="17.2%">
+                            <col width="10.7%">
+                          </colgroup>
+                          <thead class="u-black u-table-header u-table-header-1">
+                            <tr style="height: 71px;">
+                              <th class="u-border-1 u-border-black u-table-cell">Product Name</th>
+                              <th class="u-border-1 u-border-black u-table-cell">Size - Price</th>
+                              <th class="u-border-1 u-border-black u-table-cell">Quantity</th>
+                              <th class="u-border-1 u-border-black u-table-cell">Subtotal</th>
+                            </tr>
+                          </thead>
+                          <tbody class="u-table-body">
+                            {% for data in Order %}
+                            <tr style="height: 69px;">
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">{{ data.name }}</td>
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">{{ data.size }} - {{ data.price }}</td>
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">{{ data.quantity }}</td>
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">{{ data.subtotal }}</td>
+                            </tr>
+                           {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="u-size-30">
+                <div class="u-layout-row">
+                  <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3">
+                    <div class="u-container-layout u-container-layout-3">
+                      <p class="u-text u-text-default u-text-1">Thank You for your order purchase !<span style="font-size: 1.875rem;"></span>
+                      </p>
+                      <p class="u-text u-text-default u-text-2">Your Will Receive an order confirmation email with details of your order.<br>
+                        <br>Your order is #111111111111<br>
+                        <br>Countinue shopping
+                      </p>
+                      <a href="/TrackOrder/" class="u-align-center-md u-align-center-sm u-align-center-xs u-btn u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-btn-1">Track Your Order</a>
+                      <a href="/CancelOrder/" class="u-align-center-md u-align-center-sm u-align-center-xs u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">Cancle Order</a>
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-4">
+                    <div class="u-container-layout u-container-layout-4">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-2">
+                        <table class="u-table-entity">
+                          <colgroup>
+                            <col width="72.4%">
+                            <col width="27.6%">
+                          </colgroup>
+                          <thead class="u-black u-table-header u-table-header-2">
+                            <tr style="height: 45px;">
+                              <th class="u-border-1 u-border-black u-table-cell">Reseller Address</th>
+                              <th class="u-border-1 u-border-black u-table-cell">Shipping Mathod</th>
+                            </tr>
+                          </thead>
+                          <tbody class="u-table-body">
+                            <tr style="height: 45px;">
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">B-Block, 2nd Floor, Devalay Apratment, Opps. to Police quarters, keshav nagar, shubhash bridge, Ahmedabad, 380027 </td>
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">COD</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="u-expanded-width u-table u-table-responsive u-table-3">
+                        <table class="u-table-entity">
+                          <colgroup>
+                            <col width="72.4%">
+                            <col width="27.6%">
+                          </colgroup>
+                          <thead class="u-black u-table-header u-table-header-3">
+                            <tr style="height: 45px;">
+                              <th class="u-border-1 u-border-black u-table-cell">Shipment Address</th>
+                              <th class="u-border-1 u-border-black u-table-cell">Payment method</th>
+                            </tr>
+                          </thead>
+                          <tbody class="u-table-body">
+                            <tr style="height: 45px;">
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">{{ UserAddress }}</td>
+                              <td class="u-border-1 u-border-grey-30 u-table-cell">Cash On Delivery</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+</body></html>

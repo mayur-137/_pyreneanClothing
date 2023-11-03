@@ -198,6 +198,7 @@ class CartView(View):
             discount_coupen = request.session["discount_coupen"]
             discounted_price_coupen = request.session["discounted_price"]
             promo_code = request.session["PromoMessage"]
+
             print(discount_coupen, discounted_price_coupen, promo_code, "hey")
         except Exception as e:
             discount_coupen = 0
@@ -222,9 +223,9 @@ class CartView(View):
                     product_in_cart = {"product_id": str(product.product.id), "price": product.discounted_price,
                                        "quantity": product.product_quantity,
                                        "size": product.size, "size_id": str(product.id), "subtotal": product.subtotal}
-                    
+
                     # product_in_cart = str(product.product.id) + "#" + str(product.discounted_price) +"#"+ str( product.product_quantity) + "#"+ str(product.size)
-                    
+
                     product_in_cart_Json = json.dumps(product_in_cart)
                     order_product_data.append(product_in_cart_Json)
                     products_list.append(product)
@@ -297,7 +298,7 @@ class CartView(View):
         else:
             if order_product_data != "":
                 print(order_product_data, "data111")
-                b = cart_data(email=email, products_detail=order_product_data,order_total=product_total)
+                b = cart_data(email=email, products_detail=order_product_data, order_total=product_total)
                 cart_data.save(b)
                 return render(request, 'cart_checkout/Cart.html',
                               {'products': products_list, 'product_total': product_total})
@@ -462,30 +463,6 @@ class Terms_ConditionView(TemplateView):
         return Terms
 
 
-class mail:
-
-    def confirm_order_mail(self, email):
-        order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
-        order_user = final_order.objects.get(order_id=order_id)
-        order_total = order_user.order_total
-        order_address = order_user.address
-        order_product = ast.literal_eval(order_user.products_detail)
-        msg = ""
-        for i in order_product:
-            name = i.split("#")[0]
-            quantity = i.split("#")[1]
-            price = i.split("#")[2]
-            msg += ",name->{},quantity->{},price->{}".format(name, quantity, price)
-        print(msg)
-        text = ("Thanks {} for shopping with us ,\n\n Your order {} with order id {}, on address {} \n\n your total is "
-                "{}").format(
-            "dhruv", msg, order_id, order_address, order_total)
-        return text
-
-
-mail = mail()
-
-
 class RegisterView(MailView):
 
     def get(self, request):
@@ -628,8 +605,8 @@ class VerifyOTPView(MailView):
         if otp_timestamp_str:
             otp_timestamp = datetime.datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
 
-            # Check if the OTP has expired (more than 30 seconds old)
-            if timezone.now() > otp_timestamp + timedelta(seconds=30):
+            # Check if the OTP has expired (more than 60 seconds old)
+            if timezone.now() > otp_timestamp + timedelta(seconds=60):
                 context = {"error": "The OTP has expired. Please try again."}
                 return render(request, 'login/register.html', {"context": context})
 
@@ -717,9 +694,9 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         try:
-            print(request.user.email,"request email ")
+            print(request.user.email, "request email ")
             email = request.user.email
-            userData = user_address.objects.get(email=email)
+            userData = user_address.objects.get(account_email=email)
             print(type(userData), "data")
             userData.username = request.user
             return render(request, "user_data/user_data.html", {"userData": userData})
@@ -744,65 +721,145 @@ class EditProfileView(View):
         city = request.POST['city']
         state = request.POST['state']
         print(firstname, email, phone_number, building, street, area, pincode, city, state)
-        user_address.objects.filter(account_email=request.user.email).update(email=email, building=building,
-                                                                             street=street, area=area, pincode=pincode,
-                                                                             city=city, state=state,
-                                                                             phone_number=phone_number)
-        
+        if user_address.objects.exists(account_email=request.user.email):
+            user_address.objects.filter(account_email=request.user.email).update(email=email, building=building,
+                                                                                 street=street, area=area,
+                                                                                 pincode=pincode,
+                                                                                 city=city, state=state,
+                                                                                 phone_number=phone_number)
+        else:
+            user_address(account_email=request.user.email, email=email, building=building, street=street, area=area,
+                         pincode=pincode,
+                         city=city, state=state,
+                         phone_number=phone_number).save()
+
         return redirect("/profile/")
 
 
 class CashOnDelivery(MailView):
-    otp = None
 
     def get(self, request, *args, **kwargs):
-        self.otp = self.OtpGeneration()
+        otp = self.OtpGeneration()
+        confirmationOrder_email_content = email_content.email_content
+        confirmationOrder_email_content_subject = confirmationOrder_email_content["confirmationOrder"][
+            "subject"]
+        confirmationOrder_email_content_body1 = confirmationOrder_email_content["confirmationOrder"]["body1"]
+        confirmationOrder_email_content_body2 = confirmationOrder_email_content["confirmationOrder"]["body2"]
+        message = f"""Dear {request.user},\n
+
+{confirmationOrder_email_content_body1}
+
+Your OTP is {otp}. It is valid for 1 minutes. Please do not share it with anyone.
+
+{confirmationOrder_email_content_body2}
+                        """
+        # self.send_email(confirmationOrder_email_content_subject, message, request.user.email)
+        request.session['otp'] = otp
+        request.session['otp_timestamp'] = str(timezone.now())
         return render(request, "order.html")
 
 
 class SuccessPlacedOrder(CashOnDelivery):
 
-    def post(self, request, *args, **kwargs):
-        print(self.otp)
-        user_otp = request.POST.get("otp")
-        print(user_otp, "otps")
-        if self.otp == user_otp:
-            print("success full")
-        return render(request, "sucess_order.html")
+    def post(self, request):
+        user_otp = request.POST.get('otp')
+        a = request.session.get('otp')
+        print("my otp", type(user_otp), type(a))
+        otp_timestamp_str = request.session.get('otp_timestamp')
+
+        user_cart_fill = cart_data.objects.filter(email=request.user.email)
+        for i in user_cart_fill:
+            f = []
+            for j in i.products_detail:
+                JsonExtractedData = json.loads(j)
+                GetPrice = JsonExtractedData["price"]
+                GetSize = JsonExtractedData["size"]
+                GetSize_id = JsonExtractedData["size_id"]
+                GetQuantity = JsonExtractedData["quantity"]
+                Getsubtotal = JsonExtractedData["subtotal"]
+                getDataForCart = Product_Details.objects.filter(id=JsonExtractedData["product_id"])
+                for getDataForCartEdit in getDataForCart:
+                    getDataForCartEdit.price = GetPrice
+                    getDataForCartEdit.size = GetSize
+                    getDataForCartEdit.size_id = GetSize_id
+                    getDataForCartEdit.quantity = GetQuantity
+                    getDataForCartEdit.subtotal = Getsubtotal
+                    f.append(getDataForCartEdit)
+
+            UserAddress = i.address_1
+            print(UserAddress, "addr")
+
+        if otp_timestamp_str:
+            otp_timestamp = datetime.datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
+
+            # Check if the OTP has expired (more than 90 seconds old)
+            if timezone.now() > otp_timestamp + timedelta(seconds=90):
+                context = {"error": "The OTP has expired. Please try again."}
+                return redirect("/cart/")
+
+            # Check if the entered OTP matches the one in the session
+            if int(user_otp) == int(a):
+                successfullyPlaced_email_content = email_content.email_content
+                successfullyPlaced_email_content_subject = successfullyPlaced_email_content["successfullyOrderPlaced"][
+                    "subject"]
+                successfullyPlaced_email_content_body = successfullyPlaced_email_content["successfullyOrderPlaced"][
+                    "body"]
+                message = f"""Dear {request.user},\n
+                
+{successfullyPlaced_email_content_body}
+                
+Your order ID is **123456789**. You can use this ID to track your order status, delivery date, and other details on our website or app.
+
+We hope you enjoy your purchase and have a wonderful day!
+                """
+                # self.send_email(successfullyPlaced_email_content_subject, message, request.user.email)
+
+                return render(request, "successfully_placed.html", {"Order": f, "UserAddress": UserAddress})
+
+        context = "Invalid OTP. Please try again."
+        return redirect("/cart/")
 
 
-class shipment:
+class ShipmentView(View):
 
-    def take_user_data(email):
+    def get(self, request, *args, **kwargs):
+        current_Email = request.user.email
+        UserAddress = user_address.objects.get(account_email=current_Email)
+        print(UserAddress)
+
+
+class shipment(View):
+
+    def take_user_data(self, request):
         # take billing data ffrom user_address table and order data table
         print("taking user data")
-        user = user_address.objects.get(email=email)
+        user = user_address.objects.get(account_email=request.user.email)
         user_billing_city = user.city
         user_billing_pincode = user.pincode
         user_billing_state = user.state
-        user_billing_email = email
+        user_billing_email = user.email
         user_billing_phone = user.phone_number
         # user_billing_city = "ahmedabad"
         # user_billing_pincode = "380060"
         # user_billing_state = "gujrat"
         # user_billing_email = email
         # user_billing_phone = "9033474857"
-        
+
         print("user data taked")
-        print(user_billing_city,user_billing_phone,user_billing_pincode)
+        print(user_billing_city, user_billing_phone, user_billing_pincode)
         # take cart data
-        order_user = cart_data.objects.get(email=email)
+        order_user = cart_data.objects.get(email=user.email)
         print(order_user)
         order_address = order_user.address_1
         order_total = order_user.order_total
         print(order_user.products_detail)
         # order_product = ast.literal_eval(order_user.products_detail)
         order_product = order_user.products_detail
-        user_name = User.objects.get(email=email).username
+        user_name = User.objects.get(email=user.email).username
         print("products", order_product)
 
         # add value to final order list
-        b = final_order(email=email, address=order_address, products_detail=order_product,
+        b = final_order(email=user.email, address=order_address, products_detail=order_product,
                         order_total=order_total,
                         shiprocket_dashboard=False)
         final_order.save(b)
@@ -813,16 +870,16 @@ class shipment:
         print("order_id", type(order_id), order_id)
 
         l2 = []
-        # add products  
+        # add products
         print("order_product", order_product, type(order_product))
         for i in order_product:
-            print("0000", i,type(i))
+            print("0000", i, type(i))
             j = json.loads(i)
-            p_id= j["product_id"]
+            p_id = j["product_id"]
             price = j["price"]
             size = j["size"]
             quantity = j["quantity"]
-            name =  Product_Details.objects.get(id=p_id).name
+            name = Product_Details.objects.get(id=p_id).name
             # name = i.split('#')[0]
             # price = i.split('#')[1]
             # size = i.split('#')[2]
@@ -830,7 +887,7 @@ class shipment:
             print("name and quantity", name, quantity, price, size)
             d1 = {
                 "name": name,
-                "sku": str(name)+"-"+str(size)+"-"+str(price),
+                "sku": str(name) + "-" + str(size) + "-" + str(price),
                 "units": quantity,
                 "selling_price": price,
                 "discount": "00",
@@ -907,7 +964,7 @@ class shipment:
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        order_data = shipment.take_user_data(email=email)
+        order_data = shipment.take_user_data()
         print(order_data)
         # Send the POST request
         response = requests.post(url, json=order_data, headers=headers)
@@ -926,64 +983,12 @@ class razor_payment:
 
     def check_user_data(request, email):
         try:
-            c = user_address.objects.get(email=email)
+            c = user_address.objects.get(account_email=email)
             print(c, "data is there")
             return True
         except:
             context = "you have to add your address first"
             return False
-            # messages.success(request, context)
-            # print("you have to add ypur data first")
-            # request.session['edit_redirect'] = after_edit
-            # return redirect('/edit_user_data/', {"context": context})
-
-        # try:
-        #     try:
-        #         email = email
-        #         order_product_data = []
-        #         for i in products_list:
-        #             products_detail = str(str(i.name) + "#" + str(i.price))
-        #             order_product_data.append(products_detail)
-        #         try:
-        #             c = user_address.objects.get(email=email)
-        #             address = str(c.building) + " , " + str(c.street) + " , " + str(c.area) + " , " + str(
-        #                 c.pincode) + " , " + str(c.city) + " , " + str(c.state)
-
-        #             if cart_data.objects.filter(email=email).exists():
-        #                 if order_product_data != "":
-        #                     user = cart_data.objects.get(email=email)
-        #                     user.products_detail = order_product_data
-        #                     user.order_total = product_total
-        #                     user.address_1 = address
-        #                     user.save()
-        #                     return render(request, 'cart_checkout/Cart.html',
-        #                                   {'products': products_list, 'product_total': product_total})
-        #                 else:
-        #                     pass
-        #             else:
-        #                 if order_product_data != "":
-        #                     b = cart_data(email=email, address_1=address, products_detail=order_product_data,
-        #                                   order_total=product_total)
-        #                     cart_data.save(b)
-        #                     return render(request, 'cart_checkout/Cart.html',
-        #                                   {'products': products_list, 'product_total': product_total})
-        #                 else:
-        #                     pass
-        #         except:
-        #             context = "you have to add your address first"
-        #             messages.success(request, context)
-        #             after_edit = f"ProductDetails/{slug}"
-        #             request.session['edit_redirect'] = after_edit
-        #             return redirect('/edit_user_data/', {"context": context})
-        #     except:
-        #         context = "you have't login yet"
-        #         messages.success(request, context)
-        #         return redirect('/login/', {"context": context})
-        # except:
-        #     product_total = 0
-        #     products_list = []
-        #     return render(request, 'cart_checkout/cart.html',
-        #                   {'products': products_list, 'product_total': product_total})
 
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
         email = request.user.email
@@ -994,8 +999,13 @@ class razor_payment:
             print("razor front page ")
             order_address = order_user.address_1
             print(order_user)
-            order_total = order_user.order_total
+            if request.session.get("discounted_price"):
+                order_total = request.session.get("discounted_price")
+            else:
+                order_total = order_user.order_total
+
             order_product = order_user.products_detail
+
 
             print(order_user, order_address, order_total, order_product, "initial")
 
@@ -1253,9 +1263,9 @@ class razor_payment:
     def Cash_on_delivery(request):
         email = request.user.email
         # ship_status = cart_data.object.get()
-        
+
         # if ship_Status == False:
-        a = shipment.shiprockeet_order_function(request,email=email)
+        a = shipment.shiprockeet_order_function(request, email=email)
         print(a.status_code)
 
         if a.status_code == 200 and a.json()['status'] == "NEW":
@@ -1263,11 +1273,11 @@ class razor_payment:
             order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
             order = final_order.objects.get(order_id=order_id)
             ship_Status = order.shiprocket_dashboard
-            print("order id is",order_id)
-            print("order is",order)
-            print("ship status is",ship_Status)
-    
-            order.shiprocket_dashboard = True            
+            print("order id is", order_id)
+            print("order is", order)
+            print("ship status is", ship_Status)
+
+            order.shiprocket_dashboard = True
             order.save()
 
             # text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
@@ -1290,19 +1300,20 @@ class razor_payment:
             return render(request, 'cart_checkout/paymentsuccess.html')
 
         else:
-                print("some issue  in ship rocket")
-                return HttpResponseBadRequest("there is some issue with our delivery agent we will reach put to  you soon")
+            print("some issue  in ship rocket")
+            return HttpResponseBadRequest("there is some issue with our delivery agent we will reach put to  you soon")
 
-                # return render(request, 'cart_checkout/paymentfail.html')
+            # return render(request, 'cart_checkout/paymentfail.html')
         # else:
         #     return render(request, 'cart_checkout/paymentsuccess.html')
-        
+
 
 Rozor = razor_payment()
 
 # prevent_refresh_middleware.py
 
 from django.http import HttpResponseRedirect
+
 
 class PreventRefreshMiddleware:
     def __init__(self, get_response):

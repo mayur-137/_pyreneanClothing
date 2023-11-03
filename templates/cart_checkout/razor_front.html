@@ -264,8 +264,7 @@ tfoot {
         </div> {% endcomment %}
       </form>
       <form
-          action="/CashOnDelivery/" method="POST"
-        >
+          action="/CashOnDelivery/" method="get">
           {% csrf_token %}
           <button type="submit" class="button button--full">make payment</button>
         

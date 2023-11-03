@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/Product-Details.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/order.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/sucess_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sucess_order.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,6 +172,7 @@
       <workItem from="1698819453108" duration="9143000" />
       <workItem from="1698870746320" duration="11049000" />
       <workItem from="1698912506964" duration="2663000" />
+      <workItem from="1698955317766" duration="11815000" />
     </task>
     <servers />
   </component>
