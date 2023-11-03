@@ -4,8 +4,7 @@ import random
 import razorpay
 import requests
 import datetime
-from datetime import timedelta
-
+from datetime import timedelta,datetime
 from math import ceil
 from django.contrib import messages
 from django.utils import timezone
@@ -26,7 +25,11 @@ from .models import ContactModel, user_address, Product_Details, Size, user_emai
 
 from .configurations import email_content
 
-global product_total, slug, discounted_price_coupen, discount_coupen, promo_code
+global product_total, slug, discounted_price_coupen, discount_coupen, promo_code,current_time
+current_datetime = datetime.now()
+# Format the current datetime as a string in the desired format
+formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M")
+
 
 
 def HomeView(request):
@@ -842,8 +845,18 @@ class shipment(View):
         # user_billing_city = "ahmedabad"
         # user_billing_pincode = "380060"
         # user_billing_state = "gujrat"
+        print("taking user data",formatted_datetime)
+        # user = user_address.objects.get(email=email)
+        # user_billing_city = user.city
+        # user_billing_pincode = user.pincode
+        # user_billing_state = user.state
         # user_billing_email = email
-        # user_billing_phone = "9033474857"
+        # user_billing_phone = user.phone_number
+        user_billing_city = "ahmedabad"
+        user_billing_pincode = "380060"
+        user_billing_state = "gujrat"
+        user_billing_email = email
+        user_billing_phone = "9033474857"
 
         print("user data taked")
         print(user_billing_city, user_billing_phone, user_billing_pincode)
@@ -897,9 +910,9 @@ class shipment(View):
             l2.append(d1)
 
         order_data = {
-            "order_id": order_id,
+            "order_id": 82,
             "shipping_is_billing": True,
-            "order_date": "2023-08-28 17:17",
+            "order_date": "{}".format(formatted_datetime),
             "pickup_location": "Home",
             "channel_id": "",
             "comment": "",
@@ -933,16 +946,17 @@ class shipment(View):
             "giftwrap_charges": "0",
             "transaction_charges": "0",
             "total_discount": "0",
-            "sub_total": order_total,
-            "length": "10",
-            "breadth": "15",
-            "height": "20",
-            "weight": "1",
+            "sub_total": int(order_total)-int((order_total/100)*5),
+            "length": "30",
+            "breadth": "30",
+            "height": "7",
+            "weight": "{}".format(int(quantity)*0.4),
             "ewaybill_no": "",
             "customer_gstin": "",
             "invoice_number": "",
             "order_type": ""
         }
+        # {'order_id': 430681272, 'shipment_id': 428856942, 'status': 'NEW', 'status_code': 1, 'onboarding_completed_now': 0, 'awb_code': '', 'courier_company_id': '', 'courier_name': ''}
         return order_data
 
     def shiprocket_key():
@@ -955,7 +969,7 @@ class shipment(View):
         a = response.json()
         return a['token']
 
-    def shiprockeet_order_function(request, email):
+    def shiprockeet_order_function(request):
         url = "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc"
 
         # Your API key
@@ -964,7 +978,7 @@ class shipment(View):
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        order_data = shipment.take_user_data()
+        order_data = shipment.take_user_data(email=request.user.email)
         print(order_data)
         # Send the POST request
         response = requests.post(url, json=order_data, headers=headers)
@@ -972,8 +986,127 @@ class shipment(View):
         # Print the response
         print(response.status_code)
         print(response.json())
-        return response
+        return redirect('/')
+    
+    def cancel_order(request):
+        ids = request.POST["order_id"]
+        print((ids))
+        url = "https://apiv2.shiprocket.in/v1/external/orders/cancel"
+        # Your API key
+        api_key = shipment.shiprocket_key()
+        print(api_key,"apikey")
+        # Headers for the request
+        # ids= 430676810
+        headers = {
+            "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+        print('aa')
+        data = {
+                "ids": [ids]
+        }
+        response = requests.get(url, json=data, headers=headers)
+        print(response.status_code)
+        return redirect('/')
 
+
+    def get_order(request,id):
+        print(request)
+        url = 'https://apiv2.shiprocket.in/v1/external/orders/show/{}'.format(id)
+
+        api_key = shipment.shiprocket_key()
+        print(api_key,"apikey","getettttdadadadtataa")
+        # Headers for the request
+        # ids= 430676810
+        headers = {
+            "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+        print('aa')
+        response = requests.get(url,headers=headers)
+        return response
+    
+    def return_order(request):
+        order_id = request.POST('order_id')
+        sku = request.POST('sku')
+        units = request.POST('units')
+        print(order_id,sku,units)
+
+        url = "https://apiv2.shiprocket.in/v1/external/orders/create/return"
+        get_data = shipment.get_order(request=request,id=430681272)
+        print(get_data,type(get_data))
+
+        user_data = get_data.json()
+        print(user_data,type(user_data),"user_datatatatatat")
+
+        api_key = shipment.shiprocket_key()
+        print(api_key,"apikey")
+        headers = {
+            "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+        print('aa')
+        
+        l2 = []
+        # add products  
+        # d1 = {
+        #     "name": name,
+        #     "sku": str(name)+"-"+str(size)+"-"+str(price),
+        #     "units": quantity,
+        #     "selling_price": price,
+        #     "discount": "00",
+        #     "tax": "00",
+        #     "hsn": ""
+        # }
+        # l2.append(d1)
+
+        data = {
+            "order_id": id,
+            "order_date": "2021-12-30",
+            "channel_id": user_data["data"]["channel_id"],
+            "pickup_customer_name": ["customer_name"],
+            "pickup_last_name": "",
+            "company_name":"",
+            "pickup_address": ["customer_address"],
+            "pickup_address_2": "",
+            "pickup_city": ["customer_city"],
+            "pickup_state": ["customer_state"],
+            "pickup_country": "India",
+            "pickup_pincode": ["customer_pincode"],
+            "pickup_email": ["customer_email"],
+            "pickup_phone": ["customer_phone"],
+            "pickup_isd_code": "91",
+            "shipping_customer_name": "pyrenean clothing",
+            "shipping_last_name": "pyrenean clothing",
+            "shipping_address": ["pickup_location"],
+            "shipping_address_2": "",
+            "shipping_city": "ahmedabad",
+            "shipping_country": "India",
+            "shipping_pincode": 380060,
+            "shipping_state": "GUJARAT",
+            "shipping_email": "pyrenean@gmail.com",
+            "shipping_isd_code": "91",
+            "shipping_phone": 9033474857,
+            "order_items": [
+                {
+                "sku": "shirt-M-2709",
+                "name": "shoes",
+                "units": 1,
+                "selling_price": user_data["data"]["products"]["price"],
+                "discount": 0,
+                "qc_enable":True,
+                "hsn": "",
+                "brand":"",
+                "qc_size":""
+                }
+                ],
+            "payment_method": "COD",
+            "total_discount": "0",
+            "sub_total": 400,
+            "length": 30,
+            "breadth": 30,
+            "height": 7,
+            "weight": user_data["data"]["products"]["quantity"]*units
+            }
+
+        response = request.post(url,json=data,headers=headers)
+        print(response.json())
+        print(response.status_code)
+        return redirect('/')
 
 class razor_payment:
     RAZOR_KEY_ID = "rzp_test_PxvxU8NuPVYlN2"
