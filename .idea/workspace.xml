@@ -5,14 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Pyrenean/configurations/order_data_json.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/cancel_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/configurations/email_content.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/cashfree.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/cashfree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0002_alter_wishlist_product_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0003_subscribenow.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0004_alter_contactmodel_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0005_alter_contactmodel_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0005_promocode_alter_product_details_description.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0006_promocode_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0007_merge_20231030_1132.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0008_final_order_link_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0009_alter_user_address_phone_number_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0010_alter_user_address_city_alter_user_address_email_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0011_cart_data_shipment.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0011_user_address_account_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0012_merge_20231102_1610.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0013_remove_cart_data_shipment.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/Product-Details.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/edit_user_data.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/edit_user_data.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Comming-Soon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Comming-Soon.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Product-Details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/order.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sucess_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sucess_order.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/user_data/user_data.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user_data/user_data.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +57,9 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Pyrenean/views.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
@@ -64,6 +89,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="C:\Users\mayur\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="7f97503f-8902-4d8f-a638-9afe4b8b54f5" reportId="_pyreneanClothing/qodana/2023-11-05" />
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\_Code_PlayGround\_pyreneanClothing\Pyrenean\configurations" />
@@ -173,6 +203,13 @@
       <workItem from="1698870746320" duration="11049000" />
       <workItem from="1698912506964" duration="2663000" />
       <workItem from="1698955317766" duration="11815000" />
+      <workItem from="1698972136268" duration="59000" />
+      <workItem from="1699042278477" duration="3689000" />
+      <workItem from="1699074942211" duration="10305000" />
+      <workItem from="1699128880905" duration="117000" />
+      <workItem from="1699171722859" duration="12368000" />
+      <workItem from="1699190147827" duration="3000" />
+      <workItem from="1699203241652" duration="4579000" />
     </task>
     <servers />
   </component>

@@ -28,6 +28,7 @@ class user_email(models.Model):
 
 class user_address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    firstname = models.CharField(max_length=50, default="")
     email = models.EmailField(max_length=100, unique=True)
     account_email = models.EmailField(max_length=100, unique=True, default="")
     building = models.CharField(max_length=100)
@@ -35,14 +36,14 @@ class user_address(models.Model):
     area = models.CharField(max_length=100)
     pincode = models.CharField(max_length=10)
     city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50, default="GUJRAT")
+    state = models.CharField(max_length=50, default="GUJARAT")
     phone_number = models.CharField(max_length=13)
 
 
 class cart_data(models.Model):
     order_id = models.AutoField(primary_key=True)
     email = models.EmailField()
-    address_1 = models.CharField(max_length=1000, default="INDIA")
+    address_1 = models.CharField(max_length=1000, default="", null=False)
     products_detail = models.JSONField(null=True)
     order_total = models.IntegerField(null=True, default=0)
 
@@ -57,7 +58,7 @@ class final_order(models.Model):
     products_detail = models.CharField(max_length=1000, default='empty')
     order_total = models.IntegerField()
     shiprocket_dashboard = models.BooleanField(default=False)
-    link_id = models.CharField(max_length=1000,default=000)
+    link_id = models.CharField(max_length=1000, default=000)
 
 
 class Product_Details(models.Model):

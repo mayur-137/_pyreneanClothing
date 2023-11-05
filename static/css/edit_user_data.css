@@ -42,6 +42,13 @@
     background-clip: initial;
     background: linear-gradient(-135deg, #ffffff, #615f5f);
   }
+
+  .submit-btn-custom {
+    padding: 0px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
   .contact_us_2 .responsive-container-block {
     min-height: 75px;

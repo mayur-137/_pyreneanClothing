@@ -4,8 +4,11 @@ import random
 import razorpay
 import requests
 import datetime
-from datetime import timedelta,datetime
+from datetime import timedelta, datetime
 from math import ceil
+
+from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import logout
@@ -16,20 +19,19 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 from django.core.mail import EmailMessage
 
-from .forms import ContactFormModel, SubscribeForm
+from .forms import ContactFormModel, SubscribeForm, CancelOrderForm
 from .models import ContactModel, user_address, Product_Details, Size, user_email, cart_data, final_order, WishList, \
     SubscribeNow, PromoCode
 
 from .configurations import email_content
 
-global product_total, slug, discounted_price_coupen, discount_coupen, promo_code,current_time
+global product_total, slug, discounted_price_coupen, discount_coupen, promo_code, current_time
 current_datetime = datetime.now()
 # Format the current datetime as a string in the desired format
 formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M")
-
 
 
 def HomeView(request):
@@ -63,7 +65,7 @@ class MailView(View):
     def send_email(self, subject, message, to_email):
         message += self.signature
         email = EmailMessage(subject, message, self.email, [to_email])
-        print(subject, message, self.email, to_email, "contact")
+        # print(subject, message, self.email, to_email, "contact")
         email.send()
 
     @staticmethod
@@ -199,7 +201,7 @@ class CartView(View):
         size_session = request.session.get("size_session", {})
         try:
             discount_coupen = request.session["discount_coupen"]
-            discounted_price_coupen = request.session["discounted_price"]
+            discounted_price_coupen = request.session["discounted_price_coupen"]
             promo_code = request.session["PromoMessage"]
 
             print(discount_coupen, discounted_price_coupen, promo_code, "hey")
@@ -268,9 +270,11 @@ class CartView(View):
                         f.append(getDataForCartEdit)
                     if discounted_price_coupen == 0:
                         discounted_price_coupen = i.order_total
-                    elif i.order_total < 1500:
+                        print(discount_coupen, discounted_price_coupen, i.order_total, "111")
+                    elif i.order_total <= 1500:
                         discount_coupen = 0
                         discounted_price_coupen = i.order_total
+                        print(discount_coupen, discounted_price_coupen, i.order_total, "222")
                     else:
                         pass
                 return render(request, 'cart_checkout/Cart.html',
@@ -372,6 +376,10 @@ class Update_cart_view(View):
             request.session['size_session'] = size_session
             if size_session.get(Size_id) == 0:
                 del size_session[Size_id]
+                request.session["discount_coupen"] = 0
+                request.session["discounted_price_coupen"] = 0
+                request.session["PromoMessage"] = None
+
         else:
             if not size_session.get(Size_id) == detail.quantity:
                 size_session[Size_id] = size_session.get(Size_id) + 1
@@ -391,7 +399,7 @@ class RemoveItemView(View):
             del size_session[GetRemoveItemId]
             request.session["size_session"] = size_session
             request.session["discount_coupen"] = 0
-            request.session["discounted_price"] = 0
+            request.session["discounted_price_coupen"] = 0
             request.session["PromoMessage"] = None
 
         print(size_session, cart_session, "sessions")
@@ -437,9 +445,8 @@ class PromoCodeView(View):
                     if int(GetDiscount) >= 1500:
                         discounted_price_coupen = GetDiscount - promo.discount_percent
                         request.session["discount_coupen"] = promo.discount_percent
-                        request.session["discounted_price"] = discounted_price_coupen
+                        request.session["discounted_price_coupen"] = discounted_price_coupen
                         request.session["PromoMessage"] = f"Congratulations, Your Coupon Code {promo.code} Applied."
-                        print(request.session["discounted_price"], request.session["discount_coupen"], "0")
                         return redirect("/cart/")
                     else:
                         print(f"not applied because your price is {GetDiscount} less then 1500")
@@ -449,7 +456,7 @@ class PromoCodeView(View):
                         return redirect("/cart/")
                 else:
                     request.session["discount_coupen"] = 0
-                    request.session["discounted_price"] = 0
+                    request.session["discounted_price_coupen"] = 0
                     request.session["PromoMessage"] = None
                     print("21")
             except Exception as e:
@@ -701,7 +708,6 @@ class ProfileView(View):
             email = request.user.email
             userData = user_address.objects.get(account_email=email)
             print(type(userData), "data")
-            userData.username = request.user
             return render(request, "user_data/user_data.html", {"userData": userData})
         except Exception as e:
             print(e)
@@ -714,6 +720,7 @@ class EditProfileView(View):
         return render(request, "user_data/edit_user_data.html")
 
     def post(self, request, *args, **kwargs):
+        current_email = request.user.email
         firstname = request.POST["FirstName"]
         email = request.POST['email']
         phone_number = request.POST['phone_number']
@@ -724,14 +731,16 @@ class EditProfileView(View):
         city = request.POST['city']
         state = request.POST['state']
         print(firstname, email, phone_number, building, street, area, pincode, city, state)
-        if user_address.objects.exists(account_email=request.user.email):
-            user_address.objects.filter(account_email=request.user.email).update(email=email, building=building,
+        if user_address.objects.filter(account_email=current_email).exists():
+            user_address.objects.filter(account_email=request.user.email).update(firstname=firstname, email=email,
+                                                                                 building=building,
                                                                                  street=street, area=area,
                                                                                  pincode=pincode,
                                                                                  city=city, state=state,
                                                                                  phone_number=phone_number)
         else:
-            user_address(account_email=request.user.email, email=email, building=building, street=street, area=area,
+            user_address(account_email=request.user.email, firstname=firstname, email=email, building=building,
+                         street=street, area=area,
                          pincode=pincode,
                          city=city, state=state,
                          phone_number=phone_number).save()
@@ -756,7 +765,7 @@ Your OTP is {otp}. It is valid for 1 minutes. Please do not share it with anyone
 
 {confirmationOrder_email_content_body2}
                         """
-        # self.send_email(confirmationOrder_email_content_subject, message, request.user.email)
+        self.send_email(confirmationOrder_email_content_subject, message, request.user.email)
         request.session['otp'] = otp
         request.session['otp_timestamp'] = str(timezone.now())
         return render(request, "order.html")
@@ -793,7 +802,8 @@ class SuccessPlacedOrder(CashOnDelivery):
             print(UserAddress, "addr")
 
         if otp_timestamp_str:
-            otp_timestamp = datetime.datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
+            otp_timestamp = datetime.strptime(otp_timestamp_str, "%Y-%m-%d %H:%M:%S.%f%z")
+            print(otp_timestamp, "timefor otp")
 
             # Check if the OTP has expired (more than 90 seconds old)
             if timezone.now() > otp_timestamp + timedelta(seconds=90):
@@ -815,7 +825,7 @@ Your order ID is **123456789**. You can use this ID to track your order status, 
 
 We hope you enjoy your purchase and have a wonderful day!
                 """
-                # self.send_email(successfullyPlaced_email_content_subject, message, request.user.email)
+                self.send_email(successfullyPlaced_email_content_subject, message, request.user.email)
 
                 return render(request, "successfully_placed.html", {"Order": f, "UserAddress": UserAddress})
 
@@ -823,20 +833,13 @@ We hope you enjoy your purchase and have a wonderful day!
         return redirect("/cart/")
 
 
-class ShipmentView(View):
-
-    def get(self, request, *args, **kwargs):
-        current_Email = request.user.email
-        UserAddress = user_address.objects.get(account_email=current_Email)
-        print(UserAddress)
-
-
-class shipment(View):
+class shipment:
 
     def take_user_data(self, request):
+        email = request.user.email
         # take billing data ffrom user_address table and order data table
         print("taking user data")
-        user = user_address.objects.get(account_email=request.user.email)
+        user = user_address.objects.get(account_email=email)
         user_billing_city = user.city
         user_billing_pincode = user.pincode
         user_billing_state = user.state
@@ -845,7 +848,7 @@ class shipment(View):
         # user_billing_city = "ahmedabad"
         # user_billing_pincode = "380060"
         # user_billing_state = "gujrat"
-        print("taking user data",formatted_datetime)
+        print("taking user data", formatted_datetime)
         # user = user_address.objects.get(email=email)
         # user_billing_city = user.city
         # user_billing_pincode = user.pincode
@@ -910,7 +913,7 @@ class shipment(View):
             l2.append(d1)
 
         order_data = {
-            "order_id": 82,
+            "order_id": 83,
             "shipping_is_billing": True,
             "order_date": "{}".format(formatted_datetime),
             "pickup_location": "Home",
@@ -946,11 +949,11 @@ class shipment(View):
             "giftwrap_charges": "0",
             "transaction_charges": "0",
             "total_discount": "0",
-            "sub_total": int(order_total)-int((order_total/100)*5),
+            "sub_total": int(order_total) - int((order_total / 100) * 5),
             "length": "30",
             "breadth": "30",
             "height": "7",
-            "weight": "{}".format(int(quantity)*0.4),
+            "weight": "{}".format(int(quantity) * 0.4),
             "ewaybill_no": "",
             "customer_gstin": "",
             "invoice_number": "",
@@ -959,7 +962,7 @@ class shipment(View):
         # {'order_id': 430681272, 'shipment_id': 428856942, 'status': 'NEW', 'status_code': 1, 'onboarding_completed_now': 0, 'awb_code': '', 'courier_company_id': '', 'courier_name': ''}
         return order_data
 
-    def shiprocket_key():
+    def shiprocket_key(self):
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
         headers = {
             "Content-Type": "application/json"}
@@ -969,16 +972,16 @@ class shipment(View):
         a = response.json()
         return a['token']
 
-    def shiprockeet_order_function(request):
+    def shiprockeet_order_function(self, request):
         url = "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc"
 
         # Your API key
-        api_key = shipment.shiprocket_key()
+        api_key = self.shiprocket_key()
         # Headers for the request
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        order_data = shipment.take_user_data(email=request.user.email)
+        order_data = shipment.take_user_data(self=self, request=request)
         print(order_data)
         # Send the POST request
         response = requests.post(url, json=order_data, headers=headers)
@@ -987,62 +990,61 @@ class shipment(View):
         print(response.status_code)
         print(response.json())
         return redirect('/')
-    
-    def cancel_order(request):
+
+    def cancel_order(self, request):
         ids = request.POST["order_id"]
-        print((ids))
+        print(ids)
         url = "https://apiv2.shiprocket.in/v1/external/orders/cancel"
         # Your API key
-        api_key = shipment.shiprocket_key()
-        print(api_key,"apikey")
+        api_key = shipmentObj.shiprocket_key()
+        print(api_key, "apikey")
         # Headers for the request
         # ids= 430676810
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
         data = {
-                "ids": [ids]
+            "ids": [ids]
         }
         response = requests.get(url, json=data, headers=headers)
         print(response.status_code)
         return redirect('/')
 
-
-    def get_order(request,id):
+    def get_order(self, request, id):
         print(request)
         url = 'https://apiv2.shiprocket.in/v1/external/orders/show/{}'.format(id)
 
-        api_key = shipment.shiprocket_key()
-        print(api_key,"apikey","getettttdadadadtataa")
+        api_key = self.shiprocket_key()
+        print(api_key, "apikey", "getettttdadadadtataa")
         # Headers for the request
         # ids= 430676810
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        response = requests.get(url,headers=headers)
+        response = requests.get(url, headers=headers)
         return response
-    
-    def return_order(request):
+
+    def return_order(self, request):
         order_id = request.POST('order_id')
         sku = request.POST('sku')
         units = request.POST('units')
-        print(order_id,sku,units)
+        print(order_id, sku, units)
 
         url = "https://apiv2.shiprocket.in/v1/external/orders/create/return"
-        get_data = shipment.get_order(request=request,id=430681272)
-        print(get_data,type(get_data))
+        get_data = self.get_order(request=request, id=430681272)
+        print(get_data, type(get_data))
 
         user_data = get_data.json()
-        print(user_data,type(user_data),"user_datatatatatat")
+        print(user_data, type(user_data), "user_datatatatatat")
 
-        api_key = shipment.shiprocket_key()
-        print(api_key,"apikey")
+        api_key = self.shiprocket_key()
+        print(api_key, "apikey")
         headers = {
             "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
         print('aa')
-        
+
         l2 = []
-        # add products  
+        # add products
         # d1 = {
         #     "name": name,
         #     "sku": str(name)+"-"+str(size)+"-"+str(price),
@@ -1060,7 +1062,7 @@ class shipment(View):
             "channel_id": user_data["data"]["channel_id"],
             "pickup_customer_name": ["customer_name"],
             "pickup_last_name": "",
-            "company_name":"",
+            "company_name": "",
             "pickup_address": ["customer_address"],
             "pickup_address_2": "",
             "pickup_city": ["customer_city"],
@@ -1083,38 +1085,43 @@ class shipment(View):
             "shipping_phone": 9033474857,
             "order_items": [
                 {
-                "sku": "shirt-M-2709",
-                "name": "shoes",
-                "units": 1,
-                "selling_price": user_data["data"]["products"]["price"],
-                "discount": 0,
-                "qc_enable":True,
-                "hsn": "",
-                "brand":"",
-                "qc_size":""
+                    "sku": "shirt-M-2709",
+                    "name": "shoes",
+                    "units": 1,
+                    "selling_price": user_data["data"]["products"]["price"],
+                    "discount": 0,
+                    "qc_enable": True,
+                    "hsn": "",
+                    "brand": "",
+                    "qc_size": ""
                 }
-                ],
+            ],
             "payment_method": "COD",
             "total_discount": "0",
             "sub_total": 400,
             "length": 30,
             "breadth": 30,
             "height": 7,
-            "weight": user_data["data"]["products"]["quantity"]*units
-            }
+            "weight": user_data["data"]["products"]["quantity"] * units
+        }
 
-        response = request.post(url,json=data,headers=headers)
+        response = request.post(url, json=data, headers=headers)
         print(response.json())
         print(response.status_code)
         return redirect('/')
 
+
+shipmentObj = shipment()
+
+
 class razor_payment:
+
     RAZOR_KEY_ID = "rzp_test_PxvxU8NuPVYlN2"
     RAZOR_KEY_SECRET = "KP3FhK8rzOJu5Blo3ZvJHBpj"
     # authorize razorpay client with API Keys.
     razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 
-    def check_user_data(request, email):
+    def check_user_data(self, request, email):
         try:
             c = user_address.objects.get(account_email=email)
             print(c, "data is there")
@@ -1125,7 +1132,7 @@ class razor_payment:
 
     def homepage(self, request, razorpay_client=razorpay_client, RAZOR_KEY_ID=RAZOR_KEY_ID):
         email = request.user.email
-        check_data = razor_payment.check_user_data(request=request, email=email)
+        check_data = self.check_user_data(request=request, email=email)
         print("razor front page")
         if check_data:
             order_user = cart_data.objects.get(email=email)
@@ -1139,7 +1146,6 @@ class razor_payment:
 
             order_product = order_user.products_detail
 
-
             print(order_user, order_address, order_total, order_product, "initial")
 
             currency = 'INR'
@@ -1149,6 +1155,7 @@ class razor_payment:
             razorpay_order = razorpay_client.order.create(dict(amount=amount,
                                                                currency=currency,
                                                                payment_capture='0'))
+            print(razorpay_order)
 
             # order id of newly created order.
             razorpay_order_id = razorpay_order['id']
@@ -1161,9 +1168,8 @@ class razor_payment:
             context['razorpay_amount'] = amount
             context['currency'] = currency
             context['callback_url'] = callback_url
-            # c = user_address.objects.get(email=email)
-            # address = str(c.building) +" , "+ str(c.street) + " , " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city)
-            # print(address)
+            # c = user_address.objects.get(email=email) address = str(c.building) +" , "+ str(c.street) + " ,
+            # " + str(c.area) +" , "+ str(c.pincode) +" , "+ str(c.city) print(address)
             context['address'] = order_address
             context["order_total"] = order_total
             msg = ""
@@ -1175,6 +1181,7 @@ class razor_payment:
                 price = i["price"]
                 msg += "\n{}-{}-{}".format(name, quantity, price)
             context["order_product"] = msg
+            print(context, "context")
             return render(request, 'cart_checkout/razor_front.html', context=context)
         else:
             print("you have to add your address first")
@@ -1191,18 +1198,18 @@ class razor_payment:
         if request.method == "POST":
             try:
                 # get the required parameters from post request.
-                payment_id = request.POST.get('razorpay_payment_id', '')
-                razorpay_order_id = request.POST.get('razorpay_order_id', '')
-                signature = request.POST.get('razorpay_signature', '')
+                payment_id = request.POST.get('razorpay_payment_id')
+                razorpay_order_id = request.POST.get('razorpay_order_id')
+                signature = request.POST.get('razorpay_signature')
+                context1 = request.POST.get("context")
                 params_dict = {
                     'razorpay_order_id': razorpay_order_id,
                     'razorpay_payment_id': payment_id,
                     'razorpay_signature': signature
                 }
-                print("1111111")
+                print(context1, "1111111", params_dict)
                 # verify the payment signature.
-                result = razorpay_client.utility.verify_payment_signature(
-                    params_dict)
+                result = razorpay_client.utility.verify_payment_signature(params_dict)
                 print(result, "result")
                 if result is not None:
                     # email = "ladoladhruv5218@gmail.com"
@@ -1219,7 +1226,7 @@ class razor_payment:
                         razorpay_client.payment.capture(payment_id, amount)
                         print("payment captured")
                         # render success page on successful caputre of payment
-                        a = shipment.shiprockeet_order_function(request)
+                        a = shipmentObj.shiprockeet_order_function(request)
                         print(a, "aa")
 
                         print(a.status_code)
@@ -1230,10 +1237,9 @@ class razor_payment:
                             order.shiprocket_dashboard = True
                             order.save()
 
-                            text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
-                            text
-                            print(text)
-                            mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+                            # text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+                            print(" Mail send now")
+                            # mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
 
                             print("shipment done")
                             try:
@@ -1251,15 +1257,16 @@ class razor_payment:
                         print(a.json()['status'])
                         print("ship rocket api is succefully done")
                         return render(request, 'cart_checkout/paymentsuccess.html')
-                    except:
-                        print("4444444")
+                    except Exception as e:
+                        print("4444444", e)
                         # if there is an error while capturing payment.
                         return render(request, 'cart_checkout/paymentfail.html')
                 else:
 
                     # if signature verification fails.
                     return render(request, 'cart_checkout/paymentfail.html')
-            except:
+            except Exception as e:
+                print(e, "paymenthandler")
 
                 # if we don't find the required parameters in POST data
                 print("error")
@@ -1355,33 +1362,33 @@ class razor_payment:
 
         if payment_status == "PAID":
             if ship_status == False:
-                # a = shipment.shiprockeet_order_function(request,email=email)
-                # print(a.status_code)
+                a = shipmentObj.shiprockeet_order_function(request)
+                print(a.status_code)
 
-                # if a.status_code == 200 and a.json()['status'] == "NEW":
-                #     print("readyyyyy")
-                #     order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
-                #     order = final_order.objects.get(order_id=order_id)
-                #     order.shiprocket_dashboard = True
-                #     order.save()
+                if a.status_code == 200 and a.json()['status'] == "NEW":
+                    print("readyyyyy")
+                    order_id = final_order.objects.aggregate(Max('order_id'))['order_id__max']
+                    order = final_order.objects.get(order_id=order_id)
+                    order.shiprocket_dashboard = True
+                    order.save()
 
-                #     text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
-                #     text
+                    # text = mail.confirm_order_mail(email="ladoladhruv5218@gmail.com")
+                    print("send mail111")
 
-                #     mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
+                    # mail.send_mail(email="ladoladhruv5218@gmail.com", msg=text)
 
-                #     print("shipment done")
-                #     try:
-                #         order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
-                #         order_user.delete()
-                #     except:
-                #         print(KeyError)
+                    print("shipment done")
+                    try:
+                        order_user = cart_data.objects.get(email="ladoladhruv5218@gmail.com")
+                        order_user.delete()
+                    except:
+                        print(KeyError)
 
-                #     print("cart empty")
-                #     print("cart data is deleted")
-                #     print(a.status_code)
-                #     print(a.json()['status'])
-                #     print("ship rocket api is succefully done")
+                    print("cart empty")
+                    print("cart data is deleted")
+                    print(a.status_code)
+                    print(a.json()['status'])
+                    print("ship rocket api is succefully done")
                 return render(request, 'cart_checkout/paymentsuccess.html')
                 # else:
                 # pass
@@ -1393,13 +1400,13 @@ class razor_payment:
             return HttpResponseBadRequest("payment fail")
         # return redirect('/')
 
-    def Cash_on_delivery(request):
+    def Cash_on_delivery(self, request):
         email = request.user.email
-        # ship_status = cart_data.object.get()
+        ship_status = cart_data.objects.all(email=email)
 
         # if ship_Status == False:
-        a = shipment.shiprockeet_order_function(request, email=email)
-        print(a.status_code)
+        a = shipmentObj.shiprockeet_order_function(request)
+        print(a.status_code, "cash on delevary")
 
         if a.status_code == 200 and a.json()['status'] == "NEW":
             print("readyyyyy")

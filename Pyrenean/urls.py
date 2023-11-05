@@ -4,7 +4,7 @@ from Pyrenean.views import (HomeView, AboutView, ContactView, CartView, ProductD
                             RegisterView, ResetView, Rozor, WishListView, WishListAddView, RemoveWishListItem,
                             SubscribeView,Terms_ConditionView, TestView, PromoCodeView,razor_payment, VerifyOTPView,
                             forget_password, reset_verified, forget_username, ProfileView, EditProfileView,
-                            CashOnDelivery, SuccessPlacedOrder, ShipmentView, shipment)
+                            CashOnDelivery, SuccessPlacedOrder, shipment)
 from . import views
 
 app_name = "main"
@@ -34,13 +34,9 @@ urlpatterns = [
     path("reset_password/", ResetView.as_view(), name="reset_passsowrd"),
     path("forget_username/", forget_username.as_view(), name="forget_username"),
 
-    # path('edit_user_data/', views.UserData.edit_user_data, name="edit_user_data"),
-    # path("user_address/", UserData.user_data_function, name="user_address"),
-
     path("profile/", ProfileView.as_view(), name="profile"),
     path("EditProfile/", EditProfileView.as_view(), name="editProfile"),
 
-    # path('edit_user_data/', views.edit_user_data, name="edit_user_data"),
     path('customerService/', CustomerServiceView.as_view(), name="customerService"),
     path('Terms_Condition/', Terms_ConditionView.as_view(), name="Terms_ConditionView"),
     path('add_to_cart/', AddToCartView.as_view(), name='add_to_cart'),
@@ -50,15 +46,27 @@ urlpatterns = [
     path("CashOnDelivery/", CashOnDelivery.as_view(), name="CashOnDelivery"),
     path("successDelivery/", SuccessPlacedOrder.as_view(), name="SuccessPlacedOrder"),
 
-    path('initiate_payment/', shipment.return_order, name="initiate_payment"),
-    # path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
-    # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
+    # path("initiate_payment/", razor_payment.as_view(), name="razor_payment"),
+    # path("ReturnOrder/", ShipmentView.return_order, name="ReturnOrder"),
+    # path("CancelOrder/", CancelOrderView.as_view(), name="CancelOrder"),
 
-    path("shipment/", ShipmentView.as_view(), name="shipment"),
+
+    path('ReturnOrder/', shipment.return_order, name="initiate_payment"),
+    path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
+    path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
-    path("COD/",razor_payment.Cash_on_delivery,name="Cash on delivery"),
-    path('cancel_order/', shipment.cancel_order, name="initiate_payment"),
+    path("COD/", Rozor.Cash_on_delivery, name="Cash on delivery"),
+    # path('cancel_order/', Rozor.cancel_order, name="cancel order"),
     # path("cashfree/", Rozor.cashfree_dashboard,name="cashfree"),
     # path("cashfree_handle/", Rozor.cashfree_handle, name="cashfree_handle"),
+
+
+
+
+
+
+
+
+
 
 ]

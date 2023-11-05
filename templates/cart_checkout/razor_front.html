@@ -213,7 +213,7 @@ tfoot {
         <h1>Checkout</h1>
       </header>
     
-      <form action="https://httpbin.org/post" class="form" method="POST">
+      <form action="" class="form" method="POST">
         {% csrf_token %}
         <div>
           <h2>Address</h2>
@@ -264,8 +264,9 @@ tfoot {
         </div> {% endcomment %}
       </form>
       <form
-          action="/CashOnDelivery/" method="get">
+          action="paymenthandler/" method="post">
           {% csrf_token %}
+          <input type="hidden" name="context" value="{{ context }}">
           <button type="submit" class="button button--full">make payment</button>
         
       </form>

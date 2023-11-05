@@ -30,3 +30,6 @@ class SubscribeForm(forms.ModelForm):
         model = SubscribeNow
         fields = ["email"]
 
+
+class CancelOrderForm(forms.Form):
+    order_id = forms.IntegerField(required=True)

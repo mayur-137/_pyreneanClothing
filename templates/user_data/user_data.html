@@ -12,7 +12,6 @@
       <div class="blueBG">
       </div>
       <div class="responsive-container-block container">
-        <form class="form-box"  action="/EditProfile/" method="get">
           <div class="container-block form-wrapper">
             <p class="text-blk contactus-head">
               Personal Data
@@ -25,7 +24,7 @@
                 <p class="text-blk input-title">
                   FIRST NAME
                 </p>
-                <h6 class="text-lbl"> : {{userData.username}}</h6>
+                <h6 class="text-lbl"> : {{userData.firstname}}</h6>
               </div>
               <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12">
                 <p class="text-blk input-title">
@@ -84,9 +83,10 @@
               </div>
               </div>
             </div>
-            <button href="/EditProfile/" class="submit-btn">edit address</button>
+            <a href="/EditProfile/" class="submit-btn" style="display: flex;justify-content: center;align-items: center; text-decoration: none">Edit Address</a><br>
+            <a href="/cart/" class="submit-btn" style="display: flex;justify-content: center;align-items: center; text-decoration: none">Go to Cart</a>
+
           </div>
-        </form>
       </div>
     </div>
   </div>
