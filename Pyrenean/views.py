@@ -945,7 +945,7 @@ class shipment:
             l2.append(d1)
 
         order_data = {
-            "order_id": 83,
+            "order_id": 94,
             "shipping_is_billing": True,
             "order_date": "{}".format(formatted_datetime),
             "pickup_location": "Home",
@@ -1021,7 +1021,7 @@ class shipment:
         # Print the response
         print(response.status_code)
         print(response.json())
-        return redirect('/')
+        return response
 
     def cancel_order(self, request):
         ids = request.POST["order_id"]
@@ -1433,7 +1433,7 @@ class razor_payment:
 
     def Cash_on_delivery(self, request):
         email = request.user.email
-        ship_status = cart_data.objects.all(email=email)
+        # ship_status = cart_data.objects.get(email=email)
 
         # if ship_Status == False:
         a = shipmentObj.shiprockeet_order_function(request)

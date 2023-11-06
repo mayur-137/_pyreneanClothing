@@ -53,7 +53,7 @@ urlpatterns = [
 
     path('ReturnOrder/', shipment.return_order, name="initiate_payment"),
     path('initiate_payment/', Rozor.homepage, name="initiate_payment"),
-    path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
+    # path('initiate_payment/paymenthandler/', Rozor.paymenthandler, name='paymenthandler'),
     #
     path("COD/", Rozor.Cash_on_delivery, name="Cash on delivery"),
     # path('cancel_order/', Rozor.cancel_order, name="cancel order"),
