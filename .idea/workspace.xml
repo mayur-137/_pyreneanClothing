@@ -5,36 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pyrenean/configurations/order_data_json.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/cancel_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/cashfree.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/cashfree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0002_alter_wishlist_product_id.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0003_subscribenow.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0004_alter_contactmodel_id.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0005_alter_contactmodel_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0005_promocode_alter_product_details_description.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0006_promocode_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0007_merge_20231030_1132.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0008_final_order_link_id.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0009_alter_user_address_phone_number_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0010_alter_user_address_city_alter_user_address_email_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0011_cart_data_shipment.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0011_user_address_account_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0012_merge_20231102_1610.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/migrations/0013_remove_cart_data_shipment.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/edit_user_data.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/edit_user_data.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Comming-Soon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Comming-Soon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Product-Details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Product-Details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cart_checkout/razor_front.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user_data/user_data.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user_data/user_data.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -209,7 +182,7 @@
       <workItem from="1699128880905" duration="117000" />
       <workItem from="1699171722859" duration="12368000" />
       <workItem from="1699190147827" duration="3000" />
-      <workItem from="1699203241652" duration="4579000" />
+      <workItem from="1699203241652" duration="12954000" />
     </task>
     <servers />
   </component>

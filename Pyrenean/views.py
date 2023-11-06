@@ -9,6 +9,7 @@ from math import ceil
 
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from geopy.geocoders import Nominatim
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import logout
@@ -32,6 +33,18 @@ global product_total, slug, discounted_price_coupen, discount_coupen, promo_code
 current_datetime = datetime.now()
 # Format the current datetime as a string in the desired format
 formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M")
+
+
+def GetZIPtoState(zipcode):
+    geolocator = Nominatim(user_agent="geoapiExercises")
+    # Using geocode()
+    location = geolocator.geocode(zipcode)
+
+    # Displaying address details
+    print("Zipcode:", zipcode)
+    print("Details of the Zipcode:")
+    print(location)
+    return str(location)
 
 
 def HomeView(request):
@@ -442,16 +455,24 @@ class PromoCodeView(View):
                 print(type(GetPromo), type(promo.code))
                 if GetPromo == promo.code:
                     print("yes")
-                    if int(GetDiscount) >= 1500:
-                        discounted_price_coupen = GetDiscount - promo.discount_percent
-                        request.session["discount_coupen"] = promo.discount_percent
-                        request.session["discounted_price_coupen"] = discounted_price_coupen
-                        request.session["PromoMessage"] = f"Congratulations, Your Coupon Code {promo.code} Applied."
-                        return redirect("/cart/")
+                    if int(GetDiscount) >= promo.minimum_price:
+                        if promo.active:
+                            discounted_price_coupen = GetDiscount - promo.discount_percent
+                            request.session["discount_coupen"] = promo.discount_percent
+                            request.session["discounted_price_coupen"] = discounted_price_coupen
+                            request.session["PromoMessage"] = f"Congratulations, Your Coupon Code {promo.code} Applied."
+                            print(promo.active, "active")
+                            PromoCode.objects.filter()
+                            return redirect("/cart/")
+                        else:
+                            print(f"not applied because you have a already applied {promo.code} ")
+                            request.session[
+                                "PromoMessage"] = f"Your Coupon Code Not Applied, Because you have a already applied {promo.code}"
+                            return redirect("/cart/")
                     else:
                         print(f"not applied because your price is {GetDiscount} less then 1500")
                         request.session[
-                            "PromoMessage"] = f"Your Coupon Code Not Applied, Add {1500 - GetDiscount} to Applied."
+                            "PromoMessage"] = f"Your Coupon Code Not Applied, Add {promo.minimum_price - GetDiscount} to Applied."
                         print("1")
                         return redirect("/cart/")
                 else:
@@ -731,12 +752,23 @@ class EditProfileView(View):
         city = request.POST['city']
         state = request.POST['state']
         print(firstname, email, phone_number, building, street, area, pincode, city, state)
+        loc = GetZIPtoState(pincode)
+        print(type(loc), "loc", loc)
+        if loc != "None":
+            loc = loc.split(",")
+            locState = loc[-2]
+            locCity = loc[-3]
+            print(locState, locCity, "location")
+        else:
+            locState = state
+            locCity = city
+
         if user_address.objects.filter(account_email=current_email).exists():
             user_address.objects.filter(account_email=request.user.email).update(firstname=firstname, email=email,
                                                                                  building=building,
                                                                                  street=street, area=area,
                                                                                  pincode=pincode,
-                                                                                 city=city, state=state,
+                                                                                 city=locCity, state=locState,
                                                                                  phone_number=phone_number)
         else:
             user_address(account_email=request.user.email, firstname=firstname, email=email, building=building,
@@ -1115,7 +1147,6 @@ shipmentObj = shipment()
 
 
 class razor_payment:
-
     RAZOR_KEY_ID = "rzp_test_PxvxU8NuPVYlN2"
     RAZOR_KEY_SECRET = "KP3FhK8rzOJu5Blo3ZvJHBpj"
     # authorize razorpay client with API Keys.

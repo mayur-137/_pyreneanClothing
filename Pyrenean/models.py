@@ -116,6 +116,7 @@ class PromoCode(models.Model):
     code = models.CharField(max_length=50, unique=True)
     email = models.EmailField(default="")
     discount_percent = models.IntegerField()
+    minimum_price = models.IntegerField(default=1500)
     active = models.BooleanField(default=True)
 
     def __str__(self):
