@@ -264,7 +264,7 @@ tfoot {
         </div> {% endcomment %}
       </form>
       <form
-          action="paymenthandler/" method="post">
+          action="/COD/" method="post">
           {% csrf_token %}
           <input type="hidden" name="context" value="{{ context }}">
           <button type="submit" class="button button--full">make payment</button>
