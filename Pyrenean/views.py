@@ -198,6 +198,9 @@ class AddToCartView(View):
             if size_session.get(getSize_id) is None or size_session.get(getSize_id) < detail.quantity:
                 size_session[getSize_id] = size_session.get(getSize_id, 0) + 1
                 request.session["size_session"] = size_session
+                request.session["discount_coupen"] = 0
+                request.session["discounted_price_coupen"] = 0
+                request.session["PromoMessage"] = None
 
             return redirect("/cart/")
 
@@ -281,6 +284,8 @@ class CartView(View):
                         getDataForCartEdit.quantity = GetQuantity
                         getDataForCartEdit.subtotal = Getsubtotal
                         f.append(getDataForCartEdit)
+                        print("list for fff", f)
+                        print(discounted_price_coupen, discount_coupen, i.order_total)
                     if discounted_price_coupen == 0:
                         discounted_price_coupen = i.order_total
                         print(discount_coupen, discounted_price_coupen, i.order_total, "111")
@@ -387,6 +392,9 @@ class Update_cart_view(View):
         if Mode_of_Operations == "-":
             size_session[Size_id] = size_session.get(Size_id) - 1
             request.session['size_session'] = size_session
+            request.session["discount_coupen"] = 0
+            request.session["discounted_price_coupen"] = 0
+            request.session["PromoMessage"] = None
             if size_session.get(Size_id) == 0:
                 del size_session[Size_id]
                 request.session["discount_coupen"] = 0
@@ -397,8 +405,13 @@ class Update_cart_view(View):
             if not size_session.get(Size_id) == detail.quantity:
                 size_session[Size_id] = size_session.get(Size_id) + 1
                 request.session['size_session'] = size_session
+                request.session["discount_coupen"] = 0
+                request.session["discounted_price_coupen"] = 0
+                request.session["PromoMessage"] = None
             else:
-                pass
+                request.session["discount_coupen"] = 0
+                request.session["discounted_price_coupen"] = 0
+                request.session["PromoMessage"] = None
         return redirect("/cart/")
 
 
@@ -945,7 +958,7 @@ class shipment:
             l2.append(d1)
 
         order_data = {
-            "order_id": 94,
+            "order_id": 100,
             "shipping_is_billing": True,
             "order_date": "{}".format(formatted_datetime),
             "pickup_location": "Home",
@@ -1155,9 +1168,12 @@ class razor_payment:
     def check_user_data(self, request, email):
         try:
             c = user_address.objects.get(account_email=email)
+            UserFinalAddr = f"{c.building}, {c.street}, {c.area}, {c.city}, {c.state}, {c.pincode}"
+            cart_data.objects.filter(email=email).update(address_1=UserFinalAddr)
             print(c, "data is there")
             return True
-        except:
+        except Exception as e:
+            print(e)
             context = "you have to add your address first"
             return False
 
@@ -1169,15 +1185,16 @@ class razor_payment:
             order_user = cart_data.objects.get(email=email)
             print("razor front page ")
             order_address = order_user.address_1
+            print("order_address", order_address)
             print(order_user)
-            if request.session.get("discounted_price"):
-                order_total = request.session.get("discounted_price")
+            if request.session.get("discounted_price_coupen"):
+                order_total = request.session.get("discounted_price_coupen")
             else:
                 order_total = order_user.order_total
 
             order_product = order_user.products_detail
 
-            print(order_user, order_address, order_total, order_product, "initial")
+            print("initial",  order_address, "initial")
 
             currency = 'INR'
             amount = order_total * 100  # Rs. 200
