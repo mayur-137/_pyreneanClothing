@@ -39,11 +39,6 @@ def GetZIPtoState(zipcode):
     geolocator = Nominatim(user_agent="geoapiExercises")
     # Using geocode()
     location = geolocator.geocode(zipcode)
-
-    # Displaying address details
-    print("Zipcode:", zipcode)
-    print("Details of the Zipcode:")
-    print(location)
     return str(location)
 
 
@@ -682,25 +677,22 @@ class forget_password(MailView):
         return render(request, 'forget/forget.html')
 
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
+        current_email = request.POST['email']
         try:
-            user = user_email.objects.filter(email=email)
-            print(user, "user")
-            if user:
-                otp = self.OtpGeneration()
-                OTP_email_json = email_content.email_content
-                OTP_email_json_subject = OTP_email_json["ResetPassword"]["subject"]
-                OTP_email_json_body1 = OTP_email_json["ResetPassword"]["body1"]
-                OTP_email_json_body2 = OTP_email_json["ResetPassword"]["body2"]
-                message = OTP_email_json_body1 + f"\nYour One-Time Password (OTP) for resetting your password is: {otp}. Please use this OTP to proceed with resetting your password.\n\n" + OTP_email_json_body2
-                self.send_email(OTP_email_json_subject, message, email)
+            otp = self.OtpGeneration()
+            OTP_email_json = email_content.email_content
+            OTP_email_json_subject = OTP_email_json["ResetPassword"]["subject"]
+            OTP_email_json_body1 = OTP_email_json["ResetPassword"]["body1"]
+            OTP_email_json_body2 = OTP_email_json["ResetPassword"]["body2"]
+            message = OTP_email_json_body1 + f"\nYour One-Time Password (OTP) for resetting your password is: {otp}. Please use this OTP to proceed with resetting your password.\n\n" + OTP_email_json_body2
+            self.send_email(OTP_email_json_subject, message, current_email)
 
-                request.session['otp'] = otp
-                request.session['otp_timestamp'] = str(timezone.now())
-                request.session["reset_email"] = email
+            request.session['otp'] = otp
+            request.session['otp_timestamp'] = str(timezone.now())
+            request.session["reset_email"] = current_email
 
-                request.session["reset_email"] = email
-                return redirect('/reset_verified/')
+            request.session["reset_email"] = current_email
+            return redirect('/reset_verified/')
         except Exception as e:
             print(e, "reset e")
             if "user_email matching query does not exist" in str(e):

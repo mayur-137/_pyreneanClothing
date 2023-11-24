@@ -62,7 +62,7 @@ class WishListAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubscribeNow)
-class WishListAdmin(admin.ModelAdmin):
+class SubscribeAdmin(admin.ModelAdmin):
     list_display = ["id", "email"]
 
 

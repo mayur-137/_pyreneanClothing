@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pyrenean/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pyrenean/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="fff735c5-1155-4099-a0f9-9fdac356c820" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -184,6 +181,7 @@
       <workItem from="1699203241652" duration="12954000" />
       <workItem from="1699305296093" duration="706000" />
       <workItem from="1699332875467" duration="3210000" />
+      <workItem from="1699478530173" duration="656000" />
     </task>
     <servers />
   </component>
